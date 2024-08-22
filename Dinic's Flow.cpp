@@ -28,7 +28,7 @@ struct Dinic{
     }
 
     bool bfs(){
-        fill(leve.begin(),level.end(),-1);
+        fill(level.begin(),level.end(),-1);
         level[s]=0;
         q.push(s);
         while(!q.empty()){
@@ -95,7 +95,7 @@ struct Dinic{
             // se essa aresta ta saturada, eu consigo alcancar o primeiro cara (v), mas n consigo alcancar
             // o segundo cara (u), entao significa que eu cortei essa aresta, ta no corte minimo
             if(e.flow == e.cap && level[e.v] != -1 && level[e.u] == -1 && e.cap > 0) 
-                cut.emplace(e.v,e.u);
+                cut.emplace_back(e.v,e.u);
         }
         return cut;
     }
