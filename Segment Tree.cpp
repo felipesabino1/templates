@@ -2,6 +2,7 @@
 /*
     Adicionar o que tem no node e na lazy da seg.
     Ver se os tipos das coisas ta certo (vetor inicial da seg e parametros do update)
+    Adicionar o operador de igual ==, pra comparar com o off_lazy
 */
 typedef int T;
 struct SEG{
@@ -17,18 +18,18 @@ struct SEG{
     // o que vai ter dentro do no de cada seg
     struct node{
 
-    }
+    };
     // o que vai ter dentro do no de cada lazy
     struct sono{
 
-    }
+    };
 
     vector<T> vec;
     int n;
     // no nulo
-    const node off = {}
+    const node off = {};
     // lazy nula
-    const sono off_lazy = {} 
+    const sono off_lazy = {}; 
     vector<node> seg;
     vector<sono> lazy;
     // operacao de unir dois nos
