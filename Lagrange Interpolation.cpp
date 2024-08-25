@@ -63,17 +63,17 @@ struct Lagrange{
         }else{
             ll g2=0;
             ll ans=0;
-            for(int i=1; i<=n+2; i++){
+            for(int i=1; i<=n+1; i++){
                 // acumular o valor da funcao de dentro do polinomio de lagrange
                 g2=(g2+g())%mod;
                 // g(i)*produtorio(x-j)/produtorio(i-j)
                 ll aux=g2*pref[i-1]%mod;
                 aux=aux*suf[i+1]%mod;
-                aux=aux*invfat[n+2-i]%mod;
+                aux=aux*invfat[n+1-i]%mod;
                 aux=aux*invfat[i-1]%mod;
 
                 // o -1 do produtorio(i-j)
-                if((n+2-i)&1) aux*=-1;
+                if((n+1-i)&1) aux*=-1;
                 while(aux < 0) aux+=mod;
 
                 // adiciona esse cara no polinomio de lagrange
