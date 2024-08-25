@@ -1,3 +1,9 @@
+/*
+    Alteracoes:
+
+    Alterar a funcao g de dentro da funcao de lagrange
+    Na funcao que o faz o lagrange mesmo, alterar os parametros da funcao g de acordo com o que foi feito
+*/
 struct Lagrange{
     vector<ll> pref,suf;
     vector<ll> invfat;
@@ -11,10 +17,10 @@ struct Lagrange{
         for(ll i=1; i<=n+1; i++) pref[i]=pref[i-1]*(x-i)%mod;
         for(ll i=n+1; i>0; i--) suf[i]=suf[i+1]*(x-i)%mod;
         ll fat=1;
-        fatinv[0]=1;
+        invfat[0]=1;
         for(ll i=1; i<=n+1; i++){
             fat=fat*i%mod;
-            fatinv[i]=fexp(fat,mod-2);
+            invfat[i]=fexp(fat,mod-2);
         }
     }
 
@@ -34,7 +40,7 @@ struct Lagrange{
     ll fexp(ll a, ll b){
         ll ans=1;
         while(b){
-            if(b&1) ans=ans*a%mod
+            if(b&1) ans=ans*a%mod;
             b>>=1;
             a=a*a%mod;
         }
@@ -44,7 +50,7 @@ struct Lagrange{
 
     // funcao de dentro do polinomio de lagrange
     ll g(){
-
+        
     }
 
     // o que calcula o valor do polinomio no ponto n, com grau k (lg - lagrange)
