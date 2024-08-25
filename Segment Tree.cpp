@@ -1,5 +1,6 @@
-// Alteracoes:
 /*
+    Alteracoes:
+    
     Adicionar o que tem no node e na lazy da seg.
     Ver se os tipos das coisas ta certo (vetor inicial da seg e parametros do update)
     Adicionar o operador de igual ==, pra comparar com o off_lazy
