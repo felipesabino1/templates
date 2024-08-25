@@ -1,2 +1,2 @@
 # templates
-Algumas templates boas, muito boas
+Aqui tem templates que eu considero boas, muito boas :)
