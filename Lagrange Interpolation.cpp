@@ -10,6 +10,8 @@ struct Lagrange{
     // valor x que quer calcular e o grau do polinomio n
     ll x,n;
     ll mod;
+    // geralmente o negocio da funcao precisa de mais informacao
+    ll pte;
 
     void set__(){
         pref[0]=1;
@@ -24,7 +26,7 @@ struct Lagrange{
         }
     }
 
-    Lagrange(ll x, ll n,ll mod){
+    Lagrange(ll x, ll n,ll mod, ll pte){
         pref.resize(n+3);
         suf.resize(n+3);
         invfat.resize(n+3);
@@ -32,6 +34,7 @@ struct Lagrange{
         this->x=x;
         this->n=n;
         this->mod=mod;
+        this->pte=pte;
         
         set__();
     }
