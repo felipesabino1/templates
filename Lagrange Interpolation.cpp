@@ -7,6 +7,7 @@
 struct Lagrange{
     vector<ll> pref,suf;
     vector<ll> invfat;
+    vector<ll> y;
     // valor x que quer calcular e o grau do polinomio n
     ll x,n;
     ll mod;
@@ -16,20 +17,30 @@ struct Lagrange{
     void set__(){
         pref[0]=1;
         suf[n+2]=1;
-        for(ll i=1; i<=n+1; i++) pref[i]=pref[i-1]*(x-i)%mod;
-        for(ll i=n+1; i>0; i--) suf[i]=suf[i+1]*(x-i)%mod;
+        for(ll i=1; i<=n+1; i++) pref[i]=pref[i-1]*((x-i)%mod)%mod;
+        for(ll i=n+1; i>0; i--) suf[i]=suf[i+1]*((x-i)%mod)%mod;
         ll fat=1;
         invfat[0]=1;
         for(ll i=1; i<=n+1; i++){
             fat=fat*i%mod;
             invfat[i]=fexp(fat,mod-2);
         }
+        y[0]=0;
+        for(int i=1; i<=n+1; i++) y[i]=(y[i-1]+g())%mod;
+    }
+
+    void set2__(){
+        pref[0]=1;
+        suf[n+2]=1;
+        for(ll i=1; i<=n+1; i++) pref[i]=pref[i-1]*((x-i)%mod)%mod;
+        for(ll i=n+1; i>0; i--) suf[i]=suf[i+1]*((x-i)%mod)%mod;
     }
 
     Lagrange(ll x, ll n,ll mod, ll pte){
         pref.resize(n+3);
         suf.resize(n+3);
         invfat.resize(n+3);
+        y.resize(n+3);
         
         this->x=x;
         this->n=n;
@@ -41,6 +52,7 @@ struct Lagrange{
 
     // exponenciacao binaria
     ll fexp(ll a, ll b){
+        a%=mod;
         ll ans=1;
         while(b){
             if(b&1) ans=ans*a%mod;
@@ -50,6 +62,12 @@ struct Lagrange{
         return ans;
     }
 
+    // se eu so quiser mudar o x que eu calculo do polinomio, so preciso alterar o prefixo e o sufixo
+    void mudax(ll x){
+        this->x = x;
+
+        set2__();
+    }
 
     // funcao de dentro do polinomio de lagrange
     ll g(){
@@ -61,16 +79,13 @@ struct Lagrange{
         if(x <= n+1){
             ll ans=0;
             // calcula o somatorio ate o n normal
-            for(int i=1; i<=x; i++) ans=(ans+g()%mod)%mod;
+            for(int i=1; i<=x; i++) ans=(ans+g())%mod;
             return ans;
         }else{
-            ll g2=0;
             ll ans=0;
             for(int i=1; i<=n+1; i++){
-                // acumular o valor da funcao de dentro do polinomio de lagrange
-                g2=(g2+g())%mod;
                 // g(i)*produtorio(x-j)/produtorio(i-j)
-                ll aux=g2*pref[i-1]%mod;
+                ll aux=y[i]*pref[i-1]%mod;
                 aux=aux*suf[i+1]%mod;
                 aux=aux*invfat[n+1-i]%mod;
                 aux=aux*invfat[i-1]%mod;
