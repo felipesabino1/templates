@@ -2,7 +2,7 @@
     Alteracoes:
 
     Alterar a funcao g de dentro da funcao de lagrange
-    Na funcao que o faz o lagrange mesmo, alterar os parametros da funcao g de acordo com o que foi feito
+    Na funcao que o faz o lagrange mesmo, alterar os parametros da funcao g de acordo com o que foi faz
 */
 struct Lagrange{
     vector<ll> pref,suf;
