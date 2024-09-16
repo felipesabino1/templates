@@ -23,6 +23,9 @@ struct SEG{
     // o que vai ter dentro do no de cada lazy
     struct sono{
 
+        bool operator ==(const sono &o){
+            return 
+        }
     };
 
     vector<T> vec;
