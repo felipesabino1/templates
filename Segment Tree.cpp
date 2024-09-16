@@ -90,20 +90,4 @@ struct SEG{
         update(rig(u),tmid+1,tr,max(tmid+1,l),r,x);
         seg[u]=merge(seg[lef(u)],seg[rig(u)]);
     }
-
-    // update no ponto
-    void update(int u,int tl,int tr,int x,T v){
-        if(tl == tr){
-            // atualizar a seg e o lazy
-            seg[u]=
-            lazy[u]=
-            return;
-        }
-        push(u,tl,tr);
-        int tmid=tl+tr;
-        tmid>>=1;
-        if(tmid >= x) update(lef(u),tl,tmid,x,v);
-        else update(rig(u),tmid+1,tr,x,v);
-        seg[u]=merge(seg[lef(u)],seg[rig(u)]);
-    }
 };
