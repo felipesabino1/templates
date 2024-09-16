@@ -3,7 +3,6 @@
     
     Adicionar o que tem no node e na lazy da seg.
     Ver se os tipos das coisas ta certo (vetor inicial da seg e parametros do update)
-    Adicionar o operador de igual ==, pra comparar com o off_lazy
 */
 typedef int T;
 struct SEG{
@@ -68,17 +67,20 @@ struct SEG{
     }
 
     // consulta em range
-    node query(int u,int tl,int tr,int l, int r){
+    node query_(int u,int tl,int tr,int l, int r){
         if(l > r) return off;
         if(tl == l && tr == r) return seg[u];
         push(u,tl,tr);
         int tmid=tl+tr;
         tmid>>=1;
-        return merge(query(lef(u),tl,tmid,l,min(tmid,r)),query(rig(u),tmid+1,tr,max(tmid+1,l),r));
+        return merge(query_(lef(u),tl,tmid,l,min(tmid,r)),query_(rig(u),tmid+1,tr,max(tmid+1,l),r));
+    }
+    node query(int l,int r){
+        return query_(1,1,n,l,r);
     }
 
     // update em range
-    void update(int u,int tl,int tr,int l,int r,T x){
+    void update_(int u,int tl,int tr,int l,int r,T x){
         if(l > r) return;
         if(tl == l && tr == r){
             // atualizar a seg e o lazy
@@ -89,8 +91,11 @@ struct SEG{
         push(u,tl,tr);
         int tmid=tl+tr;
         tmid>>=1;
-        update(lef(u),tl,tmid,l,min(tmid,r),x);
-        update(rig(u),tmid+1,tr,max(tmid+1,l),r,x);
+        update_(lef(u),tl,tmid,l,min(tmid,r),x);
+        update_(rig(u),tmid+1,tr,max(tmid+1,l),r,x);
         seg[u]=merge(seg[lef(u)],seg[rig(u)]);
+    }
+    void update(int l,int r, T x){
+        update_(1,1,n,l,r,x);
     }
 };
