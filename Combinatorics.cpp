@@ -6,6 +6,8 @@ struct Comb{
         fatoinv.resize(n+10,-1);
     }
 
+    Comb(){}
+
     void set_tam(int n){
         fato.resize(n+10,-1);
         fatoinv.resize(n+10,-1);
