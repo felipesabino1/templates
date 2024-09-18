@@ -5,9 +5,9 @@
     Ver se os tipos das coisas ta certo (vetor inicial da seg e parametros do update)
 */
 typedef int T;
-struct SEG{
+struct Seg{
     // inicializar a estrura, fazer o a indexado de 1
-    SEG(vector<T> &a,int n){
+    Seg(vector<T> &a,int n){
         seg.resize(n<<2);
         lazy.resize(n<<2);
         vec=a;
