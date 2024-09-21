@@ -6,7 +6,7 @@
 */
 typedef int T;
 struct Seg{
-    // inicializar a estrura, fazer o a indexado de 1
+    // inicializar a estrura, fazer o a indexado de 1, fazendo o build
     Seg(vector<T> &a,int n){
         seg.resize(n<<2);
         lazy.resize(n<<2);
@@ -14,7 +14,21 @@ struct Seg{
         this->n=n;
         build(1,1,n);
     }
-    
+
+    // inicializar so o tamanho da seg, n fazer o build
+    Seg(int n){
+        seg.resize(n<<2);
+        lazy.resize(n<<2);
+        this->n=n;
+    }
+
+    // fazer o build da estrutura
+    void init(vector<T> & a, int n){
+        vec=a;
+        this->n=n;
+        build(1,1,n);
+    }
+
     // o que vai ter dentro do no de cada seg
     struct node{
 
