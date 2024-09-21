@@ -1,3 +1,6 @@
+/*
+    Indexado em 0
+*/
 struct FlowEdge{
     int v,u;
     long long cap, flow=0;
