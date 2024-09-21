@@ -1,4 +1,6 @@
 /*
+    Indexado de 1 (os l e r)
+
     Alteracoes:
 
     Ver como calcula a query
@@ -6,8 +8,10 @@
     Ver como imprime a resposta
     Ver as funcoes de add e rmv do mo
 */
-typedef int T
+typedef int TT;
 struct Mo{
+    const int K = 450;
+
     struct query{
         int idx,l,r;
 
@@ -21,27 +25,26 @@ struct Mo{
     };
 
 	vector<query> q;
-	vector<T> ans;
+	vector<TT> ans;
 
-	MO(int q){
-        this->q=q;
+    // qtd de queries
+	Mo(int q){
+        this->q.resize(q);
     }
 
-    // ler as queries
-    void ler(){
+
+    // adiciona na posicao x
+	void add(int x){
         
     }
 
-	void add(int x){
-		
-	}
-
+    // remove na posicao x
 	void rmv(int x){
-		
-	}
+
+    }
 
     // calcula a resposta pra query
-	T calc(){
+	TT calc(){
 
     }
 
@@ -51,27 +54,35 @@ struct Mo{
 		int i,j;
 		i=1;
 		j=0;
-		for(auto [idx,l,r] : q){
+        for(auto [idx,l,r] : q){
 			while(j < r){
-				add(++j,1);
+				add(++j);
 			}
 			while(i > l){
-				add(--i,0);
+				add(--i);
 			}
 
 			while(j > r){
-				rmv(j--,1);
+				rmv(j--);
 			}
 			while(i < l){
-				rmv(i++,0);
+				rmv(i++);
 			}
 
 			ans[idx]=calc();
 		}
 	}
 
+    // ler as queries
+    void ler(){
+        for(int i=0; i<q.size(); i++) {
+            cin >> q[i].l >> q[i].r;
+            q[i].l--,q[i].r--;
+            q[i].idx=i;
+        }
+    }
+
 	void show(){
         // imprime a resposta
-		for(auto v: ans) cout << v << '\n';
 	}
 };
