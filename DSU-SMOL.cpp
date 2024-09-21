@@ -1,5 +1,5 @@
 /*
-    Indexado em 0
+    Indexado em 1
 
     Alteracoes:
 
@@ -22,9 +22,9 @@ struct DSU{
 
 
     DSU (int n){
-        repre.resize(n);
-        smol.resize(n);
-        for(int i=0; i<n; i++){
+        repre.resize(n+10);
+        smol.resize(n+10);
+        for(int i=1; i<=n; i++){
             repre[i]=i;
             smol[i].init(i);
         }
