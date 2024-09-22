@@ -77,7 +77,6 @@ struct Mo{
     void ler(){
         for(int i=0; i<q.size(); i++) {
             cin >> q[i].l >> q[i].r;
-            q[i].l--,q[i].r--;
             q[i].idx=i;
         }
     }
