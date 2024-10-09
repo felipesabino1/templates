@@ -4,10 +4,10 @@
     Adicionar o que tem no node e na lazy da seg.
     Ver se os tipos das coisas ta certo (vetor inicial da seg e parametros do update)
 */
-typedef int T;
+typedef int TT;
 struct Seg{
     // inicializar a estrura, fazer o a indexado de 1, fazendo o build
-    Seg(vector<T> &a,int n){
+    Seg(vector<TT> &a,int n){
         seg.resize(n<<2);
         lazy.resize(n<<2);
         vec=a;
@@ -23,7 +23,7 @@ struct Seg{
     }
 
     // fazer o build da estrutura
-    void init(vector<T> & a, int n){
+    void init(vector<TT> & a, int n){
         vec=a;
         this->n=n;
         build(1,1,n);
@@ -94,7 +94,7 @@ struct Seg{
     }
 
     // update em range
-    void update_(int u,int tl,int tr,int l,int r,T x){
+    void update_(int u,int tl,int tr,int l,int r,TT x){
         if(l > r) return;
         if(tl == l && tr == r){
             // atualizar a seg e o lazy
@@ -109,7 +109,44 @@ struct Seg{
         update_(rig(u),tmid+1,tr,max(tmid+1,l),r,x);
         seg[u]=merge(seg[lef(u)],seg[rig(u)]);
     }
-    void update(int l,int r, T x){
+    void update(int l,int r, TT x){
         update_(1,1,n,l,r,x);
+    }
+
+    // andar na seg buscando um valor mais proximo do l, bound esquerdo. Retorno o id
+    int buscal_(int u,int tl,int tr,int l, TT v){
+        // compara a seg atual com o valor pra ver se esse no ja ta ruim
+        // if(seg[u] < v) return -1;
+        // cheguei no cara mais a esquerda que eh bom
+        if(tl == tr) return tl;
+        int tmid=tl+tr;
+        tmid>>=1;
+        int id=-1;
+        // vou pra esquerda o maximo que da
+        // if(seg[lef(u)] >= v && tmid >= l) id =  buscal_(lef(u),tl,tmid,l,v);
+        // if(id == -1) id = buscal_(rig(u),tmid+1,tr,l,v);
+        return id;
+    }
+    int buscal(int l, TT v){
+        return buscal_(1,1,n,l,v);
+    }
+
+
+    // andar na seg buscando um valor mais proximo do r, bound direito. Retorno o id
+    int buscar_(int u,int tl,int tr,int r, TT v){
+        // compara a seg atual com o valor pra ver se nesse no ja ta ruim
+        // if(seg[u] < v) return -1;
+        // cheguei no cara mais a direita que eh bom
+        if(tl == tr) return tl;
+        int tmid=tl+tr;
+        tmid>>=1;
+        int id=-1;
+        // vou pra direita o maximo que da
+        // if(seg[rig(u)] >= v && tmid+1 <= r) id =  buscar_(rig(u),tmid+1,tr,r,v);
+        // if(id == -1) id = buscar_(lef(u),tl,tmid,r,v);
+        return id;
+    }
+    int buscar(int r, TT v){
+        return buscar_(1,1,n,r,v);
     }
 };
