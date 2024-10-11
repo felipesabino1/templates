@@ -1,4 +1,6 @@
 /*
+    Indexado em 1
+    
     Alteracoes:
     
     Adicionar o que tem no node e na lazy da seg.
