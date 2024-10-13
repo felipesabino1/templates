@@ -43,7 +43,7 @@ struct Seg{
         }
     };
 
-    vector<T> vec;
+    vector<TT> vec;
     int n;
     // no nulo
     const node off = {};
