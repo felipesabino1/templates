@@ -39,7 +39,7 @@ struct Seg{
     struct sono{
 
         bool operator ==(const sono &o){
-            return 
+            return true;
         }
     };
 
@@ -70,7 +70,7 @@ struct Seg{
     void build(int u,int tl,int tr){
         if(tl == tr){
             // inicializar os caras bases
-            seg[u]=
+            seg[u]={};
             lazy[u]=off_lazy;
             return;
         }
@@ -100,8 +100,7 @@ struct Seg{
         if(l > r) return;
         if(tl == l && tr == r){
             // atualizar a seg e o lazy
-            seg[u]=
-            lazy[u]=
+            
             return;
         }
         push(u,tl,tr);
