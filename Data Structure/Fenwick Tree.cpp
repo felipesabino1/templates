@@ -16,12 +16,12 @@ struct Fen{
     const TT off_fen = ; // valor dummy
 
     Fen(int n, int pref=1){
-        fen.resize(n+10);
+        fen.resize(n+10,off_fen);
         this->pref = pref;
         this->n = n;
     }
     Fen(vector<TT> &a, int n, int pref=1){
-        fen.resize(n+10);
+        fen.resize(n+10,off_fen);
         this->pref = pref;
         this->n = n;
         // fazer o update com base na operacao da bit
