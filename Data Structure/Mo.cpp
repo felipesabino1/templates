@@ -8,7 +8,7 @@
     Ver como imprime a resposta
     Ver as funcoes de add e rmv do mo
 */
-typedef int TT;
+template <class TT = int>
 struct Mo{
     const int K = 450;
 
