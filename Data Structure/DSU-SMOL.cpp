@@ -6,6 +6,7 @@
     Ver se precisa adicionar coisa no gp do smol
 */
 struct DSU{
+    // o que cada grupo carrega de informacao
     struct gp{
         // se precisa adicionar coisa a mais
         int tam;
@@ -20,7 +21,7 @@ struct DSU{
     vector<int> repre;
     vector<gp> smol;
 
-
+    // inicializar passando a qtd de vertices, grupos iniciais
     DSU (int n){
         repre.resize(n+10);
         smol.resize(n+10);
@@ -30,11 +31,13 @@ struct DSU{
         }
     }
 
+    // achar o representante do u
     int rep(int u){
         if(u == repre[u]) return u;
         return repre[u]=rep(repre[u]);
     }
 
+    // unir u e v
     void unite(int u,int v){
         u=rep(u);
         v=rep(v);
@@ -52,6 +55,7 @@ struct DSU{
         repre[v]=u;
     }
 
+    // fazer o merge de 2 grupos
     void merge(gp &x, gp &y){
         // faz o merge se precisar
 
