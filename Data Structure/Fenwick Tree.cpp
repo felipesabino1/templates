@@ -8,7 +8,7 @@
     Ver como que faz o update da BIT na inicializacao
     Atualizar a funcao da BIT f
 */
-typedef ll TT;
+template <class TT = ll>
 struct Fen{
     vector<TT> fen;
     int n; // tamanho da BIT
