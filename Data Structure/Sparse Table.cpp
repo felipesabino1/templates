@@ -5,7 +5,7 @@
     
     Funcao f() da tabela, valor off
 */
-typedef long long int TT;
+template <class TT = ll>
 struct SparseTable{
     int n; // tamanho 
     vector<vector<TT>> tab; // sparse table
