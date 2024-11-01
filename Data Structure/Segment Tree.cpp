@@ -6,7 +6,7 @@
     Adicionar o que tem no node e na lazy da seg.
     Ver se os tipos das coisas ta certo (vetor inicial da seg e parametros do update)
 */
-typedef int TT;
+template <class TT = int>
 struct Seg{
     // inicializar a estrura, fazer o a indexado de 1, fazendo o build
     Seg(vector<TT> &a,int n){
