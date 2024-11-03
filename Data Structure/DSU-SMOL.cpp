@@ -16,6 +16,7 @@ struct DSU{
             // se precisa inicializar coisa a mais, passa por parametro
             tam=1;
         }
+        ~gp(){}
     };
     
     vector<int> repre;
@@ -29,6 +30,10 @@ struct DSU{
             repre[i]=i;
             smol[i].init(i);
         }
+    }
+    ~DSU(){
+        repre.clear();
+        smol.clear();
     }
 
     // achar o representante do u
