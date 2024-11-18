@@ -73,4 +73,8 @@ struct Comb{
         }
         return ans;
     }
+
+    ll inv(ll x){
+        return fexp(x,mod-2);
+    }
 };
