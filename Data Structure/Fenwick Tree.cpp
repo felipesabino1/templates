@@ -27,6 +27,7 @@ struct Fen{
         // fazer o update com base na operacao da bit
         for(int i=1; i<=n; i++) update();
     }
+    ~Fen(){fen.clear();}
 
     // operacao da BIT
     TT f(TT x, TT y){
