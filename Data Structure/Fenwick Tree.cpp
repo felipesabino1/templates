@@ -35,6 +35,7 @@ struct Fen{
     }
 
     void update(int x, TT v){
+        if(x <= 0 || x > n) return;
         if(pref){
             while(x <= n){
                 fen[x]=f(fen[x],v);
@@ -49,6 +50,7 @@ struct Fen{
     }
 
     TT query(int x){
+        if(x <= 0 || x > n) return off_fen;
         TT ans = off_fen;
         if(pref){
             while(x){
