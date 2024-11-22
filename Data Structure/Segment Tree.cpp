@@ -9,19 +9,16 @@
 template <class TT = int>
 struct Seg{
     // inicializar a estrura, fazer o a indexado de 1, fazendo o build
-    Seg(vector<TT> &a,int n){
+    Seg(vector<TT> &a,int n) : vec(a), n(n){
         seg.resize(n<<2);
         lazy.resize(n<<2);
-        vec=a;
-        this->n=n;
         build(1,1,n);
     }
 
     // inicializar so o tamanho da seg, n fazer o build
-    Seg(int n){
+    Seg(int n) : n(n){
         seg.resize(n<<2);
         lazy.resize(n<<2);
-        this->n=n;
     }
 
     // fazer o build da estrutura
