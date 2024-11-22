@@ -15,15 +15,11 @@ struct Fen{
     int pref; // flag que indica se a Fenwick eh no prefixo(1), ou no sufixo(0)
     const TT off_fen = ; // valor dummy
 
-    Fen(int n, int pref=1){
+    Fen(int n, int pref=1) : pref(pref),n(n){
         fen.resize(n+10,off_fen);
-        this->pref = pref;
-        this->n = n;
     }
-    Fen(vector<TT> &a, int n, int pref=1){
+    Fen(vector<TT> &a, int n, int pref=1) : pref(pref),n(n){
         fen.resize(n+10,off_fen);
-        this->pref = pref;
-        this->n = n;
         // fazer o update com base na operacao da bit
         for(int i=1; i<=n; i++) update();
     }
