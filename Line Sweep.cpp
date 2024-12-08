@@ -1,19 +1,15 @@
 struct info{
-    pair<int,int> x;
-    int t;
-    int id;
+    pair<int,int> at;
+    int x,t,id;
 
-    info(pair<int,int> x, int t,int id) : x(x),t(t),id(id){}
+    info(int l,int r,int t,int id) : info(make_pair(l,r),t,id){}
+    info(pair<int,int> at, int t,int id) : at(at),t(t),id(id){
+        if(t) x = at.second;
+        else x = at.first;
+    }
 
     bool operator <(const info & o){
-        int xx,y;
-        int x2,y2;
-        xx = (t ? x.second : x.first);
-        x2 = (t ? x.first : x.second);
-        y = (o.t ? o.x.second : o.x.first);
-        y2 = (o.t ? o.x.first : o.x.second);
-        if(xx == y && t == o.t) return x2 > y2;
-        if(xx == y) return t < o.t;
-        return xx < y;
+        if(x == o.x) return t < o.t;
+        return x < o.x;
     };
 };
