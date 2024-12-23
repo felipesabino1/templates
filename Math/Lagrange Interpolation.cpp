@@ -36,16 +36,11 @@ struct Lagrange{
         for(ll i=n+1; i>0; i--) suf[i]=suf[i+1]*((x-i)%mod)%mod;
     }
 
-    Lagrange(ll x, ll n,ll mod, ll pte){
+    Lagrange(ll x, ll n,ll mod, ll pte) : x(x),n(n),mod(mod),pte(pte){
         pref.resize(n+3);
         suf.resize(n+3);
         invfat.resize(n+3);
         y.resize(n+3);
-        
-        this->x=x;
-        this->n=n;
-        this->mod=mod;
-        this->pte=pte;
         
         set__();
     }
