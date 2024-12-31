@@ -66,6 +66,7 @@ struct TWOSAT{
     }
 
     void solve(){
+        for(int i=1; i<=n; i++) vis[pos(i)] = vis[neg(i)] = 0;
         // componentes conexas
         for(int i=1; i<=n; i++) {
             if(!vis[pos(i)]) set_ord(pos(i));
