@@ -16,14 +16,18 @@ struct DSU{
             // se precisa inicializar coisa a mais, passa por parametro
             tam=1;
         }
+        void clear(){
+            
+        }
         ~gp(){}
     };
     
     vector<int> repre;
     vector<gp> smol;
+    int n;
 
     // inicializar passando a qtd de vertices, grupos iniciais
-    DSU (int n){
+    DSU (int n) : n(n){
         repre.resize(n+10);
         smol.resize(n+10);
         for(int i=1; i<=n; i++){
@@ -34,6 +38,18 @@ struct DSU{
     ~DSU(){
         repre.clear();
         smol.clear();
+    }
+    void init(int n){
+        this->n = n;
+        for(int i=1; i<=n; i++){
+            repre[i] = i;
+            smol[i].init(i);
+        }
+    }
+    void clear(){
+        for(int i=1; i<=n; i++){
+            smol[i].clear();
+        }
     }
 
     // achar o representante do u
