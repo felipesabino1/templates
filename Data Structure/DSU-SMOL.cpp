@@ -54,8 +54,7 @@ struct DSU{
 
     // achar o representante do u
     int rep(int u){
-        if(u == repre[u]) return u;
-        return repre[u]=rep(repre[u]);
+        return repre[u] = (repre[u] == u ? u : rep(repre[u]));
     }
 
     // unir u e v
