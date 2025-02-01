@@ -8,8 +8,8 @@ struct VirtualTree{
         vector<vector<int>> &graph; // grafo original
         int n; // qtd de vertices
         int timer=0;
-        // entrada, saida, e euler tour 
-        vector<int> tin,tout,euler;
+        // entrada, saida 
+        vector<int> tin,tout;
         int flag; // (flag == 1 ? tin != tout : tin == tout)
         vector<int> dist; // distancia de cada cara pra raiz
         vector<vector<int>> pai; // tabela de ancestrais
@@ -19,7 +19,6 @@ struct VirtualTree{
         VTLCA(int n, vector<vector<int>> &graph, int flag=0, int r=1) : n(n), graph(graph), flag(flag), r(r){
             tin.resize(n+10);
             tout.resize(n+10);
-            euler.resize((flag ? 2*n+10 : n+10));
             dist.resize(n+10);
             int t=0;
             int d=1;
@@ -29,7 +28,6 @@ struct VirtualTree{
             }
             TETO = t;
             pai.resize(n+10,vector<int>(TETO));
-            this->r = r;
 
             build(r,r);
         }
