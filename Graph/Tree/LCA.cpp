@@ -30,7 +30,6 @@ struct LCA{
         }
         TETO = t;
         pai.resize(n+10,vector<int>(TETO));
-        this->r = r;
 
         build(r,r);
     }
