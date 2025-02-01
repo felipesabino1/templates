@@ -14,7 +14,8 @@ struct Centroid{
     Centroid(int n, vector<vector<int>> & graph) : graph(graph), n(n){
         tam.resize(n+10);
         vis.resize(n+10);
-        // p.resize(n+10);
+        p.resize(n+10);
+        // cnt.resize(n+10);
         r=build(1);
     }
 
