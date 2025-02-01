@@ -14,7 +14,6 @@ struct Centroid{
     Centroid(int n, vector<vector<int>> & graph) : graph(graph), n(n){
         tam.resize(n+10);
         vis.resize(n+10);
-        qtd.resize(n+10);
         // p.resize(n+10);
         r=build(1);
     }
@@ -67,21 +66,21 @@ struct Centroid{
         // faz algum tipo de calculo
         for(auto v: graph[u]){
             if(v == ant || vis[v]) continue;
-            calc(v,u,d+1,sz);
+            calc(v,u,sz);
         }
     }
     void update(int u,int ant){
         // faz algum tipo de update
         for(auto v: graph[u]){
             if(v == ant || vis[v]) continue;
-            update(v,u,d+1);
+            update(v,u);
         }
     }
-    void reset(int u,int ant,int d = 0){
+    void reset(int u,int ant){
         // reseta as coisas que eu fiz nos updates
         for(auto v: graph[u]){
             if(v == ant || vis[v]) continue;
-            reset(v,u,d+1);
+            reset(v,u);
         }
     }
     void calc(int u){
