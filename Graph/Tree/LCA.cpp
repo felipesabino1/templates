@@ -69,4 +69,15 @@ struct LCA{
         z=pai[z][0];
         return dist[x]+dist[y]-2*dist[z];
     }
+    // calcula lca entre x e y
+    int calc_lca(int x,int y){
+        if(lca(x,y)) return x;
+        else if(lca(y,x)) return y;
+        int z=x;
+        for(int i=TETO-1; i>=0; i--){
+            if(!lca(pai[z][i],y)) z=pai[z][i];
+        }
+        z = pai[z][0];
+        return z;
+    }
 };
