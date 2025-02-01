@@ -6,27 +6,20 @@
     As vezes mudar como calcula o calc do lca
 */
 struct LCA{
-    vector<vector<int>> graph;
-    int n;
-    // entrada, saida, e euler tour
+    vector<vector<int>> &graph; // grafo original
+    int n; // qtd de vertices
     int timer=0;
+    // entrada, saida, e euler tour 
     vector<int> tin,tout,euler;
-    // se vai diferenciar ou n o tin do tout
-    int flag;
-    // distancia de cada cara pra raiz
-    vector<int> dist;
-    // tabela de ancestrais
-    vector<vector<int>> pai;
-    // raiz
-    int r;
-    int TETO;
+    int flag; // (flag == 1 ? tin != tout : tin == tout)
+    vector<int> dist; // distancia de cada cara pra raiz
+    vector<vector<int>> pai; // tabela de ancestrais
+    int r; // raiz
+    int TETO; // teto(log2(n))
 
-    LCA(vector<vector<int>> &graph,int n,int flag=0,int r=1){
-        this->n = n;
-        this->graph = graph;
+    LCA(int n, vector<vector<int>> &graph, int flag=0, int r=1) : n(n), graph(graph), flag(flag), r(r){
         tin.resize(n+10);
         tout.resize(n+10);
-        this->flag = flag;
         euler.resize((flag ? 2*n+10 : n+10));
         dist.resize(n+10);
         int t=0;
@@ -45,16 +38,19 @@ struct LCA{
     void build(int u,int ant){
         if(u == ant) dist[u]=0;
         else dist[u]=dist[ant]+1;
-        tin[u]=++timer;
-        pai[u][0]=ant;
+        
         // construir tabela de ancestrais
+        pai[u][0]=ant;
         for(int i=1; i < TETO; i++) {
             pai[u][i]=pai[pai[u][i-1]][i-1];
         }
+        
+        tin[u]=++timer;
         for(auto v: graph[u]){
             if(v == ant) continue;
             build(v,u);
         }
+        
         tout[u]=(flag ? ++timer : timer);
     }
 
