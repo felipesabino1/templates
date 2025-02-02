@@ -6,6 +6,9 @@
     As vezes mudar como calcula o calc do lca
 */
 struct LCA{
+    struct info{
+        int p;
+    };
     vector<vector<int>> &graph; // grafo original
     int n; // qtd de vertices
     int timer=0;
@@ -13,7 +16,7 @@ struct LCA{
     vector<int> tin,tout,euler;
     int flag; // (flag == 1 ? tin != tout : tin == tout)
     vector<int> dist; // distancia de cada cara pra raiz
-    vector<vector<int>> pai; // tabela de ancestrais
+    vector<vector<info>> pai; // tabela de ancestrais
     int r; // raiz
     int TETO; // teto(log2(n))
 
@@ -29,7 +32,7 @@ struct LCA{
             d<<=1;
         }
         TETO = t;
-        pai.resize(n+10,vector<int>(TETO));
+        pai.resize(n+10,vector<info>(TETO));
 
         build(r,r);
     }
@@ -39,9 +42,9 @@ struct LCA{
         else dist[u]=dist[ant]+1;
         
         // construir tabela de ancestrais
-        pai[u][0]=ant;
+        pai[u][0]={ant};
         for(int i=1; i < TETO; i++) {
-            pai[u][i]=pai[pai[u][i-1]][i-1];
+            pai[u][i].p = pai[pai[u][i-1].p][i-1].p;
         }
         
         tin[u]=++timer;
@@ -64,9 +67,9 @@ struct LCA{
         else if(lca(y,x)) return dist[x]-dist[y];
         int z=x;
         for(int i=TETO-1; i>=0; i--){
-            if(!lca(pai[z][i],y)) z=pai[z][i];
+            if(!lca(pai[z][i].p,y)) z=pai[z][i].p;
         }
-        z=pai[z][0];
+        z=pai[z][0].p;
         return dist[x]+dist[y]-2*dist[z];
     }
     // calcula lca entre x e y
@@ -75,9 +78,9 @@ struct LCA{
         else if(lca(y,x)) return y;
         int z=x;
         for(int i=TETO-1; i>=0; i--){
-            if(!lca(pai[z][i],y)) z=pai[z][i];
+            if(!lca(pai[z][i].p,y)) z=pai[z][i].p;
         }
-        z = pai[z][0];
+        z = pai[z][0].p;
         return z;
     }
 };
