@@ -85,7 +85,6 @@ struct Centroid{
         }
     }
     void calc(int u){
-        qtd[0] = 1;
         for(auto v: graph[u]){
             if(vis[v]) continue;
             calc(v,u,tam[u]); // calcular essa subarvore, passo esse tamanho pra dar uma otimizada no limite dessa subarvore
