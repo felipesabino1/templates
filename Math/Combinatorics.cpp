@@ -65,13 +65,13 @@ struct Comb{
         return fato[x]=fat(x-1)*x%mod;
     }
  
-    TT fatinv(TT x){
+    TT fat_inv(TT x){
         if(TT(fatoinv.size()) <= x){
             fatoinv.resize(x+10,-1);
         }
         if(TT(fatoinv.size()) == x+1) return fatoinv[x] = (fatoinv[x] == -1 ? fexp(fat(x),mod-2) : fatoinv[x]);
         if(fatoinv[x] != -1) return fatoinv[x];
-        return fatoinv[x]=fatinv(x+1)*(x+1)%mod;
+        return fatoinv[x]=fat_inv(x+1)*(x+1)%mod;
     }
  
     TT toma(TT n, TT k,int k_pequeno = 0){
@@ -82,20 +82,29 @@ struct Comb{
             ans = tomatoma[n][k];
         }else if(k_pequeno == 0){
             ans=fat(n);
-            ans=ans*fatinv(k)%mod;
-            ans=ans*fatinv(n-k)%mod;
+            ans=ans*fat_inv(k)%mod;
+            ans=ans*fat_inv(n-k)%mod;
         }else{
             // quando k eh pequeno, podemos fazer fat(N)/fat(k)/fat(N-k) = N*(N-1)*(N-2)*...*(N-k+1)/fat(K), ai pra fazer o termo de cima
             // eh so iterar k caras, o de baixo eh de boa tambem.
             ans = 1;
             for(ll i = n; i>n-k; i--) ans = ans*i%mod;
-            ans=ans*fatinv(k)%mod;
+            ans=ans*fat_inv(k)%mod;
         }
         return ans;
     }
  
     TT inv(TT x){
         return fexp(x,mod-2);
+    }
+
+    // faz a conta do fatorial quando eu tenho elementos repetidos
+    TT fat_rep(vector<TT> & vec){
+        TT tot = 0;
+        for(TT v : vec) tot += v;
+        TT ans = fat(tot);
+        for(TT v : vec) ans = ans*fat_inv(v)%mod;
+        return ans;
     }
 
     // Calcula a soma de uma PA, somatorio_i=k1_k2(a + r*i), temos que k1 >= 0 e k2 >= k1
