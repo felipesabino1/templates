@@ -70,7 +70,7 @@ struct FFT{
         for (C& x : in) x *= x;
         for(int i = 0; i < n; i++) out[i] = in[-i & (n - 1)] - conj(in[i]);
         fft(out);
-        for(int i = 0; i < res.size(); i++) res[i] = imag(out[i]) / (4 * n);
+        for(int i = 0; i < res.size(); i++) res[i] = round(imag(out[i]) / (4 * n));
         return res;
     }
 
