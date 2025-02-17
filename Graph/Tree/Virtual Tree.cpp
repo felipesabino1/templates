@@ -102,7 +102,7 @@ struct VirtualTree{
             return lca.tin[x] < lca.tin[y];
         });
         // tira os caras repetidos e limpa a arvore de queries anteriores
-        erase(unique(vtx.begin(),vtx.end()),vtx.end());
+        vtx.erase(unique(vtx.begin(),vtx.end()),vtx.end());
         sz = vtx.size();
         for(int i=0; i<sz; i++) tree[vtx[i]].clear();
         
