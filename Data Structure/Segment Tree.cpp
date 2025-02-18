@@ -104,6 +104,7 @@ struct Seg{
     // busca binaria pela esquerda a partir do ponto inicial x, pra satisfazer alguma funcao (indice mais a esquerda tal que somatorio <= v por exemplo)
     // retorna indice e os valores dos caras mais perto de x
     pair<int,TT> bb_lef_(int u, int tl, int tr, int x, TT v){
+        push(u,tl,tr);
         int tmid = tl + tr;
         tmid >>= 1;
         pair<int,TT> ret = make_pair(n+10, -1); /*Mudar segundo parametro de acordo com a operacao*/
@@ -135,6 +136,7 @@ struct Seg{
     // busca binaria pela direta a partir do ponto inicial x, pra satisfazer alguma funcao (indice mais a direita tal que somatorio <= v por exemplo)
     // retorna indice e os valores dos caras mais perto de x
     pair<int,TT> bb_rig_(int u,int tl,int tr,int x, TT v){
+        push(u,tl,tr);
         int tmid = tl+tr;
         tmid>>=1;
         pair<int,TT> ret = make_pair(-1,-1);
