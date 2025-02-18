@@ -37,7 +37,7 @@ struct SparseTable{
         build(a); // build da Sparse Table
     }
 
-    ~SparseTable(){tab.clear();}
+    ~SparseTable(){tab.clear(); pot2.clear();}
 
     void build(vector<TT> & a){
         pot2[1] = 0;
