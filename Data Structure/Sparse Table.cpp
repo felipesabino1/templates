@@ -13,43 +13,48 @@ struct SparseTable{
     int TETO; // Teto do log2(n)
     const TT off = ;
 
-    SparseTable(int n, vector<TT> &a) : n(n){
-        int t=0;
-        int d=1;
-        while(d <= n){
-            t++;
-            d<<=1;
-        }
-        TETO = t;
-        tab.resize(n+10,vector<TT>(TETO));
+    SparseTable(int n) : n(n){
+        pot2.resize(n+10);
+        pot2[1] = 0;
+        for(int i=2; i<=n; i++) pot2[i] = pot2[i>>1] + 1;
+        tab.resize(n+10,vector<TT>(pot2[n]+1));
+        TETO = pot2[n]+1;    
+    }
+    SparseTable(int n, vector<TT> & a) : n(n){
+        pot2.resize(n+10);
+        pot2[1] = 0;
+        for(int i=2; i<=n; i++) pot2[i] = pot2[i>>1] + 1;
+        tab.resize(n+10,vector<TT>(pot2[n]+1));
+        TETO = pot2[n]+1;
         build(a); // build da Sparse Table
     }
     SparseTable(int n, TT * a) : n(n){
-        int t=0;
-        int d=1;
-        while(d <= n){
-            t++;
-            d<<=1;
-        }
-        TETO = t;
-        tab.resize(n+10,vector<TT>(TETO));
         pot2.resize(n+10);
+        pot2[1] = 0;
+        for(int i=2; i<=n; i++) pot2[i] = pot2[i>>1] + 1;
+        tab.resize(n+10,vector<TT>(pot2[n]+1));
+        TETO = pot2[n]+1;
         build(a); // build da Sparse Table
     }
 
     ~SparseTable(){tab.clear(); pot2.clear();}
 
+    void init(int n_new,vector<TT> & a){
+        n = n_new;
+        TETO = pot[n] + 1;
+        build(a);
+    }
+    void init(int n_new,TT * a){
+        n = n_new;
+        TETO = pot[n] + 1;
+        build(a);
+    }
+
     void build(vector<TT> & a){
-        pot2[1] = 0;
-        for(int i=2; i<=n; i++) pot2[i] = pot2[i>>1] + 1;
-        
         for(int i=1; i<=n; i++) tab[i][0] = a[i];
         for(int j=1; j<TETO; j++) for(int i=0; i+(1<<j)-1 <= n; i++) tab[i][j] = f(tab[i][j-1],tab[i+(1<<(j-1))][j-1]);
     }
     void build(TT * a){
-        pot2[1] = 0;
-        for(int i=2; i<=n; i++) pot2[i] = pot2[i>>1] + 1;
-
         for(int i=1; i<=n; i++) tab[i][0] = a[i];
         for(int j=1; j<TETO; j++) for(int i=0; i+(1<<j)-1 <= n; i++) tab[i][j] = f(tab[i][j-1],tab[i+(1<<(j-1))][j-1]);
     }
