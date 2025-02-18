@@ -65,6 +65,7 @@ struct SparseTable{
     }
 
     TT query(int l,int r){
+        if(l > r) return off;
         TT ans = off;
         for(int j=TETO-1; j>=0; j--){
             if(l+(1<<j)-1 <= r){
@@ -76,6 +77,7 @@ struct SparseTable{
     }
     // query idepotente
     TT query_id(int l,int r){
+        if(l > r) return off;
         int diff = pot2[r-l+1];
         return f(tab[l][diff],tab[r-(1<<diff)+1][diff]);
     }
