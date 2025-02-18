@@ -1,11 +1,3 @@
-/*
-    Indexado em 1
-    
-    Alteracoes:
-    
-    Adicionar o que tem no node e na lazy da seg.
-    Ver se os tipos das coisas ta certo (vetor inicial da seg e parametros do update)
-*/
 template <class TT = int>
 struct Seg{
     // inicializar so o tamanho da seg, n fazer o build
@@ -15,14 +7,10 @@ struct Seg{
     }
 
     // fazer o build da estrutura
-    void init(vector<TT> & a, int n_new){
-        vec=a;
-        n=n_new;
-        build(1,1,n);
-    }
-    void init(TT * a, int n_new){
-        vec = a;
+    void init(int n_new, TT * a){
         n = n_new;
+        vec = a;
+        build(1,1,n);
     }
 
     // o que vai ter dentro do no de cada seg
