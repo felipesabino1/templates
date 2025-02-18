@@ -16,11 +16,14 @@ struct Seg{
     // o que vai ter dentro do no de cada seg
     struct node{
 
+        bool operator ==(const node &ot)const{
+            return true;
+        }
     };
     // o que vai ter dentro do no de cada lazy
     struct sono{
 
-        bool operator ==(const sono &o){
+        bool operator ==(const sono &ot)const{
             return true;
         }
     };
