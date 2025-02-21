@@ -1,5 +1,5 @@
 /*
-    Indexado de 1 (os l e r)
+    Indexado de 1 (os l e r). O K = N/sqrt(Q), tal que N eh o maior range dos valores de l e r e Q o numero de queries
 
     Alteracoes:
 
@@ -28,8 +28,8 @@ struct Mo{
 	vector<TT> ans;
 
     // qtd de queries
-	Mo(int q){
-        this->q.resize(q);
+    Mo(int n_q){
+        q.resize(n_q);
     }
 
 
