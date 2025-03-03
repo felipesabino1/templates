@@ -4,14 +4,16 @@
   O static eh variavel de classe.
 */
 struct Hash {
-    const static uint64_t p=33,mod=1000000007, p2=73, mod2=1000000009;
-    vector<pair<uint64_t, uint64_t>> h;
+    int qt_hash = 2; // qtd de hashs
+    inline const static vector<uint64_t> p = {33,73};
+    inline const static vector<uint64_t> mod = {1'000'000'007,1'000'000'009};
+    vector<vector<uint64_t>> h; // quantas hashs eu quiser guardar por string
     /*
         Quando vc quer declarar variavel de classe e quer definir ela dentro da classe, vc tem que usar o inline
         https://medium.com/@martin00001313/mastering-static-objects-in-c-initialization-destruction-and-best-practices-760b17734195
     */
-    inline static vector<uint64_t> ppow,ppow2;
-    inline static int tamp=0;
+    inline static vector<vector<uint64_t>> ppow;
+    inline static int tam_ppow=0;
     int n;
 
     Hash(string & s) {
@@ -22,37 +24,40 @@ struct Hash {
 
     void build(){
         if(ppow.empty()){
-            tamp=1;
-            ppow.resize(1);
-            ppow2.resize(1);
-            ppow[0]=ppow2[0]=1;
+            ppow.resize(qt_hash);
+            
+            tam_ppow=1;
+            for(int t=0; t<qt_hash; t++) ppow[t].resize(1);
+            for(int t=0; t<qt_hash; t++) ppow[t][0] = 1;
         }
-        if(tamp < n+10){
-            ppow.resize(n+10);
-            ppow2.resize(n+10);
-            for(int i = tamp; i<n+10; i++){
-                ppow[i] = (ppow[i-1] * p) % mod;
-                ppow2[i] = (ppow2[i-1] * p2) % mod2;
-            }
-            tamp=n+10;
+        if(tam_ppow < n+2){
+            for(int t=0; t<qt_hash; t++) ppow[t].resize(n+2);
+            
+            for(int i = tam_ppow; i<n+2; i++)
+                for(int t=0; t<qt_hash; t++) 
+                    ppow[t][i] = (ppow[t][i-1] * p[t]) % mod[t];
+            
+            tam_ppow=n+2;
         }
     }
  
     void init(string &s) {
-        h.resize(s.size()+2);
-        h[0] = {5389ULL, 5389ULL};
+        h.resize(qt_hash);
+        for(int t=0; t<qt_hash; t++) h[t].resize(s.size() + 2);
+        for(int t=0; t<qt_hash; t++) h[t][0] = 5389ULL;
+
         for (size_t i = 0; i < s.size(); i++) {
             int code = s[i];
-            h[i+1].first = (h[i].first * p + code) % mod;
-            h[i+1].second = (h[i].second * p2 + code) % mod2;
+            for(int  t=0; t<qt_hash; t++)
+                h[t][i+1] = (h[t][i] * p[t] + code) % mod[t];
         }
     }
  
     // vou incluir o range [i,j], indexado de 0
-    pair<uint64_t, uint64_t> get_hash(int i, int j) {
-        pair<uint64_t, uint64_t> r;
-        r.first = (h[j+1].first - (h[i].first * ppow[j-i+1]) % mod + mod) % mod;
-        r.second = (h[j+1].second - (h[i].second * ppow2[j-i+1]) % mod2 + mod2) % mod2;
+    vector<uint64_t> get_hash(int i, int j) {
+        vector<uint64_t> r(qt_hash);
+        for(int t=0; t<qt_hash; t++) 
+            r[t] = (h[t][j+1] - (h[t][i] * ppow[t][j-i+1]) % mod[t] + mod[t]) % mod[t];
         return r;
     }
 };
