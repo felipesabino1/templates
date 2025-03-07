@@ -9,7 +9,7 @@ struct DSU{
     // o que cada grupo carrega de informacao
     struct gp{
         // se precisa adicionar coisa a mais
-        int tam;
+        int tam = 0;
 
         // inicializar o smol
         void init(int x){
@@ -27,7 +27,7 @@ struct DSU{
     int n;
 
     // inicializar passando a qtd de vertices, grupos iniciais, se t = 0 entao so aloca a memoria sem inicializar
-    DSU (int n,int t = 1) : n(n){
+    DSU (int n_,int t = 1) : n(n_){
         repre.resize(n+10);
         smol.resize(n+10);
         if(t){
