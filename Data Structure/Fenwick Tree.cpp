@@ -4,8 +4,6 @@
     Alteracoes:
     
     Adicionar o valor do off (valor dummy)
-    Mudar o tipo das coisas, setar o TT
-    Ver como que faz o update da BIT na inicializacao
     Atualizar a funcao da BIT f
 */
 template <class TT = ll>
@@ -15,13 +13,8 @@ struct Fen{
     int pref; // flag que indica se a Fenwick eh no prefixo(1), ou no sufixo(0)
     const TT off_fen = ; // valor dummy
 
-    Fen(int n, int pref=1) : pref(pref),n(n){
+    Fen(int n_, int pref_=1) : pref(pref_),n(n_){
         fen.resize(n+10,off_fen);
-    }
-    Fen(vector<TT> &a, int n, int pref=1) : pref(pref),n(n){
-        fen.resize(n+10,off_fen);
-        // fazer o update com base na operacao da bit
-        for(int i=1; i<=n; i++) update();
     }
     ~Fen(){fen.clear();}
 
@@ -61,4 +54,7 @@ struct Fen{
         }
         return ans;
     }
+    // TT query(int l, int r){
+    //     return query(r) OPERACAO query(l);
+    // }
 };
