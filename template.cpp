@@ -2,7 +2,7 @@
 using namespace std;
 #define lef(x) (x<<1)
 #define rig(x) (lef(x)|1)
-#define get_bit(x,i) (x&(1ll<<(i)))
+#define get_bit(x,i) ((x)&(1ll<<(i)))
 using ll = int64_t;
 using ull = uint64_t;
 using ld = long double;
