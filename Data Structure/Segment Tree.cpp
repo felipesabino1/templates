@@ -1,7 +1,7 @@
 template <class TT = int>
 struct Seg{
     // inicializar so o tamanho da seg, n fazer o build
-    Seg(int n) : n(n){
+    Seg(int n_) : n(n_){
         seg.resize(n<<2);
         lazy.resize(n<<2);
     }
