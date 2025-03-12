@@ -7,7 +7,7 @@ using ll = int64_t;
 using ull = uint64_t;
 using ld = long double;
 // const int MAX = 5e5+10;
-// const int mod = 998244353;
+// const int mod = 1e9 + 7; // 998244353;
 // const int inf = 2'000'000'000;
 // const int TETO = 20;
  
