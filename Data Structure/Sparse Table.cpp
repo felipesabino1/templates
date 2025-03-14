@@ -5,7 +5,6 @@
     Query: O(log(N)) ou O(1) para operacoes idempotentes. 
 
     Alteracoes: 
-    
     Funcao f() da tabela, valor off
 */
 template <class TT = ll>
@@ -16,14 +15,14 @@ struct SparseTable{
     int TETO; // Teto do log2(n)
     const TT off = ;
 
-    SparseTable(int n) : n(n){
+    SparseTable(int n_) : n(n_){
         pot2.resize(n+10);
         pot2[1] = 0;
         for(int i=2; i<=n; i++) pot2[i] = pot2[i>>1] + 1;
         tab.resize(n+10,vector<TT>(pot2[n]+1));
         TETO = pot2[n]+1;    
     }
-    SparseTable(int n, vector<TT> & a) : n(n){
+    SparseTable(int n_, vector<TT> & a) : n(n_){
         pot2.resize(n+10);
         pot2[1] = 0;
         for(int i=2; i<=n; i++) pot2[i] = pot2[i>>1] + 1;
@@ -31,7 +30,7 @@ struct SparseTable{
         TETO = pot2[n]+1;
         build(a); // build da Sparse Table
     }
-    SparseTable(int n, TT * a) : n(n){
+    SparseTable(int n_, TT * a) : n(n_){
         pot2.resize(n+10);
         pot2[1] = 0;
         for(int i=2; i<=n; i++) pot2[i] = pot2[i>>1] + 1;
