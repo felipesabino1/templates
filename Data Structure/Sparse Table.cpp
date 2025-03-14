@@ -75,7 +75,7 @@ struct SparseTable{
         }
         return ans;
     }
-    // query idepotente
+    // query idempotente
     TT query_id(int l,int r){
         if(l > r) return off;
         int diff = pot2[r-l+1];
