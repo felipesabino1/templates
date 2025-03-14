@@ -1,5 +1,8 @@
 /*
-    Indexado de 1
+    Indexado de 1.
+    Responde uma operacao num subarray, a operacao precisa ser associativa e de preferencia ter uma identidade.
+    Init: O(N*log(N)).
+    Query: O(log(N)) ou O(1) para operacoes idempotentes. 
 
     Alteracoes: 
     
