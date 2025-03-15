@@ -11,7 +11,7 @@ template <class TT = ll>
 struct DST{
     int n; // tamanho do vetor original
     vector<vector<TT>> tab; // disjoint sparse table
-    const TT off = 2'000'000'000; // identidade
+    const TT off = ; // identidade
     int TETO_DST; // menor potencia tal que 2^TETO_DST >= n
     vector<int> pot2; // log2 de cada numero
 
@@ -60,7 +60,7 @@ struct DST{
 
     // operacao da DST
     TT f(TT x, TT y){
-        return min(x, y);
+        return ;
     }
 
     // query inclusiva nos ranges
