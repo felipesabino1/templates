@@ -3,6 +3,7 @@ using namespace std;
 #define lef(x) (x<<1)
 #define rig(x) (lef(x)|1)
 #define get_bit(x,i) ((x)&(1ll<<(i)))
+#define sq(x) ((x)*(x))
 using ll = int64_t;
 using ull = uint64_t;
 using i28 = __int128_t;
