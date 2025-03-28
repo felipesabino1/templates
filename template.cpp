@@ -4,8 +4,8 @@ using namespace std;
 #define rig(x) (lef(x)|1)
 #define get_bit(x,i) ((x)&(1ll<<(i)))
 #define sq(x) ((x)*(x))
-using ll = int64_t;
-using ull = uint64_t;
+using ll = long long int;
+using ull = unsigned long long int;
 using i28 = __int128_t;
 using ld = long double;
 // const int MAX = 5e5+10;
