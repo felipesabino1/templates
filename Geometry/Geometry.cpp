@@ -64,8 +64,8 @@ namespace geo{
 
         // transformacoes geometricas de pontos
         /*
-        Point rotate90(const Point &p, const Point &center); // rotacao de 90 graus em torno de center
-        Point rotate(const Point &p, const Point &center, dd ang); // rotacao de ang graus em torno de center
+        Point rotate90(const Point &center, const Point &p); // rotacao de 90 graus em torno de center
+        Point rotate(const Point &center, const Point &p, dd ang); // rotacao de ang graus em torno de center
         */
 
         // calculos com pontos
@@ -149,14 +149,14 @@ namespace geo{
         TT cross(const Point &origin, const Point &p1, const Point&p2){
             return cross(p1-origin,p2-origin);
         }
-        Point rotate90(const Point &p, const Point &center){
+        Point rotate90(const Point &center, const Point &p){
             Point rotated = p - center;
             swap(rotated.x,rotated.y);
             rotated.x = -rotated.x;
             rotated += center;
             return rotated;
         }
-        Point rotate(const Point &p, const Point &center, dd ang){
+        Point rotate(const Point &center, const Point &p, dd ang){
             Point rotated = p - center;
             rotated = Point(rotated.x*cos(ang) - rotated.y*sin(ang), rotated.y*cos(ang) + rotated.x*sin(ang));
             rotated += center;
