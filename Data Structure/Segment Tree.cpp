@@ -1,3 +1,10 @@
+/*
+    Indexado de 1.
+    Responde uma operacao num subarray, suporta update em range
+    Init: O(4*N).
+    Query: O(4*log(N))
+    Update: O(4*log(N))
+*/
 template <class TT = int>
 struct Seg{
     // inicializar so o tamanho da seg, n fazer o build
@@ -99,69 +106,5 @@ struct Seg{
     }
     void update(int l, int r, TT x){
         update_(1, 1, n, l, r, x);
-    }
-    
-    // busca binaria pela esquerda a partir do ponto inicial x, pra satisfazer alguma funcao (indice mais a esquerda tal que somatorio <= v por exemplo)
-    // retorna indice e os valores dos caras mais perto de x
-    pair<int,TT> bb_lef_(int u, int tl, int tr, int x, TT v){
-        push(u,tl,tr);
-        int tmid = tl + tr;
-        tmid >>= 1;
-        pair<int,TT> ret = make_pair(n+10, -1); /*Mudar segundo parametro de acordo com a operacao*/
-        if(tr <= x){
-            // achei um segmento antes de x
-            ret.second = v - seg[u].sum; /*Mudar de acordo com os atributos do node*/
-            if(ret.second >= 0){
-                // esse segmento eh bom, ou seja, da pra ir mais pra esquerda
-                ret.first = tl;
-                ret.second = seg[u].sum; /*Mudar de acordo com os atributos do node*/
-                return ret;
-            }
-            if(tl == tr) return ret; // nao tem como buscar segmentos menores
-            // vou ter que ir pra direita achar um segmento que da
-            return bb_lef_(rig(u),tmid+1,tr,x,v);
-        }else if(tmid+1 <= x){
-            // busca nos caras perto de x
-            ret = bb_lef_(rig(u),tmid+1,tr,x,v);
-            if(ret.first != tmid+1) return ret; // nao tem como ir mais pra esquerda
-            ret.second = v - ret.second; // operacao pra fazer com esse segmento que eu ja achei /*Mudar de acordo com os atributos do node*/
-            ret = bb_lef_(lef(u),tl,tmid,x,ret.second);
-            return make_pair(min(ret.first,tmid+1), ret.second);
-        }else return bb_lef_(lef(u),tl,tmid,x,v); // vou pra esquerda ate achar um segmento que nao tem parte maior que x
-    }
-    int bb_lef(int x, TT v){
-        return bb_lef_(1,1,n,x,v).first;
-    }
-
-    // busca binaria pela direta a partir do ponto inicial x, pra satisfazer alguma funcao (indice mais a direita tal que somatorio <= v por exemplo)
-    // retorna indice e os valores dos caras mais perto de x
-    pair<int,TT> bb_rig_(int u,int tl,int tr,int x, TT v){
-        push(u,tl,tr);
-        int tmid = tl+tr;
-        tmid>>=1;
-        pair<int,TT> ret = make_pair(-1,-1);
-        if(tl >= x){
-            // achei um segmento depois de x
-            ret.second = v - seg[u].sum; /*Mudar de acordo com os atributos do node*/
-            if(ret.second >= 0){
-                // esse segmento eh bom, ou seja, da pra ir mais pra esquerda
-                ret.first = tr;
-                ret.second = seg[u].sum; /*Mudar de acordo com os atributos do node*/
-                return ret;
-            }
-            if(tl == tr) return ret; // nao tem como buscar segmentos menores
-            // vou ter que ir pra esquerda achar um segmento que da
-            return bb_rig_(lef(u),tl,tmid,x,v);
-        }else if(tmid >= x){
-            // busca nos caras perto de x
-            ret = bb_rig_(lef(u),tl,tmid,x,v);
-            if(ret.first != tmid) return ret; // nao tem como ir mais pra direita
-            ret.second = v - ret.second; // operacao pra fazer com esse segmento que eu ja achei /*Mudar de acordo com os atributos do node*/
-            ret = bb_rig_(rig(u),tmid+1,tr,x,ret.second);
-            return make_pair(max(ret.first,tmid), ret.second);
-        }else return bb_rig_(rig(u),tmid+1,tr,x,v); // vou pra direita ate achar um segmento que nao tem parte menor que x
-    }
-    int bb_lef(int x, TT v){
-        return bb_lef_(1,1,n,x,v).first;
     }
 };
