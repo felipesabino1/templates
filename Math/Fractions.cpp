@@ -56,9 +56,8 @@ struct Frac{
         return num != o.num || den != o.den;
     }
 
-    friend Frac &operator -(Frac & at){
-        at.num *= -1;
-        return at;
+    friend Frac operator -(const Frac & at){
+        return Frac(-at.num,at.den);
     }
 
     void operator *=(const Frac & o){
@@ -79,12 +78,16 @@ struct Frac{
         TT lcm = den/__gcd(den,o.den)*o.den;
         num = (lcm/den*num) + (lcm/o.den*o.num);
         den = lcm;
+        TT g = __gcd(num,den);
+        num /= g, den /= g;
         fixSig(num,den);
     }
     void operator -=(const Frac & o){
         TT lcm = den/__gcd(den,o.den)*o.den;
         num = (lcm/den*num) + (lcm/o.den*o.num);
         den = lcm;
+        TT g = __gcd(num,den);
+        num /= g, den /= g;
         fixSig(num,den);
     }
 
