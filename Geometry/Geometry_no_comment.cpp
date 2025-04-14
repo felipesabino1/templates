@@ -12,7 +12,6 @@ namespace geo{
     using TT = long double;
 
     bool eq(TT x, TT y){
-        // return x == y; // se for usar inteiro
         return fabs(x-y) <= eps;
     }
     inline int signal(TT x){return (((x)>eps) - ((x)<eps));}
@@ -20,11 +19,7 @@ namespace geo{
     // pode representar um ponto, vetor ou numero complexo
     struct Point{
         TT x,y;    
-        
-        // construtor
         Point(TT x_ = 0, TT y_ = 0) : x(x_), y(y_){}
-        
-        // operadores de pontos/vetores/complexos
         bool operator < (const Point & ot) const {
             if(!eq(x,ot.x)) return x < ot.x; // ordena por x primeiro 
             if(!eq(y,ot.y)) return y < ot.y; // depois ordena por y
@@ -49,7 +44,6 @@ namespace geo{
             x /= r;
             y /= r;
         }
-        
         // operacoes de vetores/complexos
         TT abs2()const{return sq(x) + sq(y);} 
         dd abs()const{return sqrtl(abs2());} 
@@ -59,8 +53,6 @@ namespace geo{
             return (ang < 0 ? ang + 2*pi : ang);
         }
         Point perp()const{return Point(-y,x);}
-
-        
         // operacoes de complexos (x,y) -> x + y*i
         Point conj()const{return Point(x,-y);} 
     };
@@ -80,9 +72,8 @@ namespace geo{
     Point operator /(const Point &at, TT r){
         return Point(at.x / r, at.y / r);
     }
-    
     Point dir(TT ang){return Point(cosl(ang), sinl(ang));} 
-    
+    // operacoes de complexo
     Point operator*(const Point &p1, const Point &p2) {return Point(p1.x*p2.x - p1.y*p2.y, p1.y*p2.x + p1.x*p2.y);}
     Point operator/(const Point &p1, const Point &p2) {return p1*p2.conj()/p2.abs2();}
     TT dot(const Point &p1, const Point &p2){
@@ -137,31 +128,18 @@ namespace geo{
     // representa uma reta ou segmento, se p == q da merda
     struct Line{
         Point p,q;
-
-        // construtor
         Line(){}
         Line(const Point &p1, const Point &p2) : p(p1.x,p1.y), q(p2.x,p2.y){}
-        
         TT get_y(TT x){
-            // seja m = (p.y - q.y)/(p.x - q.x)
-            // y = m*x + b
-            // p.y = m*p.x + b -> b = p.y - m*p.x
             TT m = (p.y - q.y)/(p.x - q.x);
             TT b = p.y - m*p.x;
             return m*x + b;
         }
         TT get_x(TT y){
-            // seja m = (p.y - q.y)/(p.x - q.x)
-            // y = m*x + b
-            // p.y = m*p.x + b -> b = p.y - m*p.x
             TT m = (p.y - q.y)/(p.x - q.x);
             TT b = p.y - m*p.x;
-            // y = m*x + b -> y-b = m*x -> (y-b)/m = x
             return (y-b)/m;
         }
-    
-        TT get_y(TT x); // retorna o y pra essa funcao de reta
-        TT get_x(TT y); // retorna o x pra essa funcao de reta
     };
     istream& operator >>(istream& in, Line& l) {
         return in >> l.p >> l.q;
@@ -177,8 +155,6 @@ namespace geo{
         return (p+reflect(p,l))/TT(2);
     }
     bool onSeg(const Point &p, const Line &l){
-        // verifica se o deslocamento do vetor l.p->p pro l.p->q eh zero, ou seja, losango nulo, mesma direcao
-        // verifica se p esta entre l.p e l.q
         return signal(cross(l.p,l.q,p)) == 0 && signal(dot(p,l.p,l.q)) <= 0;
     }
     bool onLine(const Point &p, const Line &l){
