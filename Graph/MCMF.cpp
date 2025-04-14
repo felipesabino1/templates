@@ -122,21 +122,3 @@ private:
         }
     }
 };
-
-class Solution {
-public:
-
-    long long minimumTotalDistance(vector<int>& robot, vector<vector<int>>& factory) {
-        int n = robot.size();
-        int m = factory.size();
-        int src = n+m;
-        int sink = src+1;
-        MCMF mcmf(sink+1);
-        for(int i=0; i<n; i++){
-            mcmf.addEdge(src,i,1,0);
-            for(int j=0; j<m; j++) mcmf.addEdge(i,j+n,1,1,abs(factory[j][0]-robot[i]));
-        }
-        for(int j=0; j<m; j++) mcmf.addEdge(j+n,sink,factory[j][1],0);
-        return mcmf.mcmf(src,sink).second;
-    }
-};
