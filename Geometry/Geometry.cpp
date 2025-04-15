@@ -11,11 +11,11 @@ const dd inf = 1e10;
 namespace geo{
     // friend are non-member functions
     // you use const as a return in member functions
-    using TT = long double;
+    using TT = dd;
 
     bool eq(TT x, TT y){
-        // return x == y; // se for usar inteiro
-        return fabs(x-y) <= eps;
+        return x == y; // se for usar inteiro
+        // return fabs(x-y) <= eps;
     }
     inline int signal(TT x){return (((x)>eps) - ((x)<eps));}
     
@@ -34,7 +34,7 @@ namespace geo{
         void operator *=(TT r);
         void operator /=(TT r);
         /*
-        void operator -(const Point &at); 
+            void operator -(const Point &at); 
         */
 
         // operacoes de vetores/complexos
@@ -44,43 +44,43 @@ namespace geo{
         dd arg()const; // calcula o argumento de um complexo, angulo em radianos (que nem no ciclo trigonometrico)
         Point perp()const; // retorna um ponto perpendicular
         /*
-        Point dir(TT ang); // retorna um ponto no ciclo trigonometrico com angulo x (em radianos)
+            Point dir(TT ang); // retorna um ponto no ciclo trigonometrico com angulo x (em radianos)
         */
 
         // operacoes de complexos (x,y) -> x + y*i
         Point conj()const; // retorna o conjugado do complexo, eh util pra problemas de simetria e calculos como modulo |(x,y)| = sqrt(x^2 + y^2) = sqrt((x,y)*conj())
         /*
-        Point operator*(const Point &p1, const Point &p2); // faz o produto de dois complexos, (x1+y1*i)*(x2+y2*i) = (x1*x2 + x1*y2*i + x2*y1*i + y1*y2*i*i) = (x1*x2-y1*y2 + (x1*y2 + x2*y1)*i)
-        Point operator/(const Point &p1, const Point &p2); // faz a divisao de dois complexos, multiplica o conjugado do numerador e denominador que ai a divisao vai ser por um real
+            Point operator*(const Point &p1, const Point &p2); // faz o produto de dois complexos, (x1+y1*i)*(x2+y2*i) = (x1*x2 + x1*y2*i + x2*y1*i + y1*y2*i*i) = (x1*x2-y1*y2 + (x1*y2 + x2*y1)*i)
+            Point operator/(const Point &p1, const Point &p2); // faz a divisao de dois complexos, multiplica o conjugado do numerador e denominador que ai a divisao vai ser por um real
         */
 
         // operacoes de vetores
         /*
-        TT dot(const Point &p1, const Point &p2); // produto escalar
-        TT dot(const Point &origin, const Point &p1,const Point &p2) // produto escalar considerando os vetores origin->p1 e origin->p2
-        TT cross(const Point &p1, const Point &p2); // componente Z do produto vetorial (bom pra saber como dois vetores estao orientados)
-        TT cross(const Point &origin, const Point &p1, const Point &p2); // componente Z do produto vetorial considerando os vetores origin->p1 e origin->p2
+            TT dot(const Point &p1, const Point &p2); // produto escalar
+            TT dot(const Point &origin, const Point &p1,const Point &p2) // produto escalar considerando os vetores origin->p1 e origin->p2
+            TT cross(const Point &p1, const Point &p2); // componente Z do produto vetorial (bom pra saber como dois vetores estao orientados)
+            TT cross(const Point &origin, const Point &p1, const Point &p2); // componente Z do produto vetorial considerando os vetores origin->p1 e origin->p2
         */
 
         // transformacoes geometricas de pontos
         /*
-        Point rotate90(const Point &center, const Point &p); // rotacao de 90 graus em torno de center
-        Point rotate(const Point &center, const Point &p, dd ang); // rotacao de ang graus em torno de center
+            Point rotate90(const Point &center, const Point &p); // rotacao de 90 graus em torno de center
+            Point rotate(const Point &center, const Point &p, dd ang); // rotacao de ang graus em torno de center
         */
 
         // calculos com pontos
         /*
-        dd dist(const Point &p1, const Point &p2); // distancia entre dois pontos
-        TT dist2(const Point &p1, const Point &p2); // quadrado da distancia entre dois pontos, nao precisa fazer raiz quadrada
-        dd det_area(const Point &p1, const Point &p2, const Point &p3); // area calculada entre os 3 pontos usando determinante (retorno sem tirar o modulo)
-        bool colinear(const Point &p1, const Point &p2, const Point &p3); // os 3 pontos sao colineares?
-        dd angle(const Point &p1, const Point &p2, const Point &p3); // calcula o angulo do angulo no p2, considerando o triangulo (p1,p2,p3)
+            dd dist(const Point &p1, const Point &p2); // distancia entre dois pontos
+            TT dist2(const Point &p1, const Point &p2); // quadrado da distancia entre dois pontos, nao precisa fazer raiz quadrada
+            dd det_area(const Point &p1, const Point &p2, const Point &p3); // area calculada entre os 3 pontos usando determinante (retorno sem tirar o modulo)
+            bool colinear(const Point &p1, const Point &p2, const Point &p3); // os 3 pontos sao colineares?
+            dd angle(const Point &p1, const Point &p2, const Point &p3); // calcula o angulo do angulo no p2, considerando o triangulo (p1,p2,p3)
         */
 
         // I/O
         /*
-        istream& operator >>(istream &in, Point &p);
-        ostream& operator <<(ostream &out, const Point &p);
+            istream& operator >>(istream &in, Point &p);
+            ostream& operator <<(ostream &out, const Point &p);
         */
     };
     // --------------CODIGO--------------
@@ -200,8 +200,8 @@ namespace geo{
 
         // I/O
         /*
-        istream& operator >>(istream& in, Line& l);
-        ostream& operator <<(ostream& out, const Line & l);
+            istream& operator >>(istream& in, Line& l);
+            ostream& operator <<(ostream& out, const Line & l);
         */
     };
     // --------------CODIGO--------------
@@ -233,19 +233,22 @@ namespace geo{
     // --------------FIM--------------
 
     // operacoes entre pontos e retas
-    Point reflect(const Point &p, const Line &l); // reflexao do ponto em torno da reta
-    Point reflect(const Line &l, const Point &p); // reflexao do ponto em torno da reta
-    Point proj(const Point &p, const Line &l); // projecao do ponto na reta
-    Point proj(const Line &l, const Point &p); // projecao do ponto na reta
-    bool onSeg(const Point &p, const Line &l); // verifica se o ponto esta no segmento
-    bool onSeg(const Line &l, const Point &p); // verifica se o ponto esta no segmento
-    bool onLine(const Point &p, const Line &l); // verifica se o ponto esta na reta
-    bool onLine(const Line &l, const Point &p); // verifica se o ponto esta na reta
-    dd line_dist(const Line &line, const Point &p); // distancia entre um ponto e reta
-    dd line_dist(const Point &p, const Line &line); // distancia entre um ponto e reta
-    dd seg_dist(const Line &seg, const Point &p); // distancia entre um ponto e um segmento
-    dd seg_dist(const Point &p, const Line &seg); // distancia entre um ponto e um segmento
-    // a distancia entre dois segmentos, vai ser a distancia de um dos pontos das extremidades pra outro segmento 
+    // --------------HEADER--------------
+        Point reflect(const Point &p, const Line &l); // reflexao do ponto em torno da reta
+        Point reflect(const Line &l, const Point &p); // reflexao do ponto em torno da reta
+        Point proj(const Point &p, const Line &l); // projecao do ponto na reta
+        Point proj(const Line &l, const Point &p); // projecao do ponto na reta
+        bool onSeg(const Point &p, const Line &l); // verifica se o ponto esta no segmento
+        bool onSeg(const Line &l, const Point &p); // verifica se o ponto esta no segmento
+        bool onLine(const Point &p, const Line &l); // verifica se o ponto esta na reta
+        bool onLine(const Line &l, const Point &p); // verifica se o ponto esta na reta
+        dd line_dist(const Line &line, const Point &p); // distancia entre um ponto e reta
+        dd line_dist(const Point &p, const Line &line); // distancia entre um ponto e reta
+        dd seg_dist(const Line &seg, const Point &p); // distancia entre um ponto e um segmento
+        dd seg_dist(const Point &p, const Line &seg); // distancia entre um ponto e um segmento
+        // a distancia entre dois segmentos, vai ser a distancia de um dos pontos das extremidades pra outro segmento 
+    // --------------FIM--------------
+
     // --------------CODIGO--------------
         Point reflect(const Point &p, const Line &l){
             Point aux1 = l.p, aux2 = l.q-l.p; // ponto p e vetor p->q
