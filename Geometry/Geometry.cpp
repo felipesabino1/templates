@@ -8,6 +8,7 @@ const dd pi = acosl(-1.0);
 const dd eps = 1e-9;
 const dd inf = 1e10;
 #define rad(x) ((x)*pi/180)
+#define sq(x) ((x)*(x))
 namespace geo{
     // friend are non-member functions
     // you use const as a return in member functions
