@@ -18,7 +18,7 @@ namespace geo{
         return x == y; // se for usar inteiro
         // return fabs(x-y) <= eps;
     }
-    inline int signal(TT x){return (((x)>eps) - ((x)<eps));}
+    inline int signal(TT x){return (((x)>eps) - ((x)<-eps));}
     
     // pode representar um ponto, vetor ou numero complexo
     struct Point{
