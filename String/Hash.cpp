@@ -2,6 +2,7 @@
   Indexado de 0
   
   O static eh variavel de classe.
+  Quando for escolher os primos, escolhe um do tamanho do alfabeto mais ou menos
 */
 struct Hash {
     int qt_hash = 2; // qtd de hashs
