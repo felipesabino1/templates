@@ -33,7 +33,7 @@ struct Seg{
     const sono off_lazy = {}; 
     vector<node> seg;
     vector<sono> lazy;
-    node ret,aux,esq,dir;
+    node ret;
     // operacao de unir dois nos
     void merge(node &x, node &y, node & at){
         if(x == off) {
