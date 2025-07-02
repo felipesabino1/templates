@@ -5,18 +5,9 @@
     Query: O(4*log(N))
     Update: O(4*log(N))
 */
-template <class TT = int>
 struct Seg{
     // inicializar so o tamanho da seg, n fazer o build
-    Seg(int n_) : n(n_){
-        seg.resize(n<<2);
-        lazy.resize(n<<2);
-    }
-
-    // fazer o build da estrutura
-    void init(int n_new, TT * a){
-        n = n_new;
-        vec = a;
+    Seg(int n_) : n(n_), seg(n_<<2), lazy(n_<<2){
         build(1,1,n);
     }
 
@@ -35,7 +26,6 @@ struct Seg{
         }
     };
 
-    TT * vec;
     int n;
     // no nulo
     const node off = {};
@@ -43,11 +33,19 @@ struct Seg{
     const sono off_lazy = {}; 
     vector<node> seg;
     vector<sono> lazy;
+    node ret,aux,esq,dir;
     // operacao de unir dois nos
-    node merge(node x, node y){
-        if(x == off) return y;
-        if(y == off) return x;
-    
+    void merge(node &x, node &y, node & at){
+        if(x == off) {
+            at = y;
+            return;
+        }
+        if(y == off) {
+            at = x;
+            return;
+        }
+        // o at eh o merge do x(esq) e y(dir)
+        
     }
 
     // coisar a lazy pra baixo
@@ -72,25 +70,31 @@ struct Seg{
         tmid >>= 1;
         build(lef(u), tl, tmid);
         build(rig(u), tmid+1, tr);
-        seg[u] = merge(seg[lef(u)], seg[rig(u)]);
+        merge(seg[lef(u)], seg[rig(u)], seg[u]);
         lazy[u] = off_lazy;
     }
 
     // consulta em range
-    node query_(int u,int tl,int tr,int l, int r){
-        if(l > r) return off;
-        if(tl == l && tr == r) return seg[u];
+    void query_(int u,int tl,int tr,int l, int r){
+        if(l > r) return;
+        if(tl == l && tr == r) {
+            merge(ret,seg[u],ret);
+            return;
+        }
         push(u, tl, tr);
         int tmid= tl + tr;
         tmid >>= 1;
-        return merge(query_(lef(u), tl, tmid, l, min(tmid,r)), query_(rig(u), tmid+1, tr, max(tmid+1,l), r));
+        query_(lef(u),tl,tmid,l,min(tmid,r));
+        query_(rig(u),tmid+1,tr,max(tmid+1,l),r);   
     }
     node query(int l, int r){
-        return query_(1, 1, n, l, r);
+        ret = off;
+        query_(1,1,n,l,r);
+        return ret;
     }
 
     // update em range
-    void update_(int u, int tl, int tr, int l, int r, TT x){
+    void update_(int u, int tl, int tr, int l, int r, ll x){
         if(l > r) return;
         if(tl == l && tr == r){
             // atualizar a seg e o lazy
@@ -102,9 +106,9 @@ struct Seg{
         tmid >>= 1;
         update_(lef(u), tl, tmid, l, min(tmid,r), x);
         update_(rig(u), tmid+1, tr, max(tmid+1,l), r, x);
-        seg[u] = merge(seg[lef(u)], seg[rig(u)]);
+        merge(seg[lef(u)], seg[rig(u)], seg[u]);
     }
-    void update(int l, int r, TT x){
+    void update(int l, int r, ll x){
         update_(1, 1, n, l, r, x);
     }
 };
