@@ -4,7 +4,7 @@
 const int ALP = 26; // tamanho do alfabeto
 struct node{
     int prox[ALP] = {0}, aut[ALP] = {0};
-    int link = 0, elink = 0; // kmp like, kmp like with end of string
+    int p = 0, ep = 0; // kmp like, kmp like with end of string
     bool fim = false;
     node(){}
     // vector<int> ids; // sometimes put id of each string end
@@ -21,7 +21,6 @@ void insert(string & s, int id){
         at = trie[at].prox[c];
     }
     trie[at].fim = true;
-    trie[at].ids.push_back(id);
 }
 void build(){
     queue<int> q;
@@ -30,17 +29,18 @@ void build(){
         int u = q.front();
         q.pop();
         int *prox = trie[u].prox, *aut = trie[u].aut;
-        int link = trie[u].link;
-        for(int j=0; j<ALP; j++){
-            if(prox[j] != 0){
-                aut[j] = prox[j];
-                q.push(prox[j]);
+        int p = trie[u].p;
+        for(int c=0; c<ALP; c++){
+            if(prox[c] != 0){
+                int v = prox[c];
+                aut[c] = v;
+                q.push(v);
 
-                trie[prox[j]].link = (u == 0 ? 0 : trie[link].aut[j]); // ja calcular o link dos prox caras
-            }else if(u == 0) aut[j] = 0;
-            else aut[j] = trie[link].aut[j];
+                trie[v].p = (u == 0 ? 0 : trie[p].aut[c]); // ja calcular o link dos prox caras
+            }else if(u == 0) aut[c] = 0;
+            else aut[c] = trie[p].aut[c];
         }
-        if(trie[link].fim) trie[u].elink = link;
-        else trie[u].elink = trie[link].elink;
+        if(trie[p].fim) trie[u].ep = p;
+        else trie[u].ep = trie[p].ep;
     }
 }
