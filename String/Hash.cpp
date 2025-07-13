@@ -15,13 +15,12 @@ struct Hash {
     */
     inline static vector<vector<uint64_t>> ppow;
     inline static int tam_ppow=0;
-    int n;
+    int n = -1;
 
     Hash(string & s) {
-        n = s.size();
-        build();
         init(s);
     }
+    Hash(){}
 
     void build(){
         if(ppow.empty()){
@@ -43,6 +42,8 @@ struct Hash {
     }
  
     void init(string &s) {
+        n = s.size();
+        build();
         h.resize(qt_hash);
         for(int t=0; t<qt_hash; t++) h[t].resize(s.size() + 2);
         for(int t=0; t<qt_hash; t++) h[t][0] = 5389ULL;
