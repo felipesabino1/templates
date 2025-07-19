@@ -8,7 +8,7 @@ while true; do
     ./gen 2 > in
     
     start=$(date +%s)
-    ./at < in > out
+    ./at < in > out # codigo que muda
     end=$(date +%s)
 
     echo "Elapsed Time in test $c: $(($end - $start)) seconds."
