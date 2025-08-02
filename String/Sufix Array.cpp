@@ -33,3 +33,23 @@ vector<int> SA(const string & s){
     }
     return ord;
 }
+/*
+    Given the suffix array, calculates the LCP from sufix array.
+    O(n).
+*/
+vector<int> LCP(string & s, vector<int> &sa){
+    string str = s + '$';
+    int n = str.size();
+    vector<int> pos(n);
+    vector<int> lcp(n,0);
+    for(int i=0; i<n; i++) pos[sa[i]] = i;
+    int tam = 0;
+    // tam so aumenta ate n, e diminui de 1 em 1, entao O(n)
+    for(int i=0; i<n-1; i++){
+        int id = pos[i];
+        while(i + tam < n && sa[id-1] + tam < n && str[i+tam] == str[sa[id-1] + tam]) tam++;
+        lcp[id-1] = tam;
+        if(tam) tam--;
+    }
+    return lcp;
+}
