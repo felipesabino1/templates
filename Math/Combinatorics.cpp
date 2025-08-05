@@ -4,33 +4,25 @@ struct Comb{
     vector<vector<TT>> tomatoma;
  
     // setar so os fatorias e inversos
-    Comb(int n){
-        set_tam(n);
+    Comb(int n) : fato(n+10),fatoinv(n+10){
+        build_fat();
+        build_fat_inv();
     }
- 
-    // setar so o triangulo de pascal
-    Comb(int n,int m){
-        set_tomatoma(n,m);
+    Comb(int n,int m) : tomatoma(n+10,vector<TT>(m+10)){
+        build_tomatoma();
     }
- 
-    // setar os fatorias e triangulo de pascal
-    Comb(int n2,int n,int m){
-        set_tam(n2);
-        set_tomatoma(n,m);
+    void build_fat(){
+        fato[0] = 1;
+        for(int i=1; i<fato.size(); i++) fato[i] = fato[i-1] * i % mod;
     }
- 
-    Comb(){}
- 
-    void set_tam(int n){
-        fato.resize(n+10,-1);
-        fatoinv.resize(n+10,-1);
+    void build_fat_inv(){
+        fatoinv.back() = fexp(fato.back(),mod-2);
+        for(int i=int(fatoinv.size())-2; i>=0; i--) fatoinv[i] = fatoinv[i+1] * (i+1) % mod;
     }
- 
-    void set_tomatoma(int n,int m){
-        tomatoma.resize(n+10,vector<TT>(m+10));
-        for(int i=0; i<=m; i++) tomatoma[0][i]=0;
-        for(int i=0; i<=n; i++) tomatoma[i][0]=1%mod;
-        for(int i=1; i<=n; i++) for(int j=1; j<=m; j++) tomatoma[i][j] = (tomatoma[i-1][j-1] + tomatoma[i-1][j])%mod;
+    void build_tomatoma(int n,int m){
+        for(int i=0; i<=m; i++) tomatoma[0][i] = 0;
+        for(int i=0; i<=n; i++) tomatoma[i][0] = 1;
+        for(int i=1; i<=n; i++) for(int j=1; j<=m; j++) tomatoma[i][j] = (tomatoma[i-1][j-1] + tomatoma[i-1][j]) % mod;
     }
  
     TT fexp(TT a, TT b){
@@ -42,36 +34,14 @@ struct Comb{
         }
         return ans;
     }
-    // multiplicacao de matrizes
-    void mult(vector<vector<TT>> &a, vector<vector<TT>> &b,vector<vector<TT>> & aux){
-        int n = a.size();
-        int m = a[0].size();
-        for(int i=0; i<n; i++){
-            for(int j=0; j<m; j++){
-                aux[i][j] = 0;
-                for(int k = 0; k< n; k++) aux[i][j] = (aux[i][j] + a[i][k]*a[k][j]%mod)%mod;
-            }
-        }
-        for(int i=0; i<n; i++) for(int j=0; j<m; j++) a[i][j] = aux[i][j];
-    }
  
     // calcula e guarda as respostas dos fatoriais
     TT fat(TT x){
-        if(TT(fato.size()) <= x){
-            fato.resize(x+10,-1);
-        }
-        if(x <= 1) return 1;
-        if(fato[x] != -1) return fato[x];
-        return fato[x]=fat(x-1)*x%mod;
+        return fato[x];
     }
  
     TT fat_inv(TT x){
-        if(TT(fatoinv.size()) <= x){
-            fatoinv.resize(x+10,-1);
-        }
-        if(TT(fatoinv.size()) == x+1) return fatoinv[x] = (fatoinv[x] == -1 ? fexp(fat(x),mod-2) : fatoinv[x]);
-        if(fatoinv[x] != -1) return fatoinv[x];
-        return fatoinv[x]=fat_inv(x+1)*(x+1)%mod;
+        return fatoinv[x];
     }
  
     TT toma(TT n, TT k,int k_pequeno = 0){
