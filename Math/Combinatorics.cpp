@@ -5,21 +5,13 @@ struct Comb{
  
     // setar so os fatorias e inversos
     Comb(int n) : fato(n+10),fatoinv(n+10){
-        build_fat();
-        build_fat_inv();
+        fato[0] = 1;
+        for(int i=1; i<=n; i++) fato[i] = fato[i-1] * i % mod;
+
+        fatoinv[n] = fexp(fato[n],mod-2);
+        for(int i=n-1; i>=0; i--) fatoinv[i] = fatoinv[i+1] * (i+1) % mod;
     }
     Comb(int n,int m) : tomatoma(n+10,vector<TT>(m+10)){
-        build_tomatoma();
-    }
-    void build_fat(){
-        fato[0] = 1;
-        for(int i=1; i<fato.size(); i++) fato[i] = fato[i-1] * i % mod;
-    }
-    void build_fat_inv(){
-        fatoinv.back() = fexp(fato.back(),mod-2);
-        for(int i=int(fatoinv.size())-2; i>=0; i--) fatoinv[i] = fatoinv[i+1] * (i+1) % mod;
-    }
-    void build_tomatoma(int n,int m){
         for(int i=0; i<=m; i++) tomatoma[0][i] = 0;
         for(int i=0; i<=n; i++) tomatoma[i][0] = 1;
         for(int i=1; i<=n; i++) for(int j=1; j<=m; j++) tomatoma[i][j] = (tomatoma[i-1][j-1] + tomatoma[i-1][j]) % mod;
