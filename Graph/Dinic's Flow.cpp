@@ -16,11 +16,7 @@ struct Dinic{
     vector<int> level,ptr;
     queue<int> q;
 
-    Dinic (int n,int s,int t) : n(n), s(s), t(t){
-        adj.resize(n);
-        level.resize(n);
-        ptr.resize(n);
-    }
+    Dinic (int n,int s,int t) : adj(n),n(n), s(s), t(t),level(n),ptr(n){}
 
     void add_edge(int v,int u, long long cap){
         edges.emplace_back(v,u,cap);
