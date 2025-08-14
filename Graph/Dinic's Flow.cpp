@@ -46,10 +46,10 @@ struct Dinic{
         return level[t] != -1;
     }
 
-    long long dfs(int v, long long pushed){
-        if(pushed == 0) return 0;
+    long long dfs(int v, long long p){
+        if(p == 0) return 0;
         // se eu cheguei no sink, retorna o tanto que eu consegui passar de flow
-        if(v == t) return pushed;
+        if(v == t) return p;
         // esse vetor eh pra dizer dentro de uma lista de adjacencia ate que ponto eu explorei essa lista de
         // adjacencia, pra eu n repetir aresta, so pra isso mesmo
         for(int &cid = ptr[v]; cid < (int) adj[v].size(); cid++){
@@ -60,7 +60,7 @@ struct Dinic{
             // entao eu so dou continue 
             if(level[v] + 1 != level[u] || edges[id].cap - edges[id].flow < 1) continue;
             // o tanto que eu vou conseguir passar vai ser o minimo da capacidade e do que eu ja pushei
-            long long tr = dfs(u, min(pushed, edges[id].cap-edges[id].flow));
+            long long tr = dfs(u, min(p, edges[id].cap-edges[id].flow));
             // n consegui passar fluxo na aresta pro sink
             if(tr == 0) continue;
             // passei o fluxo tr
@@ -82,7 +82,7 @@ struct Dinic{
             // resetei o visitado das arestas
             fill(ptr.begin(),ptr.end(),0);
             // enquanto da pra passar fluxo, eu vou passar
-            while(long long pushed = dfs(s,flow_inf)) f += pushed;
+            while(long long p = dfs(s,flow_inf)) f += p;
         }
         return f;
     }
