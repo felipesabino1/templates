@@ -25,18 +25,14 @@ namespace geo{
             return y<ot.y; // ordena por y
         }
         bool operator==(const pt &ot)const{return eq(x,ot.x) && eq(y,ot.y);}
-        pt operator-(pt p){return pt(-p.x,-p.y);}
-        pt operator+=(pt b){x+=b.x;y+=b.y;}
-        pt operator-=(pt b){x-=b.x;y-=b.y;}
-        pt operator*=(T r){x*=r;y*=r;}
-        pt operator/=(T r){x/=r;y/=r;}
+        pt operator-(){return pt(-x,-y);}
     };
-    ostream& operator<<(ostream& out, const Point p){
+    ostream& operator<<(ostream& out, const pt p){
         return out << "(" << p.x << "," << p.y << ")";
     }
 
     // representa uma reta ou segmento, se p == q da merda
-    stuct line{
+    struct line{
         pt p,q;
         line(pt p_={0,0},pt q_={0,0}) : p(p_),q(q_){}
         T get_y(T x){
@@ -54,7 +50,11 @@ namespace geo{
         return out << "(" << l.p << ", " << l.q << ")";
     }
 
-    pt operator+(pt a,pt b){return a+=b};
+    pt& operator+=(pt& a, pt b){a.x+=b.x;a.y+=b.y; return a;}
+    pt& operator-=(pt& a, pt b){a.x-=b.x;a.y-=b.y; return a;}
+    pt& operator*=(pt& a, T r){a.x*=r;a.y*=r; return a;}
+    pt& operator/=(pt& a, T r){a.x/=r;a.y/=r; return a;}
+    pt operator+(pt a,pt b){return a+=b;}
     pt operator-(pt a,pt b){return a-=b;}
     pt operator*(pt a, T r){return a*=r;}
     pt operator/(pt a, T r){return a/=r;}
@@ -63,7 +63,7 @@ namespace geo{
     dd abs(pt p){return sqrtl(abs2(p));}
     pt unit(pt p){return p/abs(p);}
     dd arg(pt p){
-        dd ang = atan2(y,x);
+        dd ang = atan2(p.y,p.x);
         return (ang < 0 ? ang + 2*pi : ang);
     }
     pt conj(pt p){return pt(p.x,-p.y);}
@@ -111,7 +111,7 @@ namespace geo{
     }
 
     bool onseg(pt p, line l){
-        return sng(cross(l.p,l.q,p)) == 0 && sgn(dot(p,l.p,l.q)) <= 0;
+        return sgn(cross(l.p,l.q,p)) == 0 && sgn(dot(p,l.p,l.q)) <= 0;
     }
     bool online(pt p, line l){return sgn(cross(l.p,l.q,p)) == 0;}
     dd dist(pt p1, pt p2){return abs(p2-p1);}
@@ -121,7 +121,7 @@ namespace geo{
     dd ang(pt p1, pt p2, pt p3){
         pt v1 = p1-p2, v2 = p3-p2;
         dd angle = acosl(dot(v1,v2)/abs(v1)/abs(v2));
-        return (ang < 0 ? ang + 2*pi : ang);
+        return angle + (angle < 0 ? 2*pi : 0);
     }
     dd linedist(const line l, const pt p){
         return abs(cross(p,l.p,l.q))/abs(l.p-l.q);
@@ -129,7 +129,7 @@ namespace geo{
     dd segdist(const line seg, const pt p){
         if(dot(seg.p, p, seg.q) <= 0) return abs(p-seg.p);
         if(dot(seg.q, p, seg.p) <= 0) return abs(p-seg.q);
-        return line_dist(seg,p);    
+        return linedist(seg,p);    
     }
 
     //  Usage: vpt v; sort(all(v),angleCmp);
@@ -166,6 +166,5 @@ namespace geo{
         i(a.p,b); i(a.q,b); i(b.p,a); i(b.q,a);
         return vpt{s.begin(),s.end()};
     }
-
-};
+}
 using namespace geo;
