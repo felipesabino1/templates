@@ -14,7 +14,7 @@ namespace geo{
     bool eq(const T x,const T y){
         return x == y;
     }
-    int sgn(T x){return (x>eps) - (x<-eps);}
+    int sgn(T x){return (dd(x)>eps) - (dd(x)<-eps);}
     
     // pode representar um ponto, vetor ou numero complexo
     struct pt{
