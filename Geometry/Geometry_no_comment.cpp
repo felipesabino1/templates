@@ -9,10 +9,10 @@ const dd eps = 1e-9;
 #define rad(x) ((x)*pi/180)
 #define sq(x) ((x)*(x))
 namespace geo{
-    using T = dd;
+    using T = frac<ll>;
 
     bool eq(const T x,const T y){
-        return fabs(x-y) <= eps;
+        return x == y;
     }
     int sgn(T x){return (x>eps) - (x<-eps);}
     
@@ -60,15 +60,15 @@ namespace geo{
     pt operator/(pt a, T r){return a/=r;}
     // operacoes de vetores/complexos
     T abs2(pt p){return sq(p.x) + sq(p.y);}
-    dd abs(pt p){return sqrtl(abs2(p));}
+    dd abs(pt p){return sqrtl(dd(abs2(p)));}
     pt unit(pt p){return p/abs(p);}
     dd arg(pt p){
-        dd ang = atan2(p.y,p.x);
+        dd ang = atan2(dd(p.y),dd(p.x));
         return (ang < 0 ? ang + 2*pi : ang);
     }
     pt conj(pt p){return pt(p.x,-p.y);}
     pt perp(pt p){return pt(-p.y,p.x);}
-    pt dir(T ang){return pt(cosl(ang),sinl(ang));}
+    pt dir(dd ang){return pt(cosl(ang),sinl(ang));}
     
     // operacoes de complexos
     pt operator*(pt a, pt b){return pt(a.x*b.x-a.y*b.y,a.y*b.x+a.x*b.y);}
@@ -120,7 +120,7 @@ namespace geo{
     bool colinear(pt p1,pt p2,pt p3){return eq(det(p1,p2,p3),0);}
     dd ang(pt p1, pt p2, pt p3){
         pt v1 = p1-p2, v2 = p3-p2;
-        dd angle = acosl(dot(v1,v2)/abs(v1)/abs(v2));
+        dd angle = acosl(dd(dot(v1,v2))/abs(v1)/abs(v2));
         return angle + (angle < 0 ? 2*pi : 0);
     }
     dd linedist(const line l, const pt p){
