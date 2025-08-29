@@ -8,9 +8,8 @@ struct frac{
         if((num^den) < 0) num = -abs(num);
         den = abs(den);
     }
-    friend ostream &operator<<(ostream & os, const frac o){
-        os << o.num << "/" << o.den;
-        return os;
+    friend ostream &operator<<(ostream & out, const frac at){
+        return out << at.num << '/' << at.den;
     }
  
     explicit operator int()const{return num/den;}
