@@ -8,13 +8,14 @@ struct frac{
         if((num^den) < 0) num = -abs(num);
         den = abs(den);
     }
+    friend istream& operator>>(istream& in, frac &at){return in >> at.num;}
     friend ostream &operator<<(ostream & out, const frac at){
         return out << at.num << '/' << at.den;
     }
  
     explicit operator int()const{return num/den;}
     explicit operator double()const{return double(num)/den;}
-    explicit operator long double()const{return (long double)(num)/den;}
+    explicit operator long double()const{return ((long double)num)/den;}
     bool operator<(const frac& ot)const{return 1ll*num*ot.den < 1ll*ot.num*den;}
     bool operator>(const frac& ot)const{return 1ll*num*ot.den > 1ll*ot.num*den;}
     bool operator<=(const frac &ot)const{return 1ll*num*ot.den <= 1ll*ot.num*den;}
@@ -27,6 +28,7 @@ struct frac{
     friend frac& operator+=(frac& a, frac b){
         TT d = a.den/__gcd(a.den,b.den)*b.den;
         a.num = d/a.den*a.num + d/b.den*b.num;
+        a.den = d;
         return a;
     }
     friend frac& operator-=(frac& a, frac b){
@@ -35,6 +37,7 @@ struct frac{
     friend frac& operator*=(frac& a, frac b){
         TT d = __gcd(a.num,b.den); a.num /= d; b.den /= d;
         d = __gcd(a.den,b.num); a.den /= d; b.num /= d;
+        a.num *= b.num; a.den *= b.den;
         return a;
     }
     friend frac& operator/=(frac& a, frac b){
