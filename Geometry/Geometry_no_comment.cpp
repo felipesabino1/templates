@@ -1,18 +1,20 @@
 /*
     Alteracoes:
     
-    Se for usar inteiro nas contas, muda a funca eq e o TT
+    Se for usar inteiro/frac nas contas, muda a funca eq e o T
 */
 using dd = long double;
 const dd pi = acosl(-1.0);
 const dd eps = 1e-9;
+const dd inf = 1e18;
 #define rad(x) ((x)*pi/180)
 #define sq(x) ((x)*(x))
 namespace geo{
-    using T = frac<ll>;
+    using T = dd;
 
     bool eq(const T x,const T y){
-        return x == y;
+        return fabs(x-y) < eps;
+        // return x == y;
     }
     int sgn(T x){return (dd(x)>eps) - (dd(x)<-eps);}
     
@@ -86,6 +88,9 @@ namespace geo{
     T cross(pt p1, pt p2, pt p3){
         return cross(p2-p1,p3-p1);
     }
+    T det(pt p1, pt p2, pt p3){return cross(p2-p1,p3-p2);}
+    bool colinear(pt p1,pt p2,pt p3){return eq(det(p1,p2,p3),0);}
+    bool ccw(pt p1, pt p2, pt p3){return det(p1,p2,p3) > 0;}
     
     pt reflect(const pt p, const line l){
         pt a = l.p, d = l.q-l.p;
@@ -116,8 +121,6 @@ namespace geo{
     bool online(pt p, line l){return sgn(cross(l.p,l.q,p)) == 0;}
     dd dist(pt p1, pt p2){return abs(p2-p1);}
     T dist2(pt p1, pt p2){return abs2(p2-p1);}
-    T det(pt p1, pt p2, pt p3){return cross(p2-p1,p3-p2);}
-    bool colinear(pt p1,pt p2,pt p3){return eq(det(p1,p2,p3),0);}
     dd ang(pt p1, pt p2, pt p3){
         pt v1 = p1-p2, v2 = p3-p2;
         dd angle = acosl(dd(dot(v1,v2))/abs(v1)/abs(v2));
@@ -165,6 +168,21 @@ namespace geo{
         #define i(x,y) if(onseg(x,y)) s.insert(x)
         i(a.p,b); i(a.q,b); i(b.p,a); i(b.q,a);
         return vpt{s.begin(),s.end()};
+    }
+
+    // O(log(n))
+    bool inside_convex(vpt& pol, pt p){
+        if (pol.size() == 0) return false;
+		if (pol.size() == 1) return p == pol[0];
+		int l = 1, r = pol.size();
+		while (l < r) {
+			int m = (l+r)/2;
+			if (ccw(p, pol[0], pol[m])) l = m+1;
+			else r = m;
+		}
+		if (l == 1) return onseg(p, line(pol[0], pol[1]));
+		if (l == pol.size()) return false;
+		return !ccw(p, pol[l], pol[l-1]);
     }
 }
 using namespace geo;
