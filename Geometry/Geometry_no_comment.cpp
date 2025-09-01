@@ -28,6 +28,7 @@ namespace geo{
         	return false;
 		}
         bool operator==(const pt &ot)const{return eq(x,ot.x) && eq(y,ot.y);}
+		bool operator==(const pt &ot)const{return !eq(x,ot.x) || !eq(y,ot.y);}
         pt operator-(){return pt(-x,-y);}
     };
     ostream& operator<<(ostream& out, const pt p){
