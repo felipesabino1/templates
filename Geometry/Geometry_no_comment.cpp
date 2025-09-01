@@ -171,7 +171,7 @@ namespace geo{
     }
 
     // O(log(n))
-    bool inside_convex(vpt& pol, pt p){
+    bool inconvex(vpt& pol, pt p){
         if (pol.size() == 0) return false;
 		if (pol.size() == 1) return p == pol[0];
 		int l = 1, r = pol.size();
@@ -183,6 +183,25 @@ namespace geo{
 		if (l == 1) return onseg(p, line(pol[0], pol[1]));
 		if (l == pol.size()) return false;
 		return !ccw(p, pol[l], pol[l-1]);
+    }
+    // se o ponto ta dentro do poligono: retorna 0 se ta fora,
+    // 1 se ta no interior e 2 se ta na borda
+    int inpol(vpt &v, pt p) { // O(n)
+        int qt = 0;
+        for (int i = 0; i < v.size(); i++) {
+            if (p == v[i]) return 2;
+            int j = (i+1)%v.size();
+            if (eq(p.y, v[i].y) and eq(p.y, v[j].y)) {
+                if ((v[i]-p)*(v[j]-p) < eps) return 2;
+                continue;
+            }
+            bool baixo = v[i].y+eps < p.y;
+            if (baixo == (v[j].y+eps < p.y)) continue;
+            auto t = (p-v[i])^(v[j]-v[i]);
+            if (eq(t, 0)) return 2;
+            if (baixo == (t > eps)) qt += baixo ? 1 : -1;
+        }
+        return qt != 0;
     }
 }
 using namespace geo;
