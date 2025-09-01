@@ -1,12 +1,7 @@
-/*
-    Alteracoes:
-    
-    Se for usar inteiro/frac nas contas, muda a funca eq e o T
-*/
-using dd = long double;
+using dd = double;
 const dd pi = acosl(-1.0);
 const dd eps = 1e-9;
-const dd inf = 1e18;
+const dd DINF = 1e18;
 #define rad(x) ((x)*pi/180)
 #define sq(x) ((x)*(x))
 namespace geo{
@@ -24,18 +19,19 @@ namespace geo{
         pt(T x_=0, T y_=0) : x(x_),y(y_){}
         bool operator<(const pt &ot)const{
             if(!eq(x,ot.x)) return x < ot.x; // ordena por x primeiro
-			if(!eq(y,ot.y)) return y < ot.y; // ordena por y
-        	return false;
-		}
+            if(!eq(y,ot.y)) return y < ot.y;
+            return false;
+        }
         bool operator==(const pt &ot)const{return eq(x,ot.x) && eq(y,ot.y);}
-		bool operator==(const pt &ot)const{return !eq(x,ot.x) || !eq(y,ot.y);}
+        bool operator!=(const pt &ot)const{return !eq(x,ot.x) || !eq(y,ot.y);}
         pt operator-(){return pt(-x,-y);}
     };
+    const pt pt_off(DINF,DINF);
     ostream& operator<<(ostream& out, const pt p){
         return out << "(" << p.x << "," << p.y << ")";
     }
 
-    // representa uma reta ou segmento, se p == q da merda
+    // representa uma reta ou segmento
     struct line{
         pt p,q;
         line(pt p_={0,0},pt q_={0,0}) : p(p_),q(q_){}
@@ -92,7 +88,7 @@ namespace geo{
     }
     T det(pt p1, pt p2, pt p3){return cross(p2-p1,p3-p2);}
     bool colinear(pt p1,pt p2,pt p3){return eq(det(p1,p2,p3),0);}
-    bool ccw(pt p1, pt p2, pt p3){return det(p1,p2,p3) > 0;}
+    bool ccw(pt p1, pt p2, pt p3){return det(p1,p2,p3) > eps;}
     
     pt reflect(const pt p, const line l){
         pt a = l.p, d = l.q-l.p;
@@ -121,6 +117,10 @@ namespace geo{
         return sgn(cross(l.p,l.q,p)) == 0 && sgn(dot(p,l.p,l.q)) <= 0;
     }
     bool online(pt p, line l){return sgn(cross(l.p,l.q,p)) == 0;}
+    bool interseg(line r, line s) { // se o seg de r intersecta o seg de s
+        if (onseg(r.p, s) || onseg(r.q, s) || onseg(s.p, r) || onseg(s.q, r)) return true;
+        return ccw(r.p, r.q, s.p) != ccw(r.p, r.q, s.q) && ccw(s.p, s.q, r.p) != ccw(s.p, s.q, r.q);
+    }
     dd dist(pt p1, pt p2){return abs(p2-p1);}
     T dist2(pt p1, pt p2){return abs2(p2-p1);}
     dd ang(pt p1, pt p2, pt p3){
@@ -128,13 +128,22 @@ namespace geo{
         dd angle = acosl(dd(dot(v1,v2))/abs(v1)/abs(v2));
         return angle + (angle < 0 ? 2*pi : 0);
     }
-    dd linedist(const line l, const pt p){
+    dd linedist(const line l, const pt p){ // distancia reta ponto
         return abs(cross(p,l.p,l.q))/abs(l.p-l.q);
     }
-    dd segdist(const line seg, const pt p){
+    dd segdist(const line seg, const pt p){ // distancia segmento ponto
         if(dot(seg.p, p, seg.q) <= 0) return abs(p-seg.p);
         if(dot(seg.q, p, seg.p) <= 0) return abs(p-seg.q);
         return linedist(seg,p);    
+    }
+    dd segdist(line a, line b) { // distancia entre seg
+        if(interseg(a, b)) return 0;
+        dd ret = DINF;
+        ret = min(ret, segdist(b, a.p));
+        ret = min(ret, segdist(b, a.q));
+        ret = min(ret, segdist(a, b.p));
+        ret = min(ret, segdist(a, b.q));
+        return ret;
     }
 
     //  Usage: vpt v; sort(all(v),angleCmp);
@@ -148,28 +157,34 @@ namespace geo{
     //    return atan2(a.sd,a.ft) < atan2(b.sd,b.ft); });
 
     using vpt = vector<pt>;
-    // {unique intersection point} if it exists
-    // {b.f,b.s} if input lines are the same
-    // empty if lines do not intersect
-    vpt lineIsect(const line a, const line b){
+    // degenerate line (one point line) if it exists
+    // line == b if input lines are the same
+    // line(pt_off,pt_off) if lines do not intersect
+    line lineIsect(const line a, const line b){
         T a0 = cross(a.p,a.q,b.p), a1 = cross(a.p,a.q,b.q);
-        if(eq(a0,a1)) return eq(a0,0) ? vpt{b.p,b.q} : vpt{};
-        return {(b.q*a0-b.p*a1)/(a0-a1)};
+        if(eq(a0,a1)) return eq(a0,0) ? b : line(pt_off,pt_off);
+        pt p = (b.q*a0-b.p*a1)/(a0-a1);
+        return line(p,p);
     }
     // point in interior of both segments a and b, if it exists
-    vpt strictIsect(const line a, const line b){
+    line strictIsect(const line a, const line b){
         T a0 = cross(a.p,a.q,b.p), a1 = cross(a.p,a.q,b.q);
         T b0 = cross(b.p,b.q,a.p), b1 = cross(b.p,b.q,a.q);
-        if(sgn(a0)*sgn(a1) < 0 && sgn(b0)*sgn(b1) < 0) return {(b.q*a0-b.p*a1)/(a0-a1)};
-        return {};
+        if(sgn(a0)*sgn(a1) < 0 && sgn(b0)*sgn(b1) < 0) {
+            pt p = (b.q*a0-b.p*a1)/(a0-a1); 
+            return line(p,p);
+        }
+        return line(pt_off,pt_off);
     }
-    // intersection of segments, a and b may be degenerate
-    vpt segIsect(const line a, const line b){
-        vpt v = strictIsect(a,b); if(!v.empty()) return v;
-        set<pt> s;
-        #define i(x,y) if(onseg(x,y)) s.insert(x)
+    // intersection of segments, a and b may be degenerate (the points that define it are equal)
+    // degenerate line (one point line if its only one point)
+    // line(pt_off,pt_off) if dont intersect
+    // line == a || line == b, if one segment is inside the other
+    line segIsect(const line a, const line b){
+        line l = strictIsect(a,b); if(l.p != pt_off) return l;
+        #define i(x,y) if(onseg(x,y)) {l.q = l.p; l.p = x;}
         i(a.p,b); i(a.q,b); i(b.p,a); i(b.q,a);
-        return vpt{s.begin(),s.end()};
+        return l;
     }
 
     // O(log(n))
@@ -194,16 +209,38 @@ namespace geo{
             if (p == v[i]) return 2;
             int j = (i+1)%v.size();
             if (eq(p.y, v[i].y) and eq(p.y, v[j].y)) {
-                if ((v[i]-p)*(v[j]-p) < eps) return 2;
+                if (dot(p,v[i],v[j]) < eps) return 2;
                 continue;
             }
             bool baixo = v[i].y+eps < p.y;
             if (baixo == (v[j].y+eps < p.y)) continue;
-            auto t = (p-v[i])^(v[j]-v[i]);
+            auto t = cross(v[i],p,v[j]);
             if (eq(t, 0)) return 2;
             if (baixo == (t > eps)) qt += baixo ? 1 : -1;
         }
         return qt != 0;
+    }
+    dd polarea(vpt &v){
+        ld ret = 0;
+        for (int i = 0; i < v.size(); i++)
+            ret += det(pt(0, 0), v[i], v[(i + 1) % v.size()])/2;
+        return abs(ret);
+    }
+    bool interpol(vpt &v1, vpt &v2) { // se dois poligonos se intersectam - O(n*m)
+        int n = v1.size(), m = v2.size();
+        for(int i = 0; i < n; i++) if (inpol(v2, v1[i])) return true;
+        for(int i = 0; i < m; i++) if (inpol(v1, v2[i])) return true;
+        for(int i = 0; i < n; i++) for (int j = 0; j < m; j++)
+            if (interseg(line(v1[i], v1[(i+1)%n]), line(v2[j], v2[(j+1)%m]))) return true;
+        return false;
+    }
+    dd distpol(vpt &v1, vpt &v2) { // distancia entre poligonos
+        if (interpol(v1, v2)) return 0;
+        dd ret = DINF;
+        for (int i = 0; i < v1.size(); i++) for (int j = 0; j < v2.size(); j++)
+            ret = min(ret, segdist(line(v1[i], v1[(i + 1) % v1.size()]),
+                        line(v2[j], v2[(j + 1) % v2.size()])));
+        return ret;
     }
 }
 using namespace geo;
