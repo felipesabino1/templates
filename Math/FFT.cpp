@@ -1,4 +1,5 @@
-struct FFT{
+namespace FFT{
+    // retornar vector nao eh tao paia
     typedef complex<double> C;
     typedef vector<double> vd;
     typedef vector<long long int> vl;
@@ -166,4 +167,5 @@ struct FFT{
             if (e & 1) ans = ans * b % mod;
         return ans;
     }
-};
+}
+using namespace FFT;
