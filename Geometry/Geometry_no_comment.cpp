@@ -24,8 +24,9 @@ namespace geo{
         pt(T x_=0, T y_=0) : x(x_),y(y_){}
         bool operator<(const pt &ot)const{
             if(!eq(x,ot.x)) return x < ot.x; // ordena por x primeiro
-            return y<ot.y; // ordena por y
-        }
+			if(!eq(y,ot.y)) return y < ot.y; // ordena por y
+        	return false;
+		}
         bool operator==(const pt &ot)const{return eq(x,ot.x) && eq(y,ot.y);}
         pt operator-(){return pt(-x,-y);}
     };
