@@ -1,3 +1,4 @@
+const ll mod = (119 << 23) + 1, root = 62; // = 998244353
 namespace FFT{
     // retornar vector nao eh tao paia
     typedef complex<double> C;
@@ -28,16 +29,16 @@ namespace FFT{
         int n = a.size(), L = 31 - __builtin_clz(n);
         static vector<complex<long double>> R(2, 1);
         static vector<C> rt(2, 1);  // (^ 10% faster if double)
-        for (static int k = 2; k < n; k *= 2) {
+        for (static int k = 2; k < n; k <<= 1) {
             R.resize(n); rt.resize(n);
             auto x = polar(1.0L, acos(-1.0L) / k);
-            for(int i=k; i<2*k; i++) rt[i] = R[i] = i&1 ? R[i/2] * x : R[i/2];
+            for(int i=k; i<(k<<1); i++) rt[i] = R[i] = i&1 ? R[i>>1] * x : R[i>>1];
         }
         vi rev(n);
-        for(int i = 0; i < n; i++) rev[i] = (rev[i / 2] | (i & 1) << L) / 2;
+        for(int i = 0; i < n; i++) rev[i] = (rev[i >> 1] | (i & 1) << L) >> 1;
         for(int i = 0; i < n; i++)  if (i < rev[i]) swap(a[i], a[rev[i]]);
-        for (int k = 1; k < n; k *= 2)
-            for (int i = 0; i < n; i += 2 * k) for(int j = 0; j < k; j++) {
+        for (int k = 1; k < n; k <<= 1)
+            for (int i = 0; i < n; i += (k << 1)) for(int j = 0; j < k; j++) {
                 // C z = rt[j+k] * a[i+j+k]; // (25% faster if hand-rolled)  /// include-line
                 auto x = (double *)&rt[j+k], y = (double *)&a[i+j+k];        /// exclude-line
                 C z(x[0]*y[0] - x[1]*y[1], x[0]*y[1] + x[1]*y[0]);           /// exclude-line
@@ -57,7 +58,7 @@ namespace FFT{
         for (C& x : in) x *= x;
         for(int i = 0; i < n; i++) out[i] = in[-i & (n - 1)] - conj(in[i]);
         fft(out);
-        for(int i = 0; i < res.size(); i++) res[i] = imag(out[i]) / (4 * n);
+        for(int i = 0; i < res.size(); i++) res[i] = imag(out[i]) / (n << 2);
         return res;
     }
     vl conv(const vl& a, const vl& b) {
@@ -71,7 +72,7 @@ namespace FFT{
         for (C& x : in) x *= x;
         for(int i = 0; i < n; i++) out[i] = in[-i & (n - 1)] - conj(in[i]);
         fft(out);
-        for(int i = 0; i < res.size(); i++) res[i] = round(imag(out[i]) / (4 * n));
+        for(int i = 0; i < res.size(); i++) res[i] = round(imag(out[i]) / (n << 2));
         return res;
     }
 
@@ -110,7 +111,7 @@ namespace FFT{
         }
         return res;
     }
-
+    
     /*
         * Author: chilli
         * Date: 2019-04-16
@@ -127,45 +128,48 @@ namespace FFT{
         * Time: O(N \log N)
         * Status: stress-tested
     */
-    const ll mod = (119 << 23) + 1, root = 62; // = 998244353
+    // const ll mod = (119 << 23) + 1, root = 62; // = 998244353
+    int modpow(int b, int e) {
+        int ans = 1;
+        for (; e; b = 1ll * b * b % mod, e >>= 1)
+            if (e & 1) ans = 1ll * ans * b % mod;
+        return ans;
+    }
     // For p < 2^30 there is also e.g. 5 << 25, 7 << 26, 479 << 21
     // and 483 << 21 (same root). The last two are > 10^9.
-    void ntt(vl &a) {
-        int n = a.size(), L = 31 - __builtin_clz(n);
-        static vl rt(2, 1);
-        for (static int k = 2, s = 2; k < n; k *= 2, s++) {
+    void ntt(vi &a) {
+        static vi rev;
+        int n = a.size(), S = __builtin_ctz(max(n,(int)rev.size())/n);
+        static vi rt(2, 1);
+        // o k nao reseta
+        for (static int k = 2, s = 2; k < n; k <<= 1, s++) {
             rt.resize(n);
             ll z[] = {1, modpow(root, mod >> s)};
-            for(int i = k; i < 2*k; i++) rt[i] = rt[i / 2] * z[i & 1] % mod;
+            for(int i = k; i < (k << 1); i++) rt[i] = 1ll * rt[i >> 1] * z[i & 1] % mod;
         }
-        vi rev(n);
-        for(int i = 0; i < n; i++) rev[i] = (rev[i / 2] | (i & 1) << L) / 2;
-        for(int i = 0; i < n; i++) if (i < rev[i]) swap(a[i], a[rev[i]]);
-        for (int k = 1; k < n; k *= 2)
-            for (int i = 0; i < n; i += 2 * k) for(int j = 0; j < k; j++) {
-                ll z = rt[j + k] * a[i + j + k] % mod, &ai = a[i + j];
+        if(int(rev.size()) < n){
+            rev.resize(n);
+            for(int i = 0; i < n; i++) rev[i] = (rev[i>>1] | ((i&1)*n)) >> 1;
+        }
+        for(int i = 0; i < n; i++) if (i < (rev[i] >> S)) swap(a[i], a[rev[i] >> S]);
+        for (int k = 1; k < n; k <<= 1)
+            for (int i = 0; i < n; i += (k << 1)) for(int j = 0; j < k; j++) {
+                int z = 1ll * rt[j + k] * a[i + j + k] % mod, &ai = a[i + j];
                 a[i + j + k] = ai - z + (z > ai ? mod : 0);
                 ai += (ai + z >= mod ? z - mod : z);
             }
     }
-    vl conv_ntt(const vl &a, const vl &b) {
+    vi conv_ntt(const vi &a, const vi &b) {
         if (a.empty() || b.empty()) return {};
-        int s = a.size() + b.size() - 1, B = 32 - __builtin_clz(s),
-            n = 1 << B;
+        int s = a.size() + b.size() - 1, B = 32 - __builtin_clz(s), n = 1 << B;
+        vi L(a), R(b), out(n);
         int inv = modpow(n, mod - 2);
-        vl L(a), R(b), out(n);
         L.resize(n), R.resize(n);
         ntt(L), ntt(R);
         for(int i = 0; i < n; i++)
             out[-i & (n - 1)] = (ll)L[i] * R[i] % mod * inv % mod;
         ntt(out);
         return {out.begin(), out.begin() + s};
-    }
-    ll modpow(ll b, ll e) {
-        ll ans = 1;
-        for (; e; b = b * b % mod, e /= 2)
-            if (e & 1) ans = ans * b % mod;
-        return ans;
     }
 }
 using namespace FFT;
