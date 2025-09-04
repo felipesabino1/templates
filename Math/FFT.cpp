@@ -46,9 +46,10 @@ namespace FFT{
             }
     }
     // multiplica dois polinomios
-    vd conv(const vd& a, const vd& b) {
+    template<class TT>
+    vector<TT> conv(const vector<TT>& a, const vector<TT>& b) {
         if (a.empty() || b.empty()) return {};
-        vd res(a.size() + b.size() - 1);
+        vector<TT> res(a.size() + b.size() - 1);
         int L = 32 - __builtin_clz(res.size()), n = 1 << L;
         vector<C> in(n), out(n);
         copy(a.begin(),a.end(), in.begin());
@@ -58,20 +59,6 @@ namespace FFT{
         for(int i = 0; i < n; i++) out[i] = in[-i & (n - 1)] - conj(in[i]);
         fft(out);
         for(int i = 0; i < res.size(); i++) res[i] = imag(out[i]) / (n << 2);
-        return res;
-    }
-    vl conv(const vl& a, const vl& b) {
-        if (a.empty() || b.empty()) return {};
-        vl res(a.size() + b.size() - 1);
-        int L = 32 - __builtin_clz(res.size()), n = 1 << L;
-        vector<C> in(n), out(n);
-        copy(a.begin(),a.end(), in.begin());
-        for(int i = 0; i < b.size(); i++) in[i].imag(b[i]);
-        fft(in);
-        for (C& x : in) x *= x;
-        for(int i = 0; i < n; i++) out[i] = in[-i & (n - 1)] - conj(in[i]);
-        fft(out);
-        for(int i = 0; i < res.size(); i++) res[i] = round(imag(out[i]) / (n << 2));
         return res;
     }
 
