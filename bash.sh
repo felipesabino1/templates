@@ -11,10 +11,10 @@ while true; do
     ./at < in > out # codigo que muda
     end=$(date +%s)
 
-    echo "Elapsed Time in test $c: $(($end - $start)) seconds."
+    echo "Elapsed Time in test: $(($end - $start)) seconds."
     ./brute < in > aout
     diff -B out aout > /dev/null || break
-    echo "Passou no caso $c."
+    echo "Passou no caso."
     cat out
 done
 
