@@ -1,4 +1,3 @@
-const ll mod = (119 << 23) + 1, root = 62; // = 998244353
 namespace FFT{
     // retornar vector nao eh tao paia
     typedef complex<double> C;
@@ -128,7 +127,7 @@ namespace FFT{
         * Time: O(N \log N)
         * Status: stress-tested
     */
-    // const ll mod = (119 << 23) + 1, root = 62; // = 998244353
+    const ll mod = (119 << 23) + 1, root = 62; // = 998244353
     int modpow(int b, int e) {
         int ans = 1;
         for (; e; b = 1ll * b * b % mod, e >>= 1)
