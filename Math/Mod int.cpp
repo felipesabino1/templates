@@ -20,6 +20,7 @@ struct mi {
         }
         return ans;
     }
-    mi inv(mi a){return fexp(a,mod-2);}
+    friend mi inv(mi a){return fexp(a,mod-2);}
     friend ostream& operator<<(ostream& out, mi at){return out << at.v;}
+    friend istream& operator>>(istream& in, mi &at){return in >> at.v;}
 };
