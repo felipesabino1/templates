@@ -12,14 +12,14 @@ namespace Gauss{
         }
     }
 
-    template <class T>
-    int solveLinear(vector<vector<T>>& A, vector<T>& b, vector<T>& x) {
+    template <class TT>
+    int solveLinear(vector<vector<TT>>& A, vector<TT>& b, vector<TT>& x) {
         int n = A.size(), m = x.size(), rank = 0, br, bc;
         if (n) assert(A[0].size() == m);
         vi col(m); iota(col.begin(),col.end(), 0); // fills the range with increasing values starting with value 0
 
         for(int i = 0; i < n; i++){
-            T v, bv = 0;
+            TT v, bv = 0;
 
             for(int r = i; r < n; r++) for(int c = i; c < m; c++)
                 if((v = A[r][c]) > bv)
@@ -48,7 +48,7 @@ namespace Gauss{
             // faster, dont update useless values
             for(int j = i+1; j < n; j++){
                 // A[i][i]*(1/A[i][i] * A[j][i]) = A[i][i]*fac (zero the column)
-                T fac = A[j][i] * bv; 
+                TT fac = A[j][i] * bv; 
                 b[j] -= fac * b[i];
                 for(int k = i+1; k < m; k++) A[j][k] -= fac*A[i][k];
             }
