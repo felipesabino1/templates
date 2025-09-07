@@ -73,7 +73,7 @@ struct Gauss{
 
             // busca pelo maior elemento
             for(int r = i; r < n; r++) for(int c = i; c < m; c++)
-                if ((v = A[r][c]))
+                if ((v = A[r][c]) > bv)
                     br = r, bc = c, bv = v;
             // bv eh o maior elemento, se todos os elementos sao iguais a zero
             if (bv == 0) {
