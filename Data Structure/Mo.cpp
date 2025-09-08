@@ -1,5 +1,6 @@
 /*
-    Indexado de 1 (os l e r). O K = N/sqrt(Q), tal que N eh o maior range dos valores de l e r e Q o numero de queries
+    Indexado de 1 (os l e r). 
+    O K = N/sqrt(Q), tal que N eh o maior range dos valores de l e r e Q o numero de queries
 
     Alteracoes:
 
@@ -49,27 +50,14 @@ struct Mo{
     }
 
 	void solve(){
-		sort(q.begin(),q.end());
-		ans.resize(q.size());
-		int i,j;
-		i=1;
-		j=0;
+		sort(q.begin(),q.end()); ans.resize(q.size());
+		int i = 1,j = 0;
         for(auto [idx,l,r] : q){
-			while(j < r){
-				add(++j);
-			}
-			while(i > l){
-				add(--i);
-			}
-
-			while(j > r){
-				rmv(j--);
-			}
-			while(i < l){
-				rmv(i++);
-			}
-
-			ans[idx]=calc();
+            while(j < r) add(++j);
+            while(i > l) add(--i);
+            while(j > r) rmv(j--);
+            while(i < l) rmv(i++);
+            ans[idx] = calc();
 		}
 	}
 
