@@ -1,128 +1,69 @@
-template <class TT = ll> 
+// must have modint
 struct Comb{
-    vector<TT> fato,fatoinv;
-    vector<vector<TT>> tomatoma;
+    vector<mi> fato,fatoinv;
+    vector<vector<mi>> tomatoma;
  
     // setar so os fatorias e inversos
-    Comb(int n) : fato(n+10),fatoinv(n+10){
+    Comb(int n) : fato(n+1),fatoinv(n+1){
         fato[0] = 1;
-        for(int i=1; i<=n; i++) fato[i] = fato[i-1] * i % mod;
+        for(int i=1; i<=n; i++) fato[i] = fato[i-1] * i;
 
         fatoinv[n] = fexp(fato[n],mod-2);
-        for(int i=n-1; i>=0; i--) fatoinv[i] = fatoinv[i+1] * (i+1) % mod;
+        for(int i=n-1; i>=0; i--) fatoinv[i] = fatoinv[i+1] * (i+1);
     }
-    Comb(int n,int m) : tomatoma(n+10,vector<TT>(m+10)){
+    Comb(int n,int m) : tomatoma(n+1,vector<mi>(m+1)){
         for(int i=0; i<=m; i++) tomatoma[0][i] = 0;
         for(int i=0; i<=n; i++) tomatoma[i][0] = 1;
-        for(int i=1; i<=n; i++) for(int j=1; j<=m; j++) tomatoma[i][j] = (tomatoma[i-1][j-1] + tomatoma[i-1][j]) % mod;
+        for(int i=1; i<=n; i++) for(int j=1; j<=m; j++) tomatoma[i][j] = tomatoma[i-1][j-1] + tomatoma[i-1][j];
     }
- 
-    TT fexp(TT a, TT b){
-        TT ans=1;
-        while(b){
-            if(b&1) ans=ans*a%mod;
-            b>>=1;
-            a=a*a%mod;
-        }
-        return ans;
-    }
- 
-    // calcula e guarda as respostas dos fatoriais
-    TT fat(TT x){
-        return fato[x];
-    }
- 
-    TT fat_inv(TT x){
-        return fatoinv[x];
-    }
- 
-    TT toma(TT n, TT k,int k_pequeno = 0){
-        if(n < 0) return 0;
-        if(k > n) return 0;
-        TT ans;
-        if(tomatoma.size() > n && tomatoma[0].size() > k){
-            ans = tomatoma[n][k];
-        }else if(k_pequeno == 0){
-            ans=fat(n);
-            ans=ans*fat_inv(k)%mod;
-            ans=ans*fat_inv(n-k)%mod;
-        }else{
-            // quando k eh pequeno, podemos fazer fat(N)/fat(k)/fat(N-k) = N*(N-1)*(N-2)*...*(N-k+1)/fat(K), ai pra fazer o termo de cima
-            // eh so iterar k caras, o de baixo eh de boa tambem.
+
+    mi fat(int x){assert(x < fato.size()); return fato[x];}
+    mi fat_inv(int x){assert(x < fatoinv.size()); return fatoinv[x];}
+    // binomial coefficient
+    mi toma(ll n,ll k, bool k_pequeno = false){
+        if(n < 0 || k > n) return mi(0);
+        mi ans;
+        if(tomatoma.size() > n && tomatoma[0].size() > k) ans = tomatoma[n][k];
+        else if(k_pequeno){
             ans = 1;
-            for(ll i = n; i>n-k; i--) ans = ans*i%mod;
-            ans=ans*fat_inv(k)%mod;
-        }
+            for(ll i=n; i>n-k; i--) ans *= i;
+            ans *= fat_inv(k);
+        }else ans = fat(n)*fat_inv(n-k)*fat_inv(k);
         return ans;
     }
- 
-    TT inv(TT x){
-        return fexp(x,mod-2);
+    // stars and bars (n stars in k boxes or x1+x2+...+xk = n)
+    mi sb(ll n, ll k){
+        return toma(n+k-1,k-1);
+    }
+    // catalan number (how to label n+k pairs of parentheses with k already fixed)
+    // k == 0 means normal catalan
+    // count how many trees of size n exists when k == 0
+    mi catalan(ll n, ll k){
+        return mi(k+1) * toma(2*n+k,n) / (n+k+1);
+    }
+    mi fat_rep(vector<int> &vec){
+        mi tot = 0;
+        for(int qt : vec) tot += qt;
+        mi ans = fat(tot);
+        for(int qt : vec) ans /= fat(qt);
+        return ans;
     }
 
-    // faz a conta do fatorial quando eu tenho elementos repetidos
-    TT fat_rep(vector<TT> & vec){
-        TT tot = 0;
-        for(TT v : vec) tot += v;
-        TT ans = fat(tot);
-        for(TT v : vec) ans = ans*fat_inv(v)%mod;
-        return ans;
+    // Soma de uma PA, termo inicial e final, qtd de termos
+    mi PA(mi a, mi b, mi n){return (a+b)*n/2;}
+    // Soma de uma PG, termo inicial e final, razao
+    mi PG(mi a, mi b, mi r){return (b*r - a)/(r-1);}
+    // Soma de uma PG infinita (|r| < 1), termo inicial e razao
+    mi PG(mi a, mi r){return a/mi(1-r);}
+    // Soma de uma PAG (somatorio((a0+i*ra)*(g0*rg^i))), os termos de uma PA multiplicados pelos termos de uma PG
+    // (a0+i) - termo da PA || (g0*rg^i) - termo da PG
+    // a formula fechada sai pela derivada de uma PG que vira uma PAG (derivar em funcao de rg) 
+    // termo inicial e final da PA e a razao, termo inicial e final da PG e a razao
+    mi PAG(mi a0, mi an, mi ra, mi g0, mi gn, mi rg){
+        return ((an+ra)*(gn*rg) - a0*g0)/(rg-1) + ra*rg*(gn*rg - g0)/((rg-1)*(rg-1));
     }
-
-    // Calcula a soma de uma PA, somatorio_i=k1_k2(a + r*i), temos que k1 >= 0 e k2 >= k1
-    // Passa como parametro o termo inicial (a), a razao (r) e k1 e k2
-    TT PA(TT a, TT r, TT k1, TT k2){
-        if(k1 == 0) return PA_(a,r,k2);
-        else return (PA_(a,r,k2) - PA_(a,r,k1-1) + mod)%mod;
-    }
-    // Calcula a soma de uma PA, somatorio_i=0_k(a + r*i)
-    // Passa como parametro o termo inicial (a), a razao (r) e k
-    TT PA_(TT a, TT r, TT k){
-        return (a + (a + r*k%mod)%mod)%mod * (k+1)%mod * inv(2)%mod;
-    }
-    // Acha o k-esimo termo de uma PA de razao r comecando do a, e considerando o a como o 0-esimo termo
-    TT termPA(TT a, TT r, TT k){
-        return (a+r*k%mod)%mod;
-    }
- 
-    // Calcula a soma de uma PG, somatorio_i=k1_k2(a*r^i)
-    // Passa como parametro o termo inicial (a), a razao (r) e k1 e k2
-    TT PG(TT a, TT r, TT k1, TT k2){
-        if(k1 == 0) return PG_(a,r,k2);
-        else return (PG_(a,r,k2) - PG_(a,r,k1-1) + mod)%mod;
-    }
-    // Calcula a soma de uma PG, somatorio_i=0_k(a*r^i)
-    // Passa como parametro o termo inicial (a), a razao (r) e k
-    TT PG_(TT a, TT r, TT k){
-        return a*(fexp(r,k+1)-1+mod)%mod * inv((r-1+mod)%mod)%mod;
-    }
-    // Calcula a soma de uma PG infinita, somatorio_i=0_inf(a*r^i)
-    TT PG(TT a, TT r){
-        return a*inv((1-r+mod)%mod)%mod;
-    }
-    // acha o k-esimo termo de uma PG de razao r comecando do a, e considerando o a como o 0-esimo termo
-    TT termPG(TT a, TT r, TT k){
-        return a*fexp(r%mod,k)%mod;
-    }
- 
-    // Calcula a soma de uma PAG, somatorio_i=k1_k2(a*(ra*i)*rg^i)
-    // Passa como o parametro o termo inicial (a), a razao aritmetica (ra), a razao geometrica (rg) e k1 e k2
-    TT PAG(TT a, TT ra, TT rg, TT k1, TT k2){
-        if(k1 == 0) return PAG_(a,ra,rg,k2);
-        else return (PAG_(a,ra,rg,k2) - PAG_(a,ra,rg,k1-1) + mod)%mod;
-    }
-    // Calcula a soma de uma PAG, somatorio_i=0_k(a*(ra*i)*rg^i)
-    // Passa como o parametro o termo inicial (a), a razao aritmetica (ra), a razao geometrica (rg) e k
-    TT PAG_(TT a, TT ra, TT rg, TT k){
-        TT ans = a*ra%mod * k%mod *fexp(rg,k+2)%mod;
-        ans = (ans - (k+1)*fexp(rg,k+1)%mod + mod)%mod;
-        ans = (ans + rg)%mod;
-        ans = ans*inv(fexp((1-rg+mod)%mod,2))%mod;
-        return ans;
-    }
-    // Calcula a soma de uma PAG infinita, somatorio_i=0_inf(a*(ra*i)*rg^i)
-    // Passa como o parametro o termo inicial (a), a razao aritmetica (ra), a razao geometrica (rg)
-    TT PAG(TT a, TT ra, TT rg){
-        return a*ra%mod * rg%mod * inv(fexp((1-rg+mod)%mod,2))%mod;
+    // Soma de uma PAG infinita (|r| < 1)
+    mi PAG(mi a0, mi ra, mi g0, mi rg){
+        return a0*g0/(1-r) + ra*rg*g0/((1-r)*(1-r));
     }
 };
