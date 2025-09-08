@@ -13,10 +13,7 @@ struct Fen{
     int pref; // flag que indica se a Fenwick eh no prefixo(1), ou no sufixo(0)
     const TT off_fen = ; // valor dummy
 
-    Fen(int n_, int pref_=1) : pref(pref_),n(n_){
-        fen.resize(n+10,off_fen);
-    }
-    ~Fen(){fen.clear();}
+    Fen(int n_, int pref_=1) : fen(n_+10), pref(pref_),n(n_){}
 
     // operacao da BIT
     TT f(TT x, TT y){
