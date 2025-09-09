@@ -6,6 +6,7 @@ struct Line{
     bool operator <(const Line & o) const{
         return k>o.k;
     }
+    // isso aqui n muda
     bool operator <(const TT o) const{
         return p<o;
     }
