@@ -2,21 +2,18 @@
     Indexado de 1
 */
 struct Centroid{
-    vector<int> p; // o pai de cada cara no centroide
-    vector<bool> vis; // visitado para construir o centroide
-    vector<int> tam; // tam da subarvore
     vector<vector<int>> & graph; // referencia da arvore original
     int n; // qtd de vertices 
+    vector<int> tam; // tam da subarvore
+    vector<bool> vis; // visitado para construir o centroide
+    vector<int> p; // o pai de cada cara no centroide
     int r; // raiz do centroide
     // vector<ll> cnt;
     // ll qt = 0;
 
-    Centroid(int n, vector<vector<int>> & graph) : graph(graph), n(n){
-        tam.resize(n+10);
-        vis.resize(n+10);
-        p.resize(n+10);
-        // cnt.resize(n+10);
-        r=build(1);
+    Centroid(int nn, vector<vector<int>> & ggraph) : n(nn), graph(ggraph), tam(nn+1),vis(nn+1,false),p(nn+1){
+        // cnt.resize(nn+1);
+        r = build(1);
     }
 
     // constroi o centroid decomposition
