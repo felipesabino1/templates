@@ -12,6 +12,7 @@ struct Line{
     }
 };
 struct CHT : multiset<Line,less<>>{
+    // (for doubles, use inf = 1/.0, div(a,b) = a/b)
     static const TT inf = std::numerical_limit<TT>::max();
     TT div(TT a, TT b){
         return a/b-((a^b) < 0 && a%b);
