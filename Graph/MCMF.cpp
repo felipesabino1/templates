@@ -3,20 +3,14 @@
 template <class TT = int, class TT1 = ll>
 class MCMF {
 public:
-    struct Edge {
-        Edge(int a, TT b, TT1 c) : to(a), cap(b), cost(c) {}
-        int to;
+    struct Edge{
+        int from,to;
         TT cap;
         TT1 cost;
+        Edge(int a, int b, TT c, TT1 d) : from(a), to(b), cap(c), cost(d) {}
     };
 
-    MCMF(int size) {
-        n = size;
-        edges.resize(n);
-        pot.assign(n, 0);
-        dist.resize(n);
-        visit.assign(n, false);
-    }
+    MCMF(int size) : n(size), edges(n), pot(n,0), dist(n), visit(n,false){}
 
     pair<TT, TT1> mcmf(int src, int sink) {
         pair<TT, TT1> ans(0, 0);
@@ -32,11 +26,11 @@ public:
         return ans;
     }
 
-    void addEdge(int from, int to, TT cap, TT1 cost) {
+    void add_edge(int from, int to, TT cap, TT1 cost) {
         edges[from].push_back(list.size());
-        list.push_back(Edge(to, cap, cost));
+        list.emplace_back(from,to, cap, cost));
         edges[to].push_back(list.size());
-        list.push_back(Edge(from, 0, -cost));
+        list.emplace_back(to,from,0,-cost);
     }
 private:
     int n;
