@@ -5,7 +5,7 @@ struct Dinic{
     struct FlowEdge{
         int v,u;
         long long cap, flow=0;
-        FlowEdge(int v,int u, long long cap) : v(v), u (u), cap(cap){}
+        FlowEdge(int a,int b, long long c) : v(a), u(b), cap(c){}
     };
     const long long flow_inf = 1e18;
     vector<FlowEdge> edges;
@@ -15,7 +15,7 @@ struct Dinic{
     vector<int> level,ptr;
     queue<int> q;
 
-    Dinic (int n,int s,int t) : adj(n),n(n), s(s), t(t),level(n),ptr(n){}
+    Dinic (int tam,int src,int snk) : adj(tam),n(tam), s(src), t(snk),level(tam),ptr(tam){}
 
     void add_edge(int v,int u, long long cap){
         edges.emplace_back(v,u,cap);
