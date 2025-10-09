@@ -6,11 +6,10 @@
     Update: O(4*log(N))
 */
 struct Seg{
-    // inicializar so o tamanho da seg, n fazer o build
+    // inicializar a seg
     Seg(int n_) : n(n_), seg(n_<<2), lazy(n_<<2){
         build(1,1,n);
     }
-
     // o que vai ter dentro do no de cada seg
     struct node{
 
@@ -47,14 +46,16 @@ struct Seg{
         // o at eh o merge do x(esq) e y(dir)
         
     }
+    // aplicar um update na range
+    void apply(int u,int tl,int tr,ll x){
+        
+    }
 
     // coisar a lazy pra baixo
     void push(int u,int tl,int tr){
         if(tl == tr || lazy[u] == off_lazy) return;
-        // atualizar os filhos
-
-        // atualizar as lazies dos filhos
-
+        int tmid = tl + tr; tmid >>= 1;
+        apply(lef(u),tl,tmid,lazy[u]), apply(rig(u),tmid+1,tr,lazy[rig(u)]);
         lazy[u] = off_lazy;
     }
 
@@ -62,14 +63,11 @@ struct Seg{
     void build(int u,int tl,int tr){
         if(tl == tr){
             // inicializar os caras bases
-            seg[u] = {};
-            lazy[u] = off_lazy;
+            seg[u] = {}; lazy[u] = off_lazy;
             return;
         }
-        int tmid = tl + tr;
-        tmid >>= 1;
-        build(lef(u), tl, tmid);
-        build(rig(u), tmid+1, tr);
+        int tmid = tl + tr; tmid >>= 1;
+        build(lef(u), tl, tmid), build(rig(u), tmid+1, tr);
         merge(seg[lef(u)], seg[rig(u)], seg[u]);
         lazy[u] = off_lazy;
     }
@@ -82,10 +80,8 @@ struct Seg{
             return;
         }
         push(u, tl, tr);
-        int tmid= tl + tr;
-        tmid >>= 1;
-        query(lef(u),tl,tmid,l,min(tmid,r));
-        query(rig(u),tmid+1,tr,max(tmid+1,l),r);   
+        int tmid= tl + tr; tmid >>= 1;
+        query(lef(u),tl,tmid,l,min(tmid,r)), query(rig(u),tmid+1,tr,max(tmid+1,l),r);   
     }
     node query(int l, int r){
         ret = off;
@@ -98,17 +94,14 @@ struct Seg{
         if(l > r) return;
         if(tl == l && tr == r){
             // atualizar a seg e o lazy
-            
+            apply(u,tl,tr,x);
             return;
         }
         push(u, tl, tr);
-        int tmid = tl + tr;
-        tmid >>= 1;
-        update(lef(u), tl, tmid, l, min(tmid,r), x);
-        update(rig(u), tmid+1, tr, max(tmid+1,l), r, x);
+        int tmid = tl + tr; tmid >>= 1;
+        update(lef(u), tl, tmid, l, min(tmid,r), x), update(rig(u), tmid+1, tr, max(tmid+1,l), r, x);
         merge(seg[lef(u)], seg[rig(u)], seg[u]);
     }
     void update(int l, int r, ll x){
         update(1, 1, n, l, r, x);
     }
-};
