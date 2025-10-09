@@ -105,3 +105,4 @@ struct Seg{
     void update(int l, int r, ll x){
         update(1, 1, n, l, r, x);
     }
+};
