@@ -55,7 +55,7 @@ struct Seg{
     void push(int u,int tl,int tr){
         if(tl == tr || lazy[u] == off_lazy) return;
         int tmid = tl + tr; tmid >>= 1;
-        apply(lef(u),tl,tmid,lazy[u]), apply(rig(u),tmid+1,tr,lazy[rig(u)]);
+        apply(lef(u),tl,tmid,lazy[u]), apply(rig(u),tmid+1,tr,lazy[u]);
         lazy[u] = off_lazy;
     }
 
