@@ -17,11 +17,11 @@ struct SparseTable{
     SparseTable(int n_) : n(n_), pot2(n_+10){
         pot2[1] = 0;
         for(int i=2; i<=n; i++) pot2[i] = pot2[i>>1] + 1;
-        tab.resize(n+10,vector<TT>(pot2[n]+1));
+        tab.resize(pot2[n]+1,vector<TT>(n+1));
     }
     void build(){
-        for(int i=1; i<=n; i++) tab[i][0] = a[i]; // nome do vetor original
-        for(int j=1; j<=pot2[n]; j++) for(int i=1; i+(1<<j)-1 <= n; i++) tab[i][j] = f(tab[i][j-1],tab[i+(1<<(j-1))][j-1]);
+        for(int i=1; i<=n; i++) tab[0][i] = a[i]; // nome do vetor original
+        for(int j=1; j<=pot2[n]; j++) for(int i=1; i+(1<<j)-1 <= n; i++) tab[j][i] = f(tab[j-1][i],tab[j-1][i+(1<<(j-1))]);
     }
 
     // operacao da sparse table
@@ -34,7 +34,7 @@ struct SparseTable{
         TT ans = off;
         for(int j=pot2[n]; j>=0; j--){
             if(l+(1<<j)-1 <= r){
-                ans = f(ans, tab[l][j]);
+                ans = f(ans, tab[j][l]);
                 l +=(1<<j);
             }
         }
@@ -44,6 +44,6 @@ struct SparseTable{
     TT query_id(int l,int r){
         if(l > r) return off;
         int diff = pot2[r-l+1];
-        return f(tab[l][diff],tab[r-(1<<diff)+1][diff]);
+        return f(tab[diff][l],tab[diff][r-(1<<diff)+1]);
     }
 };
