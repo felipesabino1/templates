@@ -21,7 +21,7 @@ struct Comb{
     mi fat_inv(int x){assert(x < fatoinv.size()); return fatoinv[x];}
     // binomial coefficient
     mi toma(ll n,ll k, bool k_pequeno = false){
-        if(n < 0 || k > n) return mi(0);
+        if(n < 0 || k > n || k < 0) return mi(0);
         mi ans;
         if(tomatoma.size() > n && tomatoma[0].size() > k) ans = tomatoma[n][k];
         else if(k_pequeno){
