@@ -5,7 +5,7 @@ namespace MD{
     // Assume que a,b >= 0, pra converter dps eh facil
     // O(log(min(a,b)))
     tuple<ll,ll,ll> ext_gcd(ll a, ll b){
-        if(!a) return {b, 0, sig};
+        if(!a) return {b, 0, 1};
         auto [g,x,y] = ext_gcd(b%a,a);
         return {g,y - b/a*x,x};
     }
@@ -15,6 +15,14 @@ namespace MD{
     struct crt{
         ll a, m;
         crt(ll aa = 0, ll mm = 1) : a(aa), m(mm) {}
+        crt(vector<ll>& A, vector<ll>& M){
+            if(A.size() != M.size()) a = -1, m = 0;
+            else{
+                crt c;
+                for(int i=0; i<A.size(); i++) c = c * crt(A[i],M[i]);
+                a = c.a, m = c.m;
+            }            
+        }
         crt operator*(crt c){
             auto [g,x,y] = ext_gcd(m,c.m);
             if((a-c.a)%g) a = -1;
@@ -41,7 +49,7 @@ namespace MD{
         ll g = __gcd(a,m);
         if(b%g) return off;
         a /= g, b /= g, m /= g;
-        auto [g,x,y] = ext_gcd(a,m);
+        auto [gg,x,y] = ext_gcd(a,m);
         return b*(x%m)%m;
     }
 }
