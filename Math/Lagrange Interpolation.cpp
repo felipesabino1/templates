@@ -3,7 +3,7 @@
 // Tudo modular, precisa do modint
 //
 // O(n)
-mint lagrange(int x, vector<mi> y) {
+mi lagrange(int x, vector<mi> y) {
 	int n = y.size();
 	if(x < n) return y[x];
 	vector<mi> sulf(n+1, 1), fat(n, 1), ifat(n);
