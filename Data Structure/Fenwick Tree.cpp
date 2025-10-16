@@ -61,6 +61,6 @@ struct Fen{
         return ans;
     }
     // TT query(int l, int r){
-    //     return query(r) OPERACAO query(l);
+    //     return query(r) - query(l);
     // }
 };
