@@ -13,13 +13,13 @@ struct Fen{
     int pref; // flag que indica se a Fenwick eh no prefixo(1), ou no sufixo(0)
     const TT off_fen = ; // valor dummy
 
-    Fen(int n_, int pref_=1, int t=0) : fen(n_+10), pref(pref_),n(n_){
+    Fen(int n_, int pref_=1, int t=0) : fen(n_+10,off_fen), pref(pref_),n(n_){
         if(t){
             // inicializar a Fenwick em O(n)
             for(int i=1; i<=n; i++){
-                fen[i] += a[i]; // operacao de update
+                fen[i] = f(fen[i],a[i]);
                 int x = i + (i&-i);
-                if(x <= n) fen[x] += fen[i]; // operacao de update
+                if(x <= n) fen[x] = f(fen[x],fen[i]); 
             }
         }
     }
