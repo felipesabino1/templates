@@ -1,6 +1,7 @@
-/*
-    Indexado em 0
-*/
+// Indexado em 0
+// O(min(m * max_flow, n^2 m))
+// Grafo com capacidades 1: O(min(m sqrt(m), m * n^(2/3)))
+// Todo vertice tem grau de entrada ou saida 1: O(m sqrt(n))
 struct Dinic{
     struct FlowEdge{
         int v,u;
