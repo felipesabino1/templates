@@ -1,10 +1,9 @@
-/*
-    Indexado de 1.
-    Responde uma operacao num subarray, suporta update em range
-    Init: O(4*N).
-    Query: O(4*log(N))
-    Update: O(4*log(N))
-*/
+// Indexado de 1
+// Query com op associativa e update em range
+// Init: 4*N
+// Query: 4*log(N)
+// Update: 4*log(N)
+// Definir o node e sono
 struct Seg{
     // inicializar a seg
     Seg(int n_) : n(n_), seg(n_<<2), lazy(n_<<2){
@@ -17,7 +16,7 @@ struct Seg{
             return true;
         }
     };
-    // o que vai ter dentro do no de cada lazy
+    // o que vai ter dentro do no de cada lazy, define o update
     struct sono{
 
         bool operator ==(const sono &ot)const{
@@ -46,11 +45,11 @@ struct Seg{
         // o at eh o merge do x(esq) e y(dir)
         
     }
-    // aplicar um update na range
-    void apply(int u,int tl,int tr,ll x){
-        
-    }
+    // aplicar um update
+    void apply(int u,int tl,int tr,sono& x){
 
+    }
+    
     // coisar a lazy pra baixo
     void push(int u,int tl,int tr){
         if(tl == tr || lazy[u] == off_lazy) return;
@@ -58,7 +57,7 @@ struct Seg{
         apply(lef(u),tl,tmid,lazy[u]), apply(rig(u),tmid+1,tr,lazy[u]);
         lazy[u] = off_lazy;
     }
-
+    
     // inicializar a seg
     void build(int u,int tl,int tr){
         if(tl == tr){
@@ -71,7 +70,7 @@ struct Seg{
         merge(seg[lef(u)], seg[rig(u)], seg[u]);
         lazy[u] = off_lazy;
     }
-
+    
     // consulta em range
     void query(int u,int tl,int tr,int l, int r){
         if(l > r) return;
@@ -88,9 +87,9 @@ struct Seg{
         query(1,1,n,l,r);
         return ret;
     }
-
+    
     // update em range
-    void update(int u, int tl, int tr, int l, int r, ll x){
+    void update(int u, int tl, int tr, int l, int r, sono& x){
         if(l > r) return;
         if(tl == l && tr == r){
             // atualizar a seg e o lazy
@@ -102,7 +101,9 @@ struct Seg{
         update(lef(u), tl, tmid, l, min(tmid,r), x), update(rig(u), tmid+1, tr, max(tmid+1,l), r, x);
         merge(seg[lef(u)], seg[rig(u)], seg[u]);
     }
+    // passa os parametros e passa um sono
     void update(int l, int r, ll x){
-        update(1, 1, n, l, r, x);
+        sono vals = {};
+        update(1, 1, n, l, r, vals);
     }
 };
