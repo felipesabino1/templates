@@ -66,19 +66,19 @@ struct Seg{
         return ret;
     }
     
-    void update(int u, int tl, int tr, int l, int r, sono& x){
-        if(l > r) return;
-        if(tl == l && tr == r){
+    void update(int u, int tl, int tr, int id, sono& x){
+        if(tl == tr){
             apply(u,tl,tr,x);
             return;
         }
         int tmid = tl + tr; tmid >>= 1;
-        update(lef(u), tl, tmid, l, min(tmid,r), x), update(rig(u), tmid+1, tr, max(tmid+1,l), r, x);
+        if(tmid >= id) update(lef(u),tl,tmid,id,x);
+        else update(rig(u),tmid+1,tr,id,x);
         merge(seg[lef(u)], seg[rig(u)], seg[u]);
     }
     // passa os parametros que dai vai converter pra sono
-    void update(int l, int r, ll x){
+    void update(int id, ll x){
         sono vals = {};
-        update(1, 1, n, l, r, vals);
+        update(1, 1, n, id, vals);
     }
 };
