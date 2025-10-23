@@ -18,9 +18,6 @@ struct Seg{
     // Update
     struct sono{
 
-        bool operator ==(const sono &ot)const{
-            return true;
-        }
     };
 
     int n;
