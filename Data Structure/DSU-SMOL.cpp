@@ -42,7 +42,7 @@ struct DSU{
     }
 
     // unir u e v
-    void unite(int u,int v,int t){
+    void unite(int u,int v,int t = 0){
         u = rep(u), v = rep(v);
         if(u == v) return;
         auto &x=smol[u];
