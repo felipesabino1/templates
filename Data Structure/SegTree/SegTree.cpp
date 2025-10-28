@@ -5,8 +5,8 @@
 // Update: 4*log(N)
 // Definir o node
 struct Seg{
-    Seg(int n_) : n(n_), seg(n_<<2){
-        build(1,1,n);
+    Seg(int n_, int t = 1) : n(n_), seg(n_<<2){
+        if(t) build(1,1,n);
     }
     // No da seg
     struct node{
