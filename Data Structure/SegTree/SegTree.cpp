@@ -5,10 +5,11 @@
 // Update: 4*log(N)
 // Definir o node
 struct Seg{
-    Seg(int n_, int t = 1) : n(n_), seg(n_<<2){
+    Seg(int nn = 0, int t = 0) : n(nn), seg(nn<<2){
         if(t) build(1,1,n);
     }
     void init(int nn){
+        if(seg.size() < (nn<<2)) seg.resize(nn<<2);
         n = nn;
         build(1,1,n);
     }
