@@ -6,7 +6,7 @@ struct mi {
     friend mi& operator+=(mi& a,mi b){if((a.v += b.v) >= mod) a.v -= mod; return a;}
     friend mi& operator-=(mi& a,mi b){if((a.v -= b.v) < 0) a.v += mod; return a;}
     friend mi& operator*=(mi& a,mi b){a.v = 1ll*a.v*b.v%mod; return a;}
-    friend mi& operator/=(mi& a,mi b){a = a*inv(b); return a;}
+    friend mi& operator/=(mi& a,mi b){a *= inv(b); return a;}
     friend mi operator+(mi a,mi b){return a += b;}
     friend mi operator-(mi a,mi b){return a -= b;}
     friend mi operator*(mi a,mi b){return a *= b;}
