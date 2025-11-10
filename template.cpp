@@ -5,7 +5,7 @@ using namespace std;
 #define get_bit(x,i) ((x)&(1ll<<(i)))
 #define sq(x) ((x)*(x))
 using ll = long long int; using ull = unsigned long long int; using i28 = __int128_t; using ld = long double;
-using vi = vector<int>; using vl = vector<ll>;
+template<class T> using vc = vector<T>; template<class T> using vvc = vector<vc<T>>;
 // const int MAX = 5e5+10;
 // const int mod = 1e9 + 7; // 998244353;
 // const int inf = 2'000'000'000;
