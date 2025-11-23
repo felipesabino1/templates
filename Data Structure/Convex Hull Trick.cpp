@@ -19,15 +19,16 @@ struct CHT : multiset<Line,less<>>{
     ll div(ll a, ll b){
         return a/b-((a^b) < 0 && a%b);
     }
- 
+	#warning se for de maximo inverter
+ 	ll bst(ll x, ll y){return min(x,y);}
     // x eh melhor que y?
     bool insect(iterator x, iterator y){
         if(y == end()){
             x->p=inf;
             return false;
         }
-        if(x->k == y->k) #warning se for de maximo inverter
-            x->p= x->m <= y->m ? inf : -inf;
+        if(x->k == y->k)
+            x->p= bst(x->m,y->m) == x->m ? inf : -inf;
         else
             x->p=div(y->m-x->m,x->k-y->k);
         return x->p >= y->p;
@@ -60,29 +61,29 @@ struct CHT{
 	int it;
 	vector<pair<ll,ll>> cht;
 	CHT():it(0){}
-    ll f(int id, ll x){return cht[id].first*x + cht[id].second}
+    ll f(int id, ll x){return cht[id].first*x + cht[id].second;}
     // se vc quer minimizar bota min, senao bota max
-    bool bst(ll v1, ll v2){return min(v1,v2);}
-
-    ll eval(int i, ll x){
-		return a[i]*x + b[i];
-	}
+    ll bst(ll v1, ll v2){return min(v1,v2);}
+    // pra double usar div(a,b) = a/b
+    int div(ll a, ll b){return a/b-((a^b) < 0 && a%b);}
 	bool useless(){
         int tam = cht.size();
-        int l = tam-3, mid = tam-2, r = tam-1;
-        #warning cuidado com overflow!
-		return (cht[l].second - cht[r].second)*(cht[mid].first - cht[l].first) <
-			(cht[l].second - cht[mid].second)*(cht[r].first - cht[l].first);
-	}
+        auto a = cht[tam-3], b = cht[tam-2], c = cht[tam-1];
+        return div(b.second-a.second,a.first-b.first) >= div(c.second-b.second,b.first-c.first);
+    }
     // add a*x+b
 	void add(ll a, ll b){
-		cht.emplace_back(a,b);
-        while(cht.size() >= 3 && useless()) 
+        if(!cht.empty() && a == cht.back().first) cht.back().second = bst(cht.back().second,b);
+        else cht.emplace_back(a,b);
+
+        while(it <= int(cht.size())-3 && useless())
             cht.erase(cht.end()-2);
+        
+        
         it = min(it, int(cht.size())-1);
 	}
     ll query(ll x){
-        while(it+1 < cht.size() && bst(f(it+1,x),f(it,x))) it++;
+        while(it+1 < cht.size() && f(it+1,x) == bst(f(it+1,x),f(it,x))) it++;
         return f(it,x);
     }
 };
