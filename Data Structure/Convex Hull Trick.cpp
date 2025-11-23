@@ -3,6 +3,7 @@
 struct Line{
     // coef angular, linear, criterio de comparacao
     mutable ll k,m,p;
+	#warning se for de maximo inverter
     // aqui eu quero sempre deixar os com menor coef angular mais pra frente, conc pra baixo
     bool operator <(const Line & ot) const{
         return k>ot.k;
@@ -25,7 +26,7 @@ struct CHT : multiset<Line,less<>>{
             x->p=inf;
             return false;
         }
-        if(x->k == y->k)
+        if(x->k == y->k) #warning se for de maximo inverter
             x->p= x->m <= y->m ? inf : -inf;
         else
             x->p=div(y->m-x->m,x->k-y->k);
