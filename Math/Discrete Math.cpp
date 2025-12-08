@@ -50,7 +50,8 @@ namespace MD{
         if(b%g) return off;
         a /= g, b /= g, m /= g;
         auto [gg,x,y] = ext_gcd(a,m);
-        return b*(x%m)%m;
+        x %=m; if(x < 0) x += m;
+        return b*x%m;
     }
 }
 using namespace MD;
