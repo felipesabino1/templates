@@ -6,21 +6,17 @@ make at # codigo que muda
 
 while true; do
     ./gen 2 > in
-    
-    start=$(date +%s)
     ./at < in > out # codigo que muda
-    end=$(date +%s)
 
-    echo "Elapsed Time in test: $(($end - $start)) seconds."
     ./brute < in > aout
     diff -B out aout > /dev/null || break
-    echo "Passou no caso."
+    echo "Passou"
     cat out
 done
 
-echo "WA on the following case:"
+echo "WA:"
 cat in
-echo "Your answer is:"
+echo "Your answer:"
 cat out
-echo "Correct answer is:"
+echo "Correct answer:"
 cat aout
