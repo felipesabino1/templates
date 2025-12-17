@@ -13,14 +13,14 @@ struct DSU{
     };
     
     int n;
-    vector<int> repre;
+    vector<int> rep;
     vector<gp> smol;
 
     // se t = 0, aloca sem init
-    DSU (int nn,int t = 1) : n(nn), repre(nn+1), smol(nn+1){
+    DSU (int nn,int t = 1) : n(nn), rep(nn+1), smol(nn+1){
         if(t){
             for(int i=1; i<=n; i++){
-                repre[i]=i;
+                rep[i]=i;
                 smol[i].init(i);
             }
         }
@@ -28,32 +28,28 @@ struct DSU{
     void init(int nn){
         n = nn;
         for(int i=1; i<=n; i++){
-            repre[i] = i;
+            rep[i] = i;
             smol[i].init(i);
         }
     }
 
-
-    int rep(int u){
-        return repre[u] = (repre[u] == u ? u : rep(repre[u]));
+    int get(int u){
+        return rep[u] = (rep[u] == u ? u : get(rep[u]));
     }
     gp & smoll(int u){
-        return smol[rep(u)];
+        return smol[get(u)];
     }
 
     // unir u e v
     void unite(int u,int v,int t = 0){
-        u = rep(u), v = rep(v);
+        u = get(u), v = get(v);
         if(u == v) return;
         auto &x=smol[u];
         auto &y=smol[v];
-        if(y.tam > x.tam){
-            unite(v,u,t);
-            return;
-        }
+        if(y.tam > x.tam) return void(unite(v,u,t));
         // da merge nos smols
         merge(x,y,t);
-        repre[v]=u;
+        rep[v]=u;
     }
 
     // fazer o merge de 2 grupos
