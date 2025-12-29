@@ -1,7 +1,5 @@
 using dd = double;
-const dd pi = acosl(-1.0);
-const dd eps = 1e-9;
-const dd DINF = 1e18;
+const dd pi = acosl(-1.0), eps = 1e-9, DINF = 1e18;
 #define rad(x) ((x)*pi/180)
 #define sq(x) ((x)*(x))
 namespace geo{
@@ -13,10 +11,10 @@ namespace geo{
     }
     int sgn(T x){return (dd(x)>eps) - (dd(x)<-eps);}
     
-    // pode representar um ponto, vetor ou numero complexo
+    // point,vector,complex
     struct pt{
         T x,y;
-        pt(T x_=0, T y_=0) : x(x_),y(y_){}
+        pt(T xx=0, T yy=0) : x(xx),y(yy){}
         bool operator<(const pt &ot)const{
             if(!eq(x,ot.x)) return x < ot.x; // ordena por x primeiro
             if(!eq(y,ot.y)) return y < ot.y;
@@ -31,10 +29,10 @@ namespace geo{
         return out << "(" << p.x << "," << p.y << ")";
     }
 
-    // representa uma reta ou segmento
+    // line,segment
     struct line{
         pt p,q;
-        line(pt p_={0,0},pt q_={0,0}) : p(p_),q(q_){}
+        line(pt pp={0,0},pt qq={0,0}) : p(pp),q(qq){}
         T get_y(T x){
             T m = (p.y - q.y)/(p.x - q.x);
             T b = p.y - m*p.x;
