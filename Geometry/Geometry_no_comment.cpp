@@ -3,28 +3,35 @@ const dd pi = acosl(-1.0), eps = 1e-9, DINF = 1e18;
 #define rad(x) ((x)*pi/180)
 #define sq(x) ((x)*(x))
 namespace geo{
-    using T = dd;
+    using T = ll;
 
     bool eq(const T x,const T y){
-        return fabs(x-y) < eps;
-        // return x == y;
+        // return fabs(x-y) < eps;
+        return x == y;
     }
     int sgn(T x){return (dd(x)>eps) - (dd(x)<-eps);}
     
     // point,vector,complex
     struct pt{
         T x,y;
+        int id;
         pt(T xx=0, T yy=0) : x(xx),y(yy){}
-        bool operator<(const pt &ot)const{
-            if(!eq(x,ot.x)) return x < ot.x; // ordena por x primeiro
-            if(!eq(y,ot.y)) return y < ot.y;
-            return false;
+        bool operator<(const pt& ot)const{
+            if(eq(x,ot.x)) return eq(y,ot.y) ? false : y < ot.y;
+            return x < ot.x;
         }
-        bool operator==(const pt &ot)const{return eq(x,ot.x) && eq(y,ot.y);}
-        bool operator!=(const pt &ot)const{return !eq(x,ot.x) || !eq(y,ot.y);}
-        pt operator-(){return pt(-x,-y);}
     };
     const pt pt_off(DINF,DINF);
+    bool operator==(const pt& p1, const pt& p2){return eq(p1.x,p2.x) && eq(p1.y,p2.y);}
+    bool operator!=(const pt& p1, const pt& p2){return !(p1 == p2);}
+    pt& operator+=(pt& a, pt b){a.x+=b.x,a.y+=b.y; return a;}
+    pt& operator-=(pt& a, pt b){a.x-=b.x,a.y-=b.y; return a;}
+    pt& operator*=(pt& a, T r){a.x*=r,a.y*=r; return a;}
+    pt& operator/=(pt& a, T r){a.x/=r,a.y/=r; return a;}
+    pt operator+(pt a,pt b){return a+=b;}
+    pt operator-(pt a,pt b){return a-=b;}
+    pt operator*(pt a, T r){return a*=r;}
+    pt operator/(pt a, T r){return a/=r;}
     ostream& operator<<(ostream& out, const pt p){
         return out << "(" << p.x << "," << p.y << ")";
     }
@@ -48,21 +55,13 @@ namespace geo{
         return out << "(" << l.p << ", " << l.q << ")";
     }
 
-    pt& operator+=(pt& a, pt b){a.x+=b.x;a.y+=b.y; return a;}
-    pt& operator-=(pt& a, pt b){a.x-=b.x;a.y-=b.y; return a;}
-    pt& operator*=(pt& a, T r){a.x*=r;a.y*=r; return a;}
-    pt& operator/=(pt& a, T r){a.x/=r;a.y/=r; return a;}
-    pt operator+(pt a,pt b){return a+=b;}
-    pt operator-(pt a,pt b){return a-=b;}
-    pt operator*(pt a, T r){return a*=r;}
-    pt operator/(pt a, T r){return a/=r;}
     // operacoes de vetores/complexos
     T abs2(pt p){return sq(p.x) + sq(p.y);}
     dd abs(pt p){return sqrtl(dd(abs2(p)));}
     pt unit(pt p){return p/abs(p);}
     dd arg(pt p){
         dd ang = atan2(dd(p.y),dd(p.x));
-        return (ang < 0 ? ang + 2*pi : ang);
+        return ang + (ang < 0 ? 2*pi : 0);
     }
     pt conj(pt p){return pt(p.x,-p.y);}
     pt perp(pt p){return pt(-p.y,p.x);}
@@ -72,18 +71,10 @@ namespace geo{
     pt operator*(pt a, pt b){return pt(a.x*b.x-a.y*b.y,a.y*b.x+a.x*b.y);}
     pt operator/(pt a, pt b){return a*conj(b)/abs2(b);}
     
-    T dot(pt p1, pt p2){
-        return p1.x*p2.x+p1.y*p2.y;
-    }
-    T dot(pt p1, pt p2, pt p3){
-        return dot(p2-p1,p3-p1);
-    }
-    T cross(pt p1, pt p2){
-        return p1.x*p2.y-p1.y*p2.x;
-    }
-    T cross(pt p1, pt p2, pt p3){
-        return cross(p2-p1,p3-p1);
-    }
+    T dot(pt p1, pt p2){return p1.x*p2.x+p1.y*p2.y;}
+    T dot(pt p1, pt p2, pt p3){return dot(p2-p1,p3-p1);}
+    T cross(pt p1, pt p2){return p1.x*p2.y-p1.y*p2.x;}
+    T cross(pt p1, pt p2, pt p3){return cross(p2-p1,p3-p1);}
     T det(pt p1, pt p2, pt p3){return cross(p2-p1,p3-p2);}
     bool colinear(pt p1,pt p2,pt p3){return eq(det(p1,p2,p3),0);}
     bool ccw(pt p1, pt p2, pt p3){return det(p1,p2,p3) > eps;}
@@ -93,7 +84,7 @@ namespace geo{
         return a+conj((p-a)/d)*d;
     }
     pt proj(const pt p, const line l){
-        return (p+reflect(p,l))/(T)2;
+        return (p+reflect(p,l))/T(2);
     }
     pt rotate90(pt a, pt c = pt(0,0)){
         a -= c;
@@ -119,8 +110,6 @@ namespace geo{
         if (onseg(r.p, s) || onseg(r.q, s) || onseg(s.p, r) || onseg(s.q, r)) return true;
         return ccw(r.p, r.q, s.p) != ccw(r.p, r.q, s.q) && ccw(s.p, s.q, r.p) != ccw(s.p, s.q, r.q);
     }
-    dd dist(pt p1, pt p2){return abs(p2-p1);}
-    T dist2(pt p1, pt p2){return abs2(p2-p1);}
     dd ang(pt p1, pt p2, pt p3){
         pt v1 = p1-p2, v2 = p3-p2;
         dd angle = acosl(dd(dot(v1,v2))/abs(v1)/abs(v2));
@@ -144,17 +133,18 @@ namespace geo{
         return ret;
     }
 
-    //  Usage: vpt v; sort(all(v),angleCmp);
+    using vpt = vector<pt>;
+
+    // Usage: vpt v; sort(all(v),angleCmp);
     // used to sort points int ccw around the origin
+    // equivalent to: sort(all(v),[](pt a, pt b) { 
+    //  return atan2(a.sd,a.ft) < atan2(b.sd,b.ft); });
     int half(pt p){return !eq(p.y,0) ? sgn(p.y) : -sgn(p.x);}
     bool angleCmp(pt a, pt b){
         int A = half(a), B = half(b);
         return A == B ? cross(a,b) > 0 : A < B;
     }
-    // equivalent to: sort(all(v),[](pt a, pt b) { 
-    //    return atan2(a.sd,a.ft) < atan2(b.sd,b.ft); });
-
-    using vpt = vector<pt>;
+    
     // degenerate line (one point line) if it exists
     // line == b if input lines are the same
     // line(pt_off,pt_off) if lines do not intersect
@@ -239,6 +229,25 @@ namespace geo{
             ret = min(ret, segdist(line(v1[i], v1[(i + 1) % v1.size()]),
                         line(v2[j], v2[(j + 1) % v2.size()])));
         return ret;
+    }
+    vpt convex_hull(vpt v) { // convex hull - O(n log(n))
+        sort(v.begin(), v.end());
+        v.erase(unique(v.begin(), v.end()), v.end());
+        if (v.size() <= 1) return v;
+        vpt l, u;
+        for (int i = 0; i < v.size(); i++) { // lower
+            while (l.size() > 1 and !ccw(l.end()[-2], l.end()[-1], v[i]))
+                l.pop_back();
+            l.push_back(v[i]);
+        }
+        for (int i = v.size() - 1; i >= 0; i--) { // upper
+            while (u.size() > 1 and !ccw(u.end()[-2], u.end()[-1], v[i]))
+                u.pop_back();
+            u.push_back(v[i]);
+        }
+        l.pop_back(); u.pop_back();
+        for (pt i : u) l.push_back(i);
+        return l;
     }
 }
 using namespace geo;
