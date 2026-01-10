@@ -16,33 +16,21 @@ struct Seg{
     // No da seg
     struct node{
 
-        bool operator ==(const node &ot)const{
-            return true;
-        }
+        bool off = false;
     };
     // Update e lazy
     struct sono{
 
-        bool operator ==(const sono &ot)const{
-            return true;
-        }
+        bool off = false;
     };
 
     int n;
-    const node off = {};
-    const sono off_lazy = {}; 
     vector<node> seg;
     vector<sono> lazy;
     node ret,aux;
     void merge(node &x, node &y, node & at){
-        if(x == off) {
-            at = y;
-            return;
-        }
-        if(y == off) {
-            at = x;
-            return;
-        }
+        if(x.off) return void(at = y);
+        if(y.off) return void(at = x);
         // o at eh o merge do x(esq) e y(dir)
         
     }
@@ -52,20 +40,20 @@ struct Seg{
     }
     
     void push(int u,int tl,int tr){
-        if(tl == tr || lazy[u] == off_lazy) return;
+        if(tl == tr || lazy[u].off) return;
         int tmid = tl + tr; tmid >>= 1;
         apply(lef(u),tl,tmid,lazy[u]), apply(rig(u),tmid+1,tr,lazy[u]);
-        lazy[u] = off_lazy;
+        lazy[u].off = true;
     }
     void build(int u,int tl,int tr){
         if(tl == tr){
-            seg[u] = {}; lazy[u] = off_lazy;
+            seg[u] = {}; lazy[u].off = true;
             return;
         }
         int tmid = tl + tr; tmid >>= 1;
         build(lef(u), tl, tmid), build(rig(u), tmid+1, tr);
         merge(seg[lef(u)], seg[rig(u)], seg[u]);
-        lazy[u] = off_lazy;
+        lazy[u].off = true;
     }
     
     void query(int u,int tl,int tr,int l, int r){
@@ -79,7 +67,7 @@ struct Seg{
         query(lef(u),tl,tmid,l,min(tmid,r)), query(rig(u),tmid+1,tr,max(tmid+1,l),r);   
     }
     node query(int l, int r){
-        ret = off;
+        ret.off = true;
         query(1,1,n,l,r);
         return ret;
     }
