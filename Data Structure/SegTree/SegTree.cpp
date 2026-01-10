@@ -15,10 +15,7 @@ struct Seg{
     }
     // No da seg
     struct node{
-
-        bool operator ==(const node &ot)const{
-            return true;
-        }
+        bool off = false;
     };
     // Update
     struct sono{
@@ -26,18 +23,11 @@ struct Seg{
     };
 
     int n;
-    const node off = {};
     vector<node> seg;
     node ret,aux;
     void merge(node &x, node &y, node & at){
-        if(x == off) {
-            at = y;
-            return;
-        }
-        if(y == off) {
-            at = x;
-            return;
-        }
+        if(x.off) return void(at = y);
+        if(y.off) return void(at = x);
         // o at eh o merge do x(esq) e y(dir)
         
     }
@@ -66,7 +56,7 @@ struct Seg{
         query(lef(u),tl,tmid,l,min(tmid,r)), query(rig(u),tmid+1,tr,max(tmid+1,l),r);   
     }
     node query(int l, int r){
-        ret = off;
+        ret.off = true;
         query(1,1,n,l,r);
         return ret;
     }
