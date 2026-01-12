@@ -3,7 +3,7 @@
 // Init: 4*N
 // Query: 4*log(N)
 // Update: 4*log(N)
-// Definir o node e sono
+// Definir: node,sono,merge,apply,build,update
 struct Seg{
     Seg(int nn = 0, int t = 0) : n(nn), seg(nn<<2), lazy(nn<<2){
         if(t) build(1,1,n);
@@ -58,10 +58,7 @@ struct Seg{
     
     void query(int u,int tl,int tr,int l, int r){
         if(l > r) return;
-        if(tl == l && tr == r) {
-            merge(aux = ret,seg[u],ret);
-            return;
-        }
+        if(tl == l && tr == r) return merge(aux = ret,seg[u],ret);
         push(u, tl, tr);
         int tmid= tl + tr; tmid >>= 1;
         query(lef(u),tl,tmid,l,min(tmid,r)), query(rig(u),tmid+1,tr,max(tmid+1,l),r);   
@@ -74,10 +71,7 @@ struct Seg{
     
     void update(int u, int tl, int tr, int l, int r, sono& x){
         if(l > r) return;
-        if(tl == l && tr == r){
-            apply(u,tl,tr,x);
-            return;
-        }
+        if(tl == l && tr == r) return apply(u,tl,tr,x);
         push(u, tl, tr);
         int tmid = tl + tr; tmid >>= 1;
         update(lef(u), tl, tmid, l, min(tmid,r), x), update(rig(u), tmid+1, tr, max(tmid+1,l), r, x);
