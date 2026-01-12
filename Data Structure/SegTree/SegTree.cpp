@@ -1,17 +1,16 @@
 // Indexado de 1
 // Query com op associativa e update em ponto
-// Init: 4*N
-// Query: 4*log(N)
-// Update: 4*log(N)
-// Definir: node,upd,merge,apply,build,update
+// Init: 2*N
+// Query: 2*log(N)*O(merge)
+// Update: log(N)*O(merge)
+// Definir: node,upd,merge,build,apply,update
 struct Seg{
-    Seg(int nn = 0, int t = 0) : n(nn), seg(nn<<2){
-        if(t) build(1,1,n);
+    Seg(int nn = 0, int t = 1) : n(nn), seg(nn<<1){
+        if(t) build();
     }
     void init(int nn){
-        if(seg.size() < (nn<<2)) seg.resize(nn<<2);
-        n = nn;
-        build(1,1,n);
+        n = nn; if(seg.size() < 2*n) seg.resize(n<<1);
+        build();
     }
     // No da seg
     struct node{
@@ -24,47 +23,33 @@ struct Seg{
     };
 
     int n; vector<node> seg;
-    node ret,aux;
     void merge(node &x, node &y, node & at){
         if(x.off) return void(at = y);
         if(y.off) return void(at = x);
         // o at eh o merge do x(esq) e y(dir)
-        
-    }
-    // aplicar um update
-    void apply(int u,int tl,int tr,upd& x){
 
     }
-    
-    void build(int u,int tl,int tr){
-        if(tl == tr) return void(seg[u] = {false});
-        int tmid = tl + tr; tmid >>= 1;
-        build(lef(u), tl, tmid), build(rig(u), tmid+1, tr);
-        merge(seg[lef(u)], seg[rig(u)], seg[u]);
+    void build(){
+        for(int u=1; u<=n; u++) seg[u-1+n] = {a[u],false};
+        for(int u=n-1; u; u--) merge(seg[lef(u)],seg[rig(u)],seg[u]);
     }
-    
-    void query(int u,int tl,int tr,int l, int r){
-        if(l > r) return;
-        if(tl == l && tr == r) return merge(aux = ret, seg[u], ret);
-        int tmid= tl + tr; tmid >>= 1;
-        query(lef(u),tl,tmid,l,min(tmid,r)), query(rig(u),tmid+1,tr,max(tmid+1,l),r);   
+    // aplicar um update
+    void apply(int u,upd x){
+        
     }
-    node query(int l, int r){
-        ret.off = true;
-        query(1,1,n,l,r);
-        return ret;
-    }
-    
-    void update(int u, int tl, int tr, int id, upd& x){
-        if(tl == tr) return apply(u,tl,tr,x);
-        int tmid = tl + tr; tmid >>= 1;
-        if(tmid >= id) update(lef(u),tl,tmid,id,x);
-        else update(rig(u),tmid+1,tr,id,x);
-        merge(seg[lef(u)], seg[rig(u)], seg[u]);
+    // query inclusiva [l,r]
+    node query(int l,int r){
+        node vl,vr,aux;
+        vl.off = vr.off = true;
+        for(l+=n-1,r+=n;l<r;l>>=1,r>>=1){
+            if (l&1) merge(aux=vl,seg[l++],vl);
+            if (r&1) merge(seg[--r],aux=vr,vr);
+        } merge(vl,vr,aux); return aux;
     }
     // passa os parametros que dai vai converter pra upd
     void update(int id, ll x){
-        upd vals = {};
-        update(1, 1, n, id, vals);
+        id += n-1;
+        apply(id,{}); 
+        for(id>>=1; id; id>>=1) merge(seg[lef(id)],seg[rig(id)],seg[id]);
     }
 };
