@@ -38,17 +38,14 @@ namespace geo{
     // line,segment
     struct line{
         pt p,q;
-        line(pt p={0,0},pt qq={0,0}) : p(pp),q(qq){}
-        T get_y(T x){
-            T m = (p.y - q.y)/(p.x - q.x);
-            T b = p.y - m*p.x;
-            return m*x+b;
+        line(pt pp={0,0}, pt qq={0,0}) : p(pp), q(qq){
+            m = (p.y-q.y)/(p.x-q.x);
+            b = p.y-m*p.x;
         }
-        T get_x(T y){
-            T m = (p.y - q.y)/(p.x - q.x);
-            T b = p.y - m*p.x;
-            return (y-b)/m;
-        }
+        // se quiser economizar memoria, comenta
+        T m,b;
+        T get_y(T x){return m*x+b;}
+        T get_x(T y){return (y-b)/m;}
     };
     ostream& operator<<(ostream& out, const line l){
         return out << "(" << l.p << ", " << l.q << ")";
