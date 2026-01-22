@@ -14,7 +14,6 @@ namespace geo{
     // point,vector,complex
     struct pt{
         T x,y;
-        int id;
         pt(T xx=0, T yy=0) : x(xx),y(yy){}
         bool operator<(const pt& ot)const{
             if(eq(x,ot.x)) return eq(y,ot.y) ? false : y < ot.y;
@@ -39,7 +38,7 @@ namespace geo{
     // line,segment
     struct line{
         pt p,q;
-        line(pt pp={0,0},pt qq={0,0}) : p(pp),q(qq){}
+        line(pt p={0,0},pt qq={0,0}) : p(pp),q(qq){}
         T get_y(T x){
             T m = (p.y - q.y)/(p.x - q.x);
             T b = p.y - m*p.x;
@@ -55,7 +54,7 @@ namespace geo{
         return out << "(" << l.p << ", " << l.q << ")";
     }
 
-    // operacoes de vetores/complexos
+    // vector
     T abs2(pt p){return sq(p.x) + sq(p.y);}
     dd abs(pt p){return sqrtl(dd(abs2(p)));}
     pt unit(pt p){return p/abs(p);}
@@ -63,14 +62,14 @@ namespace geo{
         dd ang = atan2(dd(p.y),dd(p.x));
         return ang + (ang < 0 ? 2*pi : 0);
     }
-    pt conj(pt p){return pt(p.x,-p.y);}
-    pt perp(pt p){return pt(-p.y,p.x);}
-    pt dir(dd ang){return pt(cosl(ang),sinl(ang));}
+    pt dir(dd ang){return pt(cosl(ang),sinl(ang));} // unit vector in direction
     
-    // operacoes de complexos
+    // complex
     pt operator*(pt a, pt b){return pt(a.x*b.x-a.y*b.y,a.y*b.x+a.x*b.y);}
     pt operator/(pt a, pt b){return a*conj(b)/abs2(b);}
+    pt conj(pt p){return pt(p.x,-p.y);}
     
+    // point/vector
     T dot(pt p1, pt p2){return p1.x*p2.x+p1.y*p2.y;}
     T dot(pt p1, pt p2, pt p3){return dot(p2-p1,p3-p1);}
     T cross(pt p1, pt p2){return p1.x*p2.y-p1.y*p2.x;}
@@ -78,7 +77,18 @@ namespace geo{
     T det(pt p1, pt p2, pt p3){return cross(p2-p1,p3-p2);}
     bool colinear(pt p1,pt p2,pt p3){return eq(det(p1,p2,p3),0);}
     bool ccw(pt p1, pt p2, pt p3){return det(p1,p2,p3) > eps;}
+    pt perp(pt p){return pt(-p.y,p.x);} // rotaciona em 90 graus
+    pt rotate(pt a, dd d){ // rotaciona em d radianos(ccw) com centro(0,0)
+        return pt(p.x * cos(th) - p.y * sin(th),
+            p.x * sin(th) + p.y * cos(th));
+    }
+    dd ang(pt p1, pt p2, pt p3){ // p2 o ponto do meio do angulo, ang(a,b,c) == ang(c,b,a)
+        pt v1 = p1-p2, v2 = p3-p2;
+        dd angle = acosl(dd(dot(v1,v2))/abs(v1)/abs(v2));
+        return angle + (angle < 0 ? 2*pi : 0);
+    }
     
+    // line/point
     pt reflect(const pt p, const line l){
         pt a = l.p, d = l.q-l.p;
         return a+conj((p-a)/d)*d;
@@ -86,22 +96,6 @@ namespace geo{
     pt proj(const pt p, const line l){
         return (p+reflect(p,l))/T(2);
     }
-    pt rotate90(pt a, pt c = pt(0,0)){
-        a -= c;
-        swap(a.x,a.y);
-        a.x = -a.x;
-        a += c;
-        return a;
-    }
-    pt rotate(pt a, dd d, pt c = pt(0,0)){
-        a -= c;
-        pt b;
-        b.x = a.x*cosl(d) - a.y*sinl(d);
-        b.y = a.y*cosl(d) + a.x*sinl(d);
-        b += c;
-        return b;
-    }
-
     bool onseg(pt p, line l){
         return sgn(cross(l.p,l.q,p)) == 0 && sgn(dot(p,l.p,l.q)) <= 0;
     }
@@ -109,11 +103,6 @@ namespace geo{
     bool interseg(line r, line s) { // se o seg de r intersecta o seg de s
         if (onseg(r.p, s) || onseg(r.q, s) || onseg(s.p, r) || onseg(s.q, r)) return true;
         return ccw(r.p, r.q, s.p) != ccw(r.p, r.q, s.q) && ccw(s.p, s.q, r.p) != ccw(s.p, s.q, r.q);
-    }
-    dd ang(pt p1, pt p2, pt p3){
-        pt v1 = p1-p2, v2 = p3-p2;
-        dd angle = acosl(dd(dot(v1,v2))/abs(v1)/abs(v2));
-        return angle + (angle < 0 ? 2*pi : 0);
     }
     dd linedist(const line l, const pt p){ // distancia reta ponto
         return abs(cross(p,l.p,l.q))/abs(l.p-l.q);
@@ -133,6 +122,7 @@ namespace geo{
         return ret;
     }
 
+    // polygon
     using vpt = vector<pt>;
 
     // Usage: vpt v; sort(all(v),angleCmp);
