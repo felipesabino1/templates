@@ -21,7 +21,7 @@ struct Kosaraju{
         // criar o novo grafo
         for(int i=0; i<n; i++){
             int u = vis[i];
-            for(auto vv: graph[i]) if(u != vis[vv]) ng[u].push_back(vis[vv]);
+            for(auto v: graph[i]) if(u != vis[v]) ng[u].push_back(vis[v]);
         }
         inv.clear(), vis.clear(), ord.clear();
     }
