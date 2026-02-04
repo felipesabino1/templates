@@ -1,9 +1,11 @@
-/*
-    Indexado de 1. O grafo condensado ta em ngraph, tem que ter um graph e inv globais
-*/
+// Indexado de 1
+// Constroi a DAG de um grafo direcionado
+// graph e inv (inversa do grafo) tem que ser globais. O grafo condensado esta em ngraph
+// O(N+M)
 namespace DAG{
     int timer;
-    vector<int> vis,ord,ngraph;
+    vector<int> vis,ord;
+    vector<vector<int>> ngraph;
     void set_ord(int u){
         vis[u] = 1;
         for(auto v: graph[u]){
