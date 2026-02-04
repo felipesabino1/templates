@@ -1,47 +1,37 @@
-// Indexado de 1
+// Indexado de 0
 // Constroi a DAG de um grafo direcionado
-// graph e inv (inversa do grafo) tem que ser globais. O grafo condensado esta em ngraph
-// O(N+M)
-namespace DAG{
-    int timer;
-    vector<int> vis,ord;
-    vector<vector<int>> ngraph;
+// O(N+M), internamente cria a inversa do grafo original
+struct Kosaraju{
+    vvc<int> &graph; vvc<int>inv;
+    vc<int> vis,ord; int timer;
+    vvc<int> ng; // nova DAG
+    Kosaraju(vvc<int>& graphh) : graph(graphh), inv(graphh.size()), vis(graphh.size(),0){
+        int n = graph.size();
+        for(int u=0; u<n; u++) for(auto v : graph[u]) inv[v].push_back(u);
+        // ordem de saida dos caras
+        for(int i=0; i<n; i++) vis[i] = 0;
+        for(int i=0; i<n; i++) if(!vis[i]) set_ord(i);
+        reverse(ord.begin(),ord.end());
+        for(int i=0; i<n; i++) vis[i] = 0;
+        // andar no grafo inverso pra arrumar as componentes
+        timer = 0;
+        for(auto u : ord) if(!vis[u]) timer++,set_comp(u);
+        ng.resize(timer);
+        for(int i=0; i<n; i++) vis[i]--;
+        // criar o novo grafo
+        for(int i=0; i<n; i++){
+            int u = vis[i];
+            for(auto vv: graph[i]) if(u != vis[vv]) ng[u].push_back(vis[vv]);
+        }
+        inv.clear(), vis.clear(), ord.clear();
+    }
     void set_ord(int u){
         vis[u] = 1;
-        for(auto v: graph[u]){
-            if(vis[v]) continue;
-            set_ord(v);
-        }
+        for(auto v: graph[u]) if(!vis[v]) set_ord(v);
         ord.push_back(u);
     }
     void set_comp(int u){
         vis[u] = timer;
-        for(auto v: inv[u]){
-            if(vis[v]) continue;
-            set_comp(v);
-        }
+        for(auto v: inv[u]) if(!vis[v]) set_comp(v);
     }
-    void solve(int n){
-        vis.resize(n); ord.clear();
-        // ordem de saida dos caras
-        for(int i=1; i<=n; i++) vis[i] = 0;
-        for(int i=0; i<=n; i++) if(!vis[i]) set_ord(i);
-        reverse(ord.begin(),ord.end());
-        for(int i=1; i<=n; i++) vis[i] = 0;
-        // andar no grafo inverso pra arrumar as componentes
-        timer = 1;
-        for(auto u : ord) if(!vis[u]) set_comp(u),timer++;
-        timer--;
-        ngraph.resize(timer+1);
-        // criar o novo grafo
-        for(int i=1; i<=n; i++){
-            int u = vis[i];
-            for(auto vv: graph[i]) {
-                int v = vis[vv];
-                if(u == v) continue;
-                ngraph[u].push_back(v);
-            }
-        }
-    }
-}
-using namespace DAG;
+};
