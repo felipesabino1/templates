@@ -5,7 +5,7 @@ struct Kosaraju{
     vvc<int> &graph; vvc<int>inv;
     vc<int> vis,ord; int timer;
     vvc<int> ng; // nova DAG
-    Kosaraju(vvc<int>& graphh) : graph(graphh), inv(graphh.size()), vis(graphh.size(),0){
+    Kosaraju(vvc<int>& g) : graph(g), inv(g.size()), vis(g.size(),0){
         int n = graph.size();
         for(int u=0; u<n; u++) for(auto v : graph[u]) inv[v].push_back(u);
         // ordem de saida dos caras
