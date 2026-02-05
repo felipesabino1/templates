@@ -1,61 +1,43 @@
-/*
-    Indexado de 1
-*/
+// Indexado de 0
+// Realiza a Centroid Decomposition da arvore
+// O(N * log(N))
 struct Centroid{
     vector<vector<int>> & graph; // referencia da arvore original
-    int n; // qtd de vertices 
-    vector<int> tam; // tam da subarvore
-    vector<bool> vis; // visitado para construir o centroide
-    vector<int> p; // o pai de cada cara no centroide
-    int r; // raiz do centroide
-    // vector<ll> cnt;
+    int r; // raiz do centroid
+    vc<int> tam,p; vc<bool> vis; // tam de subarvore, pais do centroide
+    // vc<ll> cnt;
     // ll qt = 0;
 
-    Centroid(int nn, vector<vector<int>> & ggraph) : n(nn), graph(ggraph), tam(nn+1),vis(nn+1,false),p(nn+1){
-        // cnt.resize(nn+1);
-        r = build(1);
+    Centroid(vvc<int> &g) : graph(g),tam(g.size()),p(g.size()),vis(g.size()){
+        r = build(0);
     }
 
     // constroi o centroid decomposition
     int build(int u){
         set_tam(u,u);
-        u = find_centroid(u);
+        u = get(u);
         vis[u]=1;
 
         // se tiver que fazer algum calculo durante o centroid decomposition
         // calc(u);
 
         p[u]=u;
-        for(auto v: graph[u]){
-            if(vis[v]) continue;
-            int x=build(v);
-            p[x]=u;
-        }    
+        for(auto v: graph[u]) if(!vis[v]) p[build(v)] = u;
         return u;
     }
 
     void set_tam(int u,int ant){
         tam[u]=1;
-        for(auto v: graph[u]){
-            if(v == ant || vis[v]) continue;
+        for(auto v: graph[u]) if(v != ant && !vis[v]){
             set_tam(v,u);
             tam[u]+=tam[v];
         }
     }
-    int find_centroid(int u){
-        while(1){
-            int flag=1;
-            for(auto v: graph[u]){
-                if(vis[v]) continue;
-                if(tam[v]*2 > tam[u]){
-                    tam[u]-=tam[v];
-                    tam[v]+=tam[u];
-                    u=v;
-                    flag=0;
-                    break;
-                }
-            }
-            if(flag) break;
+    int get(int u){
+        for(auto v : graph[u]) if(!vis[v] && 2*tam[v] > tam[u]){
+            tam[u]-=tam[v];
+            tam[v]+=tam[u];
+            return get(v);
         }
         return u;
     }
