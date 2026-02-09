@@ -13,7 +13,7 @@ template<class TT = ll> struct RMQ{
     int msb(int x){return 31-__builtin_clz(x);}
     int small(int r, int sz = b){return r-msb(mask[r]&((1<<sz)-1));}
 	rmq() {}
-	rmq(const vector<TT>& vv) : v(vv), n(v.size()), mask(n), t(n) {
+	rmq(const vc<TT>& vv) : v(vv), n(v.size()), mask(n), t(n) {
 		for (int i = 0, at = 0; i < n; mask[i++] = (at |= 1)) {
 			at = (at<<1)&((1<<b)-1);
 			while (at && op(i-msb(at&-at), i) == i) at ^= at&-at;
