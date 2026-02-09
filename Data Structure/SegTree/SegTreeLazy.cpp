@@ -5,12 +5,12 @@
 // Update: 4*log(N)
 // Definir: node,sono,merge,apply,build,update
 struct Seg{
-    Seg(int nn = 0, int t = 0) : n(nn), seg(nn<<2), lazy(nn<<2){
+    Seg(int nn = 0, int t = 0) : n(nn), seg(n<<2), lazy(n<<2){
         if(t) build(1,1,n);
     }
     void init(int nn){
-        if(seg.size() < (nn<<2)) seg.resize(nn<<2),lazy.resize(nn<<2);
         n = nn;
+        if(seg.size() < (n<<2)) seg.resize(n<<2),lazy.resize(n<<2);
         build(1,1,n);
     }
     // No da seg
@@ -25,8 +25,8 @@ struct Seg{
     };
 
     int n;
-    vector<node> seg;
-    vector<sono> lazy;
+    vc<node> seg;
+    vc<sono> lazy;
     node ret,aux;
     void merge(node &x, node &y, node & at){
         if(x.off) return void(at = y);
@@ -34,9 +34,9 @@ struct Seg{
         // o at eh o merge do x(esq) e y(dir)
         
     }
-    // aplicar um update
+    // aplica o updt e att o lazy
     void apply(int u,int tl,int tr,sono& x){
-
+        
     }
     
     void push(int u,int tl,int tr){
