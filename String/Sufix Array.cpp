@@ -1,4 +1,5 @@
-// Computa o Suffix Array
+// Computa o Suffix Array indexado de 0
+// A primeira posicao do SA eh o end() da string
 // O(N * log(N))
 vc<int> SA(string s){
     s.push_back('$'); int n = s.size();
@@ -6,9 +7,8 @@ vc<int> SA(string s){
         return (k == -1 ? id : (id + (1<<k)) % n);
     };
     vc<int> c(n),nc(n),ord(n),nord(n);
-    vc<int> cnt(max(256,n),0);
-    for(int i=0; i<n; i++) ord[i] = i;
-    for(int i=0; i<n; i++) c[i] = s[i];
+    vc<int> cnt(max(256,n),0); // tamanho do alfabeto
+    for(int i=0; i<n; i++) c[i] = s[i], ord[i] = i;
     // ordena pela primeira metade
     auto radix = [&](int k) -> void {
         for(int i=0; i<n; i++) cnt[c[i]]++;
@@ -28,22 +28,20 @@ vc<int> SA(string s){
     }
     return ord;
 }
-/*
-    Given the suffix array, calculates the LCP from sufix array.
-    O(n).
-*/
-vector<int> LCP(string & s, vector<int> &sa){
-    string str = s + '$';
-    int n = str.size();
-    vector<int> pos(n);
-    vector<int> lcp(n,0);
-    for(int i=0; i<n; i++) pos[sa[i]] = i;
-    int tam = 0;
-    // tam so aumenta ate n, e diminui de 1 em 1, entao O(n)
-    for(int i=0; i<n-1; i++){
-        int id = pos[i];
-        while(i + tam < n && sa[id-1] + tam < n && str[i+tam] == str[sa[id-1] + tam]) tam++;
-        lcp[id-1] = tam;
+// Calcula o LCP entre os sufixos ordenados
+// O(N)
+vc<int> LCP(string& s, vc<int>& sa){    
+    int n = s.size();
+    vc<int> lcp(n),pos(n+1);
+    for(int i=0; i<=n; i++) pos[sa[i]] = i;
+    for(int tam=0,at=0,ot; at<=n; at++){
+        if(pos[at] == n){
+            tam = 0;
+            continue;
+        }
+        ot = sa[pos[at]+1];
+        while(at+tam<n && ot+tam<n && s[at+tam] == s[ot+tam]) tam++;
+        lcp[pos[at]] = tam;
         if(tam) tam--;
     }
     return lcp;
