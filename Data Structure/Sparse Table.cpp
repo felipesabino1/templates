@@ -1,27 +1,17 @@
-/*
-    Indexado de 1.
-    Responde uma operacao num subarray, a operacao precisa ser associativa e de preferencia ter uma identidade.
-    Init: O(N*log(N)).
-    Query: O(log(N)) ou O(1) para operacoes idempotentes. 
-
-    Alteracoes: 
-    Funcao f() da tabela, valor off
-*/
+// Indexado de 0
+// Responde operacao associativa em range, nao precisa ter identidade
+// Init: O(N * log(N))
+// Query: O(log(N)) ou O(1) para idempotente
+// Alterar a operacao associativa e o valor off
 template <class TT = ll>
 struct SparseTable{
-    int n; // tamanho 
-    vector<vector<TT>> tab; // sparse table
-    vector<int> pot2; // log de cada valor
+    int n; vvc<TT> tab;
     const TT off = ;
 
-    SparseTable(int n_) : n(n_), pot2(n_+10){
-        pot2[1] = 0;
-        for(int i=2; i<=n; i++) pot2[i] = pot2[i>>1] + 1;
-        tab.resize(pot2[n]+1,vector<TT>(n+1));
-    }
-    void build(){
-        for(int i=1; i<=n; i++) tab[0][i] = a[i]; // nome do vetor original
-        for(int j=1; j<=pot2[n]; j++) for(int i=1; i+(1<<j)-1 <= n; i++) tab[j][i] = f(tab[j-1][i],tab[j-1][i+(1<<(j-1))]);
+    SparseTable(vc<TT>& vec) : n(vec.size()), tab(31-__builtin_clz(vec.size()),vc<TT>(vec.size())){
+        for(int i=0; i<n; i++) tab[0][i] = vec[i];
+        for(int j=1; j<tab.size(); j++) for(int i=0; i+(1<<j)-1<n; i++) 
+            tab[j][i] = f(tab[j-1][i],tab[j-1][i+(1<<(j-1))]);
     }
 
     // operacao da sparse table
@@ -30,20 +20,18 @@ struct SparseTable{
     }
 
     TT query(int l,int r){
-        if(l > r) return off;
+        if(l > r || r < 0 || l >= n) return off;
         TT ans = off;
-        for(int j=pot2[n]; j>=0; j--){
-            if(l+(1<<j)-1 <= r){
-                ans = f(ans, tab[j][l]);
-                l +=(1<<j);
-            }
+        for(int j=0; j<tab.size(); j++) if(get_bit(r-l+1,j)){
+            ans = f(ans,tab[j][l]);
+            l += (1<<j);
         }
         return ans;
     }
     // query idempotente
     TT query_id(int l,int r){
-        if(l > r) return off;
-        int diff = pot2[r-l+1];
-        return f(tab[diff][l],tab[diff][r-(1<<diff)+1]);
+        if(l > r || r < 0 || l >= n) return off;
+        int t = 31 - __builtin_clz(r-l+1);
+        return f(tab[t][l],tab[t][r-(1<<t)+1]);
     }
 };
