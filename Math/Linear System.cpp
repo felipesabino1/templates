@@ -1,8 +1,13 @@
+// Resolve sistema linear
+// Se for usar double ou modint eh so mudar o TT
+// Retorna uma solucao, caso exista, e outros vetores para vc alterar a solucao base
+// O Rank vai ser o tamanho do vetor de retorno -1
+// O(N^2 * M)
 namespace Gauss{
     const double eps = 1e-9;
+    using TT = double; // modint
 
-    template <class TT>
-    void show(vector<vector<TT>>& a, vector<TT>& b){
+    void show(vvc<TT>& a, vc<TT>& b){
         if(a.size() == 0) return;
         int n = a.size(), m = a[0].size();
         for(int i = 0; i < n; i++){
@@ -10,59 +15,48 @@ namespace Gauss{
             cout << "= " << b[i] << '\n';
         }
     }
+    bool zero(TT x){ // x == 0?
+        return fabs(x) < eps;
+        // return !int(x.v);
+    }
 
-    // search for assert(1 == 0) to make necessary uncomments about modint or double
-    template <class TT> vector<vector<TT>> solveLinear(vector<vector<TT>> a, vector<TT> b) {
+    vvc<TT> solveLinear(vvc<TT> a, vc<TT> b){
         if(a.empty() || a[0].empty()) return {};
-        int n = a.size(), m = a[0].size();
+        int n = a.size(), m = a[0].size(), r = 0;
         assert(int(b.size()) == n);
-        int r = 0;
-        vector<bool> used(m,false);
-        vector<int> idcol;
+        vc<bool> used(m,false); vc<int> idcol;
         for(int j = 0; j < m; j++){
             int lin = -1;
-            for(int i = r ; i < n; i++){
-                assert(1 == 0);
-                // if(int(a[i][j])){
-                //     lin = i;
-                //     break;
-                // }
-
-                // if(fabs(a[i][j]) > eps){
-                //     lin = i;
-                //     break;
-                // }
+            for(int i = r ; i < n; i++) if(!zero(a[i][j])){
+                lin = i;
+                break;
             }
-            if(lin == -1) continue; // zero in column, reason for idcol
-            if(r != lin) swap(a[r],a[lin]); // make diagonal
+            if(lin == -1) continue; // so tem zero na coluna, motivo de existir idcol
+            if(r != lin) swap(a[r],a[lin]); // arrumar a diagonal
             swap(b[r],b[lin]);
             TT ival = 1/a[r][j];
             for(int i = r+1; i < n; i++){
-                assert(1 == 0);
-                // if(!int(a[i][j])) continue;
-                // if(fabs(a[i][j]) > eps) continue;
+                if(zero(a[i][j])) continue;
                 auto freq = a[i][j] * ival;
                 for(int k = j; k < m; k++) a[i][k] -= freq * a[r][k];
                 b[i] -= freq * b[r];
             }
-            r++;
-            used[j] = true;
-            idcol.push_back(j);
+            r++, used[j] = true, idcol.push_back(j);
             if(r == n) break;
         }
-        // r is the rank of the matrix
-        for(int i = r; i < n; i++){
-            assert(1 == 0);
-            // if(int(b[i])) return {};
-            // if(fabs(b[i]) > eps) return {};
-        }
-        // random solution,vectors that form solution basis
-        // Solution = X0 + linear_combination_of_V
+        // r eh o rank da matriz
+        for(int i = r; i < n; i++) if(!zero(b[i])) return {};
+        // return r; se quiser retornar o rank da matriz
+
+        // X0 = solucao aleatoria
+        // V_i = Vetor_i
+        // C = sum(V_i * c_i), C eh uma combinacao linear qualquer de V
+        // Solucao_qualquer = X0 + C
         // sols = {X0,V1,V2,V3,...,V_r}
-        vector<vector<TT>> sols;
+        vvc<TT> sols;
         // solution X0
         {
-            vector<TT> v(m,0);
+            vc<TT> v(m,0);
             for(int i=r-1; i >= 0; i--){
                 int id = idcol[i];
                 v[id] = b[i];
@@ -74,7 +68,7 @@ namespace Gauss{
         // free variables
         for(int s=0; s<m; s++){
             if(used[s]) continue;
-            vector<TT> v(m,0);
+            vc<TT> v(m,0);
             v[s] = 1;
             for(int i=r-1; i>=0; i--){
                 int id = idcol[i];
