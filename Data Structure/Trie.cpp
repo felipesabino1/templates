@@ -1,17 +1,17 @@
-struct Node{
+struct node{
     map<char,int> prox; // se for de char eh melhor fazer um map que ai nao cria uns caracteres inuteis na trie
-    bool ended = false;
-    int & operator[](const char & c){return prox[c];}
+    bool fim = false;
+    int& operator[](int x){return prox[x];}
 };
-int timer = 1;
-const int TAM_TRIE = MAX * constante;
-Node trie[TAM_TRIE];
+vc<node> trie(1);
 void insert(string & s){
     int at = 0;
     for(int i=0; i<s.size(); i++){
-        auto & it = trie[at][s[i]];
-        if(it == 0) it = timer++;
-        at = it;
+        if(!trie[at][s[i]]){
+            trie[at][s[i]] = trie.size();
+            trie.emplace_back();
+        }
+        at = trie[at][s[i]];
     }
-    trie[at].ended = true;
+    trie[at].fim = true;
 }
