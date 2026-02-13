@@ -5,7 +5,7 @@
 // Update: 4*log(N)
 // Definir: node,sono,merge,apply,build,update
 struct Seg{
-    Seg(int nn = 0, int t = 0) : n(nn), seg(n<<2), lazy(n<<2){
+    Seg(int nn = 0, int t = 1) : n(nn), seg(n<<2), lazy(n<<2){
         if(t) build(1,1,n);
     }
     void init(int nn){
@@ -24,11 +24,9 @@ struct Seg{
         bool off = false;
     };
 
-    int n;
-    vc<node> seg;
-    vc<sono> lazy;
+    int n; vc<node> seg; vc<sono> lazy;
     node ret,aux;
-    void merge(node &x, node &y, node & at){
+    void merge(node &x, node &y, node &at){
         if(x.off) return void(at = y);
         if(y.off) return void(at = x);
         // o at eh o merge do x(esq) e y(dir)
@@ -36,7 +34,8 @@ struct Seg{
     }
     // aplica o updt e att o lazy
     void apply(int u,int tl,int tr,sono& x){
-        
+
+        lazy[u].off = false;
     }
     
     void push(int u,int tl,int tr){
@@ -59,27 +58,23 @@ struct Seg{
     void query(int u,int tl,int tr,int l, int r){
         if(l > r) return;
         if(tl == l && tr == r) return merge(aux = ret,seg[u],ret);
-        push(u, tl, tr);
-        int tmid= tl + tr; tmid >>= 1;
+        push(u, tl, tr); int tmid= tl + tr; tmid >>= 1;
         query(lef(u),tl,tmid,l,min(tmid,r)), query(rig(u),tmid+1,tr,max(tmid+1,l),r);   
     }
     node query(int l, int r){
-        ret.off = true;
-        query(1,1,n,l,r);
+        ret.off = true; query(1,1,n,l,r);
         return ret;
     }
     
     void update(int u, int tl, int tr, int l, int r, sono& x){
         if(l > r) return;
         if(tl == l && tr == r) return apply(u,tl,tr,x);
-        push(u, tl, tr);
-        int tmid = tl + tr; tmid >>= 1;
+        push(u, tl, tr); int tmid = tl + tr; tmid >>= 1;
         update(lef(u), tl, tmid, l, min(tmid,r), x), update(rig(u), tmid+1, tr, max(tmid+1,l), r, x);
         merge(seg[lef(u)], seg[rig(u)], seg[u]);
     }
     // passa os parametros que dai vai converter pra sono
     void update(int l, int r, ll x){
-        sono vals = {};
-        update(1, 1, n, l, r, vals);
+        sono vals = {}; update(1, 1, n, l, r, vals);
     }
 };
