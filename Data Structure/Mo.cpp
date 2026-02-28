@@ -13,7 +13,7 @@ struct Mo{
     };
 
     vc<query> q; vc<TT> ans;
-    Mo(int nn) : q(nn),ans(nn);
+    Mo(int nn) : q(nn),ans(nn){}
 
     // add in x
 	void add(int x){
