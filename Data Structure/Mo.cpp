@@ -2,9 +2,9 @@
 // K = N/sqrt(Q)
 // alterar o add,rmv,calc,read,show
 // O(N*K*T) tal que T eh a complexidade do add e rmv
+const int K = 450;
 template <class TT = int>
 struct Mo{
-    const int K = 450;
     struct query{
         int id,l,r;
         bool operator <(const query &ot)const{
@@ -27,19 +27,19 @@ struct Mo{
 	void solve(){
 		sort(q.begin(),q.end());
 		int i = 1,j = 0;
-        for(auto [idx,l,r] : q){
+        for(auto [id,l,r] : q){
             while(j < r) add(++j);
             while(i > l) add(--i);
             while(j > r) rmv(j--);
             while(i < l) rmv(i++);
-            ans[idx] = calc();
+            ans[id] = calc();
 		}
 	}
 
     void read(){
         for(int i=0; i<q.size(); i++) {
             cin >> q[i].l >> q[i].r;
-            q[i].idx=i;
+            q[i].id=i;
         }
     }
     void show(){
