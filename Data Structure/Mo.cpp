@@ -1,56 +1,31 @@
-/*
-    Indexado de 1 (os l e r). 
-    O K = N/sqrt(Q), tal que N eh o maior range dos valores de l e r e Q o numero de queries
-
-    Alteracoes:
-
-    Ver como calcula a query
-    Ler as queries
-    Ver como imprime a resposta
-    Ver as funcoes de add e rmv do mo
-*/
+// Indexado de 1
+// K = N/sqrt(Q)
+// alterar o add,rmv,calc,read,show
+// O(N*K*T) tal que T eh a complexidade do add e rmv
 template <class TT = int>
 struct Mo{
     const int K = 450;
-
     struct query{
-        int idx,l,r;
-
-        bool operator <(const query &o){
-            if(l/K == o.l/K){
-                if((l/K)&1) return r>o.r;
-                return r<o.r;
-            }
-            return l/K < o.l/K;
+        int id,l,r;
+        bool operator <(const query &ot)const{
+            return (l/K == ot.l/K ? (l/K%2 ? r<ot.r : r>ot.r) : l/K < ot.l/K);
         }
     };
 
-	vector<query> q;
-	vector<TT> ans;
+    vc<query> q; vc<TT> ans;
+    Mo(int nn) : q(nn),ans(nn);
 
-    // qtd de queries
-    Mo(int n_q){
-        q.resize(n_q);
-    }
-
-
-    // adiciona na posicao x
+    // add in x
 	void add(int x){
-        
     }
-
-    // remove na posicao x
+    // rmv in x
 	void rmv(int x){
-
     }
-
-    // calcula a resposta pra query
 	TT calc(){
-
     }
 
 	void solve(){
-		sort(q.begin(),q.end()); ans.resize(q.size());
+		sort(q.begin(),q.end());
 		int i = 1,j = 0;
         for(auto [idx,l,r] : q){
             while(j < r) add(++j);
@@ -61,15 +36,13 @@ struct Mo{
 		}
 	}
 
-    // ler as queries
-    void ler(){
+    void read(){
         for(int i=0; i<q.size(); i++) {
             cin >> q[i].l >> q[i].r;
             q[i].idx=i;
         }
     }
-
-	void show(){
+    void show(){
         // imprime a resposta
-	}
+    }
 };
