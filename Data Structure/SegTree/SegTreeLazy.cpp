@@ -35,6 +35,7 @@ struct Seg{
     // aplica o updt e att o lazy
     void apply(int u,int tl,int tr,sono& x){
 
+        if(lazy[u].off) // limpa o que tem
         lazy[u].off = false;
     }
     
@@ -46,7 +47,7 @@ struct Seg{
     }
     void build(int u,int tl,int tr){
         if(tl == tr){
-            seg[u] = {}; lazy[u].off = true;
+            seg[u] = {,false}; lazy[u].off = true;
             return;
         }
         int tmid = tl + tr; tmid >>= 1;
