@@ -221,7 +221,7 @@ namespace geo{
         return ret;
     }
 	// se vc quer considerar os pontos colineares nas arestas do poligono colocar o colinear=true
-    vpt convex_hull(vpt v) { // convex hull - O(n log(n))
+    vpt convex_hull(vpt v, bool colinear = false) { // convex hull - O(n log(n))
         sort(v.begin(), v.end());
         v.erase(unique(v.begin(), v.end()), v.end());
         if (v.size() <= 1) return v;
