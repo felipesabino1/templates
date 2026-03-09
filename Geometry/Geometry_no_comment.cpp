@@ -226,13 +226,19 @@ namespace geo{
         if (v.size() <= 1) return v;
         vpt l, u;
         for (int i = 0; i < v.size(); i++) { // lower
-            while (l.size() > 1 and !ccw(l.end()[-2], l.end()[-1], v[i]))
+            while(l.size() > 1){
+                auto& p = l.end()[-2], &q = l.end()[-1];
+                if(ccw(p,q,v[i]) || (colinear && cross(p,q,v[i]) == 0)) break;
                 l.pop_back();
+            }
             l.push_back(v[i]);
         }
         for (int i = v.size() - 1; i >= 0; i--) { // upper
-            while (u.size() > 1 and !ccw(u.end()[-2], u.end()[-1], v[i]))
+            while(u.size() > 1){
+                auto& p = u.end()[-2], &q = u.end()[-1];
+                if(ccw(p,q,v[i]) || (colinear && cross(p,q,v[i]) == 0)) break;
                 u.pop_back();
+            }
             u.push_back(v[i]);
         }
         l.pop_back(); u.pop_back();
