@@ -13,7 +13,6 @@ struct Hash {
     Hash(){}
  
     void init(string &s){
-        int n = s.size();
         ppow.resize(qt_hash), h.resize(qt_hash);
         for(int t=0; t<qt_hash; t++) h[t].resize(s.size() + 2), ppow[t].resize(s.size()+2);
         for(int t=0; t<qt_hash; t++) h[t][0] = 5389ULL, ppow[t][0] = 1;
@@ -23,7 +22,7 @@ struct Hash {
  
     // vou incluir o range [i,j], indexado de 0
     // se quiser que seja mais rapido retorna um pair
-    vc<uint64_t> get_hash(int l,int r){
+    vc<uint64_t> get_hash(int i,int j){
         vc<uint64_t> r(qt_hash);
         for(int t=0; t<qt_hash; t++)
             r[t] = (h[t][j+1] - (h[t][i] * ppow[t][j-i+1]) % mod[t] + mod[t]) % mod[t];
