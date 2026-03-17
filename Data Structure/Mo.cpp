@@ -1,5 +1,6 @@
 // Indexado de 1
 // K = N/sqrt(Q)
+// A complexidade vai ser N*K (andar dentro do bloco) + RANGE/K * RANGE (andar entre blocos)
 // alterar o add,rmv,calc,read,show
 // O(N*K*T) tal que T eh a complexidade do add e rmv
 const int K = 450;
