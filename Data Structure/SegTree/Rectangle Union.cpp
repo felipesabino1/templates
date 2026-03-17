@@ -1,160 +1,97 @@
-template <class TTT = int>
+template <class T = ll>
 struct RectangleUnion{
-    vector<TTT> compressed; // ordered coordinates
-    TTT N; // total covered length
+    vc<T> comp; // coord comprimida
+    T N; // tamanho total
 
-    template <class TT = TTT>
     struct Seg{
-        // allocate the needed size
-        Seg(int n,const vector<TT> & compressed) : n(n), compressed(compressed){
-            seg.resize(n<<2);
-            lazy.resize(n<<2);
-        }
-
-        // init the structure
-        void init(int n_new){
-            n = n_new;
-            seg.resize(n<<2);
-            lazy.resize(n<<2);
+        Seg(vc<T>& vecc) : vec(vecc){}
+        void init(int nn){
+            n = nn;
+            seg.resize(n<<2), lazy.resize(n<<2);
             build(1,1,n);
         }
-
-        // info of each node
         struct node{
-            TT mini, qt;
-            TT l_min, r_min;
-            TT tl, tr;
-
-            node(){}
-            node(TT mini, TT qt,TT l_min = 0, TT r_min = 0, TT tl = 0,TT tr = 0) : mini(mini), qt(qt), l_min(l_min), r_min(r_min), tl(tl), tr(tr){}
-
-            bool operator ==(const node & ot)const{
-                return mini == ot.mini && qt == ot.qt && l_min == ot.l_min && r_min == ot.r_min && tl == ot.tl && tr == ot.tr;
-            }
-
-            void show(){
-                cout << mini << ' ' << qt << ' ' << l_min << ' ' << r_min << ' ' << tl << ' ' << tr << endl;
-            }
+            T val,qt;
+            T vl,vr; // o valor do cara mais a esq e dir
+            T l,r; // range real do node nas coord
         };
-        // info of each lazy node
         struct sono{
-            TT qt;
-            bool operator ==(const sono &ot)const{
-                return qt == ot.qt;
-            }
+            T qt;
         };
 
-        int n; // count of nodes
-        const vector<TT> &compressed;
-        const node off = {-1,-1,-1,-1,-1,-1}; // null node
-        const sono off_lazy = {0}; // null lazy node
-        vector<node> seg;
-        vector<sono> lazy;
-        // merge two nodes
-        node merge(node x, node y){
-            if(x == off) return y;
-            if(y == off) return x;
-            node ret;
-            ret.mini = min(x.mini, y.mini);
-            ret.qt = 0;
-            if(x.mini == ret.mini) ret.qt += x.qt;
-            if(y.mini == ret.mini) ret.qt += y.qt;
-            
-            if(min(x.r_min, y.l_min) == ret.mini) ret.qt += y.tl - x.tr - 1;
-
-            ret.l_min = x.l_min, ret.r_min = y.r_min;
-            ret.tl = x.tl, ret.tr = y.tr;
-            
-            return ret;
+        int n;
+        vc<node> seg; vc<sono> lazy;
+        vc<T>& vec;
+        node ret,aux;
+        void merge(node& x, node& y, node& at){
+            if(x.val == -1) return void(at = y);
+            if(y.val == -1) return void(at = x);
+            at.val = min(x.val,y.val), at.qt = 0;
+            at.qt += (x.val == at.val) * x.qt;
+            at.qt += (y.val == at.val) * y.qt;
+            at.qt += (min(x.vr,y.vl) == at.val) * (y.l-x.r-1);
+            at.vl = x.vl, at.vr = y.vr, at.l = x.l, at.r = y.r;
         }
-
-        // spread the lazy
+        void apply(int u,sono& upd){
+            seg[u].val += upd.qt, seg[u].vl += upd.qt, seg[u].vr += upd.qt;
+            lazy[u].qt += upd.qt;
+        }
         void push(int u,int tl,int tr){
-            if(tl == tr || lazy[u] == off_lazy) return;
-            // update the sons
-            seg[lef(u)].mini += lazy[u].qt;
-            seg[rig(u)].mini += lazy[u].qt;
-
-            seg[lef(u)].l_min += lazy[u].qt, seg[lef(u)].r_min += lazy[u].qt;
-            seg[rig(u)].l_min += lazy[u].qt, seg[rig(u)].r_min += lazy[u].qt;
-
-            // update the sons's lazies
-            lazy[lef(u)].qt += lazy[u].qt;
-            lazy[rig(u)].qt += lazy[u].qt;
-
-            lazy[u]=off_lazy;
+            if(tl == tr || !lazy[u].qt) return;
+            apply(lef(u),lazy[u]), apply(rig(u),lazy[u]);
+            lazy[u] = {0};
         }
-
-        // init the seg 
         void build(int u,int tl,int tr){
             if(tl == tr){
-                // init the bases nodes
-                seg[u] = node(0,1,0,0,compressed[tl-1],compressed[tl-1]);
-                lazy[u]=off_lazy;
+                seg[u] = {0,1,0,0,vec[tl-1],vec[tl-1]};
+                lazy[u] = {0};
                 return;
             }
-            int tmid=tl+tr;
-            tmid>>=1;
-            build(lef(u),tl,tmid);
-            build(rig(u),tmid+1,tr);
-            seg[u]=merge(seg[lef(u)],seg[rig(u)]);
-            lazy[u]=off_lazy;
+            int tmid=tl+tr; tmid>>=1;
+            build(lef(u),tl,tmid), build(rig(u),tmid+1,tr);
+            merge(seg[lef(u)],seg[rig(u)],seg[u]), lazy[u] = {0};
         }
-
-        // range query
-        node query_(int u,int tl,int tr,int l, int r){
-            if(l > r) return off;
-            if(tl == l && tr == r) return seg[u];
+        void query(int u,int tl,int tr,int l, int r){
+            if(l > r) return;
+            if(tl == l && tr == r) return merge(aux = ret,seg[u],ret);
             push(u,tl,tr);
-            int tmid=tl+tr;
-            tmid>>=1;
-            return merge(query_(lef(u),tl,tmid,l,min(tmid,r)),query_(rig(u),tmid+1,tr,max(tmid+1,l),r));
+            int tmid=tl+tr; tmid>>=1;
+            query(lef(u),tl,tmid,l,min(tmid,r)),query(rig(u),tmid+1,tr,max(tmid+1,l),r);
         }
         node query(int l,int r){
-            return query_(1,1,n,l,r);
+            ret.val = -1;
+            query(1,1,n,l,r);
+            return ret;
         }
-
-        // range update
-        void update_(int u,int tl,int tr,int l,int r,TT x){
+        void update(int u,int tl,int tr,int l,int r,sono& upd){
             if(l > r) return;
-            if(tl == l && tr == r){
-                // update seg and lazy
-                seg[u].mini += x;
-                seg[u].l_min += x, seg[u].r_min += x;
-                lazy[u].qt += x;
-                return;
-            }
+            if(tl == l && tr == r) return apply(u,upd);
             push(u,tl,tr);
-            int tmid=tl+tr;
-            tmid>>=1;
-            update_(lef(u),tl,tmid,l,min(tmid,r),x);
-            update_(rig(u),tmid+1,tr,max(tmid+1,l),r,x);
-            seg[u]=merge(seg[lef(u)],seg[rig(u)]);
+            int tmid=tl+tr; tmid>>=1;
+            update(lef(u),tl,tmid,l,min(tmid,r),upd),update(rig(u),tmid+1,tr,max(tmid+1,l),r,upd);
+            merge(seg[lef(u)],seg[rig(u)],seg[u]);
         }
-        void update(int l,int r, TT x){
-            update_(1,1,n,l,r,x);
+        void update(int l,int r, T x){
+            sono upd = {x};
+            update(1,1,n,l,r,upd);
         }
     };
-    Seg<TTT> seg; // segment tree
+    Seg seg; // segment tree
 
-    RectangleUnion(vector<TTT> &coord) : seg(compressed.size(),compressed){
-        for(int v : coord){
-            compressed.push_back(v-1);
-            compressed.push_back(v);
-        }
-        sort(compressed.begin(),compressed.end());
-        compressed.erase(unique(compressed.begin(), compressed.end()),compressed.end());        
-        N = compressed.back() - compressed[0] + 1;
-        seg.init(compressed.size());
+    RectangleUnion(vc<T> &coord) : seg(comp){
+        assert(comp.empty());
+        for(auto v : coord) comp.push_back(v-1),comp.push_back(v);
+        sort(comp.begin(),comp.end());
+        comp.erase(unique(comp.begin(),comp.end()),comp.end());
+        N = comp.back()-comp[0]+1;
+        seg.init(comp.size());
     }
-
-    int compress(TTT x){return lower_bound(compressed.begin(), compressed.end(), x) - compressed.begin() + 1;} 
-    // if it's compressed, pass the compressed coordinates
-    void update(int l,int r,TTT v){ 
-        seg.update(l,r-1,v); // segment
-    }  
-    int covered_length(){
-        auto ret = seg.query(1,compressed.size());
-        return (ret.mini > 0 ? N : N - ret.qt);
+    int get(T x){return lower_bound(comp.begin(),comp.end(),x) - comp.begin()+1;}
+    // update em [l,r], as vezes dependendo do segmento o update eh ate r-1 na vdd
+    // passar as coordenadas normais, eu comprimo
+    void update(int l,int r,T v){seg.update(get(l),get(r-1),v);}  
+    T cover_len(){
+        auto ret = seg.query(1,comp.size());
+        return (ret.val > 0 ? N : N - ret.qt);
     }
 };
