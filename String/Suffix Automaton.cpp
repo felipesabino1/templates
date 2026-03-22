@@ -1,6 +1,7 @@
 // Dado uma string S computa o suffix automaton de S
 // Suffix automaton eh um automato que so aceita sufixos de S
 // Cada path do automato corresponde a uma substring de S
+// Cada no representa um subset de sufixos contiguos (um eh sufixo do outro)
 // O(N), 2*N estados e no maximo 3*N-4 transicoes
 struct SAM{
     struct node{
