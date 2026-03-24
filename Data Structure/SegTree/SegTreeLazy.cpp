@@ -32,10 +32,11 @@ struct Seg{
         // o at eh o merge do x(esq) e y(dir)
         
     }
-    // aplica o updt e att o lazy
+    // aplica o updt e updt lazy
     void apply(int u,int tl,int tr,sono& x){
-
+        // updt seg
         if(lazy[u].off) // limpa o que tem
+        // updt lazy
         lazy[u].off = false;
     }
     
