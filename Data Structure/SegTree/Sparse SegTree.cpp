@@ -3,25 +3,24 @@
 // Query: 4*log(N)
 // Update: 4*log(N)
 // Q*log(N) de memoria
-// Definir: node,sono,merge,apply,build,update
+// Definir: node,sono,merge,apply,build
 #warning verificar se tem conflito com os defines
-#define lef(x) prox[x].first
-#define rig(x) prox[x].second
+#define lef(x) seg[u].l
+#define rig(x) seg[u].r
 struct Seg{
-    Seg(int nn = 0) : n(nn),seg(1),lazy(1),prox(1,{0,0}){}
+    Seg(int nn = 0) : n(nn),seg(1),lazy(1){}
     // No da seg
     struct node{
 
-        bool off = true;
+        bool off = true; int l = 0,r = 0;
     };
     // Update e lazy
     struct sono{
-        
+
         bool off = true;
     };
     
     int n; vc<node> seg;  vc<sono> lazy;
-    vc<pair<int,int>> prox;
     node ret,aux,offn;
     void merge(node &x, node &y, node &at){
         if(x.off) return void(at = y); // as vezes mudar o que o fazer com o off
@@ -47,7 +46,7 @@ struct Seg{
     }
     int add(){
         int x = seg.size();
-        seg.emplace_back(),lazy.emplace_back(),prox.emplace_back(0,0);
+        seg.emplace_back(),lazy.emplace_back();
         return x;
     }
     void query(int u,int tl,int tr,int l, int r){
@@ -62,7 +61,7 @@ struct Seg{
         if(ret.off) // off val
         return ret;
     }
-    
+
     void update(int u, int tl, int tr, int l, int r, sono& x){
         if(l > r) return;
         if(l == tl && tr == r) return apply(u,tl,tr,x);
@@ -72,7 +71,5 @@ struct Seg{
         merge(seg[lef(u)],seg[rig(u)],seg[u]);
     }
     // passa os parametros que dai vai converter pra sono
-    void update(int l, int r){
-        sono vals = {}; update(0,1,n,l,r,vals);
-    }
+    void update(int l, int r, sono x){update(0,1,n,l,r,x);}
 };
