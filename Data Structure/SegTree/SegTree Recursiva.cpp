@@ -14,7 +14,7 @@ struct Seg{
         bool off = false;
     };
     // Update
-    struct sono{
+    struct upd{
 
     };
 
@@ -28,7 +28,7 @@ struct Seg{
       
     }
     // aplicar um update
-    void apply(int u,sono& x){
+    void apply(int u,upd& x){
       
     }
     
@@ -51,7 +51,7 @@ struct Seg{
         return ret;
     }
     
-    void update(int u, int tl, int tr, int id, sono& x){
+    void update(int u, int tl, int tr, int id, upd& x){
         if(tl == tr) return apply(u,x);
         int tmid = tl + tr; tmid >>= 1;
         if(tmid >= id) update(lef(u),tl,tmid,id,x);
@@ -59,8 +59,5 @@ struct Seg{
         merge(seg[lef(u)], seg[rig(u)], seg[u]);
     }
     // passa os parametros que dai vai converter pra sono
-    void update(int id, ll x){
-        sono vals = {};
-        update(1, 1, n, id, vals);
-    }
+    void update(int id, upd x){update(1, 1, n, id, x);}
 };
