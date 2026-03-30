@@ -3,7 +3,7 @@
 // Init: 4*N
 // Query: 4*log(N)
 // Update: 4*log(N)
-// Definir: node,sono,merge,apply,build,update
+// Definir: node,sono,merge,apply,build
 struct Seg{
     Seg(int nn = 0, int t = 1) : n(nn), seg(n<<2), lazy(n<<2){
         if(t) build(1,1,n);
@@ -75,8 +75,5 @@ struct Seg{
         update(lef(u), tl, tmid, l, min(tmid,r), x), update(rig(u), tmid+1, tr, max(tmid+1,l), r, x);
         merge(seg[lef(u)], seg[rig(u)], seg[u]);
     }
-    // passa os parametros que dai vai converter pra sono
-    void update(int l, int r, ll x){
-        sono vals = {}; update(1, 1, n, l, r, vals);
-    }
+    void update(int l, int r, sono x){update(1, 1, n, l, r, x);}
 };
