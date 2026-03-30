@@ -34,7 +34,7 @@ struct Seg{
         for(int u=n-1; u; u--) merge(seg[lef(u)],seg[rig(u)],seg[u]);
     }
     // aplicar um update
-    void apply(int u,upd x){
+    void apply(int u,upd& x){
         
     }
     // query inclusiva [l,r]
@@ -44,12 +44,13 @@ struct Seg{
         for(l+=n-1,r+=n;l<r;l>>=1,r>>=1){
             if (l&1) merge(aux=vl,seg[l++],vl);
             if (r&1) merge(seg[--r],aux=vr,vr);
-        } merge(vl,vr,aux); return aux;
+        } 
+        merge(vl,vr,aux); return aux;
     }
     // passa os parametros que dai vai converter pra upd
-    void update(int id, ll x){
+    void update(int id,upd x){
         id += n-1;
-        apply(id,{}); 
+        apply(id,x); 
         for(id>>=1; id; id>>=1) merge(seg[lef(id)],seg[rig(id)],seg[id]);
     }
 };
