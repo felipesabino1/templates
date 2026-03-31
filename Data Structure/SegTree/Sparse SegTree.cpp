@@ -1,47 +1,44 @@
-// Indexado de 1
+// Indexado de 0
 // Query com op associativa e update em range
 // Query: 4*log(N)
 // Update: 4*log(N)
 // Q*log(N) de memoria
-// Definir: node,sono,merge,apply,build
-#warning verificar se tem conflito com os defines
-#define lef(x) seg[u].l
-#define rig(x) seg[u].r
-struct Seg{
-    Seg(int nn = 0) : n(nn),seg(1),lazy(1){}
-    // No da seg
-    struct node{
-
-        bool off = true; int l = 0,r = 0;
-    };
-    // Update e lazy
-    struct sono{
-
-        bool off = true;
-    };
+// Definir tudo que ta fora de Seg
+struct node{
     
-    int n; vc<node> seg;  vc<sono> lazy;
-    node ret,aux,offn;
-    void merge(node &x, node &y, node &at){
+    bool off = true; int l = 0,r = 0;
+    void merge(node &x,node &y,node &at){
         if(x.off) return void(at = y); // as vezes mudar o que o fazer com o off
         if(y.off) return void(at = x);
         // o at eh o merge do x(esq) e y(dir)
-
+    
         at.off = false;
     }
-    // aplica o updt e updt lazy
-    void apply(int u,int tl,int tr,sono& x){
-        if(seg[u].off) // init
+};
+struct sono{
+
+    bool off = true; 
+    // aplica upd e upd lazy
+    friend void apply(node &at,sono &x){
+        if(at.off) // init
         // updt seg
-        seg[u].off = false;
-        if(lazy[u].off) // init
+        at.off = false;
+        if(x.off) // init
         // updt lazy
-        lazy[u].off = false;
+        x.off = false;
     }
+};
+template <class node, class sono>
+struct Seg{
+    #define lef(x) seg[u].l
+    #define rig(x) seg[u].r
+    Seg(int nn = 0) : n(nn),seg(1),lazy(1){}
+    int n; vc<node> seg;  vc<sono> lazy;
+    node ret,aux,offn;
     void push(int u,int tl,int tr){
         if(tl == tr || lazy[u].off) return;
         int tmid = tl + tr; tmid >>= 1;
-        apply(lef(u),tl,tmid,lazy[u]),apply(rig(u),tmid+1,tr,lazy[u]);
+        apply(seg[lef(u)],lazy[u]),apply(seg[rig(u)],lazy[u]);
         lazy[u].off = true;
     }
     int add(){
@@ -57,19 +54,19 @@ struct Seg{
         query(lef(u),tl,tmid,l,min(r,tmid)),query(rig(u),tmid+1,tr,max(l,tmid+1),r);
     }
     node query(int l, int r){
-        ret.off = true; query(0,1,n,l,r);
+        ret.off = true; query(0,0,n-1,l,r);
         if(ret.off) // off val
         return ret;
     }
-
     void update(int u, int tl, int tr, int l, int r, sono& x){
         if(l > r) return;
-        if(l == tl && tr == r) return apply(u,tl,tr,x);
+        if(l == tl && tr == r) return apply(u,x);
         if(!lef(u)) lef(u) = add(), rig(u) = add();
         push(u,tl,tr); int tmid = tl + tr; tmid >>= 1;
         update(lef(u),tl,tmid,l,min(r,tmid),x),update(rig(u),tmid+1,tr,max(l,tmid+1),r,x);
         merge(seg[lef(u)],seg[rig(u)],seg[u]);
     }
-    // passa os parametros que dai vai converter pra sono
-    void update(int l, int r, sono x){update(0,1,n,l,r,x);}
+    void update(int l, int r, sono x){update(0,0,n-1,l,r,x);} // [l,r]
+    #undef lef
+    #undef rig
 };
