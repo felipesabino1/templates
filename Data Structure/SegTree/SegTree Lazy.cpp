@@ -29,7 +29,7 @@ struct sono{
 template<class node,class sono>
 struct Seg{
     Seg(int nn = 0, vc<node> &v = {}) : n(nn), seg(n<<2), lazy(n<<2){
-        if(!v.empty()) build(1,1,n,v);
+        if(!v.empty()) build(1,n-1,0,v);
     }
     int n; vc<node> seg; vc<sono> lazy;
     node ret,aux;
