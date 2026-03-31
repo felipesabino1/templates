@@ -30,8 +30,8 @@ struct sono{
 };
 template <class node, class sono>
 struct Seg{
-    #define lef(x) seg[u].l
-    #define rig(x) seg[u].r
+    #define lef(x) seg[x].l
+    #define rig(x) seg[x].r
     Seg(int nn = 0) : n(nn),seg(1),lazy(1){}
     int n; vc<node> seg;  vc<sono> lazy;
     node ret,aux,offn;
