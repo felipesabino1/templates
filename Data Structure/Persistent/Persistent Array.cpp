@@ -7,7 +7,6 @@ struct info{
 };
 template<class T>
 struct perarray{
-    #warning ver se nao conflita com outros define's
     #define lef(x) (prox[x].first)
     #define rig(x) (prox[x].second)
     vc<T> vals; // so guardo as folhas da arvore
