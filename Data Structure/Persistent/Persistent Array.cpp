@@ -5,28 +5,29 @@
 struct info{
     info(){} // init NULL
 };
+const info off = info();
 template<class T>
 struct perarray{
     #define lef(x) (prox[x].first)
     #define rig(x) (prox[x].second)
-    vc<T> vals; // so guardo as folhas da arvore
+    int n; vc<T> vals; // so guardo as folhas da arvore
     vc<int> rev; // a raiz da revisao
     vc<pair<int,int>> prox; // dado esse no, quais os proximos
-    perarray(int n) : rev(1,0),prox(1,{0,0}){
+    perarray(int nn) : n(nn),rev(1,0),prox(1,{0,0}){
         build(0,0,n-1);
     }
     void build(int u,int tl,int tr){
         if(tl == tr) return void(vals.push_back(off));
         int tmid = tl + tr; tmid >>= 1;
-        lef(r) = (tl == tmid ? vals.size() : prox.size());
+        lef(u) = (tl == tmid ? vals.size() : prox.size());
         prox.emplace_back(0,0);
-        rig(r) = (tmid+1 == tr ? vals.size() : prox.size());
+        rig(u) = (tmid+1 == tr ? vals.size() : prox.size());
         prox.emplace_back(0,0);
         build(lef(u),tl,tmid), build(rig(u),tmid+1,tr);
     }
     T ret;
     void query(int u,int tl,int tr,int id){
-        if(tl == tr) return void(ret = vals[id]);
+        if(tl == tr) return void(ret = vals[u]);
         int tmid = tl + tr; tmid >>= 1;
         if(id <= tmid) query(lef(u),tl,tmid,id);
         else query(rig(u),tmid+1,tr,id);
