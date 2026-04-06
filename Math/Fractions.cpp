@@ -16,9 +16,10 @@ struct frac{
     bool operator<=(const frac &ot)const{return 1ll*num*ot.den <= 1ll*ot.num*den;}
     bool operator>=(const frac &ot)const{return 1ll*num*ot.den >= 1ll*ot.num*den;}
     bool operator==(const frac& ot)const{return 1ll*num*ot.den == 1ll*ot.num*den;}
-
+    
     frac operator-(){return frac(-num,den);}
-    friend frac inv(frac f){return frac(f.den,f.num);}    
+    friend frac inv(frac f){return frac(f.den,f.num);}
+    
     friend frac& operator+=(frac& a, frac b){
         TT d = a.den/__gcd(a.den,b.den)*b.den;
         a.num *= d/a.den, b.num *= d/b.den;
@@ -29,8 +30,8 @@ struct frac{
         return a += -b;
     }
     friend frac& operator*=(frac& a, frac b){
-        TT d = __gcd(a.num,b.den); a.num /= d, b.den /= d;
-        d = __gcd(a.den,b.num); a.den /= d, b.num /= d;
+        TT d = __gcd(abs(a.num),b.den); a.num /= d, b.den /= d;
+        d = __gcd(a.den,abs(b.num)); a.den /= d, b.num /= d;
         a.num *= b.num, a.den *= b.den;
         return a;
     }
