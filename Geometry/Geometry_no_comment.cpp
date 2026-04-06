@@ -75,7 +75,7 @@ namespace geo{
     T cross(pt a, pt b, pt c){return cross(b-a,c-a);}
     T det(pt a, pt b, pt c){return cross(b-a,c-b);}
     bool colinear(pt a,pt b,pt c){return eq(det(a,b,c),0);}
-    bool ccw(pt a, pt b, pt c){return det(a,b,c) > eps;}
+    bool ccw(pt a, pt b, pt c){return sgn(cross(b-a,c-b)) == 1;}
     pt perp(pt p){return pt(-p.y,p.x);} // rotaciona em 90 graus
     pt rotate(pt p, dd d){ // rotaciona em d radianos(ccw) com centro(0,0)
         return pt(p.x * cos(d) - p.y * sin(d), // COSL,SINL
