@@ -1,4 +1,4 @@
-template <class TT = ll>
+template <class TT>
 struct frac{
     TT num,den; // o valor negativo da fracao fica so no numerador
     frac(TT numm = 0,TT denn = 1) : num(numm), den(denn){
