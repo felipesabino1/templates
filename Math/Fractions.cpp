@@ -11,6 +11,7 @@ struct frac{
     }
     explicit operator int()const{return num/den;}
     explicit operator double()const{return double(num)/den;}
+    explicit operator long double()const{return (long double)(num)/den;}
     bool operator<(const frac& ot)const{return 1ll*num*ot.den < 1ll*ot.num*den;}
     bool operator>(const frac& ot)const{return 1ll*num*ot.den > 1ll*ot.num*den;}
     bool operator<=(const frac &ot)const{return 1ll*num*ot.den <= 1ll*ot.num*den;}
