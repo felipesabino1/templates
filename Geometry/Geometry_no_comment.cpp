@@ -75,7 +75,7 @@ namespace geo{
     T cross(pt a, pt b, pt c){return cross(b-a,c-a);}
     T det(pt a, pt b, pt c){return cross(b-a,c-b);}
     bool colinear(pt a,pt b,pt c){return eq(det(a,b,c),0);}
-    bool ccw(pt a, pt b, pt c){return sgn(cross(b-a,c-b)) == 1;}
+    bool ccw(pt a, pt b, pt c){return sgn(det(a,b,c)) == 1;}
     pt perp(pt p){return pt(-p.y,p.x);} // rotaciona em 90 graus
     pt rotate(pt p, dd d){ // rotaciona em d radianos(ccw) com centro(0,0)
         return pt(p.x * cos(d) - p.y * sin(d), // COSL,SINL
@@ -134,7 +134,6 @@ namespace geo{
         int A = half(a), B = half(b);
         return A == B ? cross(a,b) > 0 : A < B;
     }
-    
     // degenerate line (one point line) if it exists
     // line == b if input lines are the same
     // line(pt_off,pt_off) if lines do not intersect
@@ -164,7 +163,6 @@ namespace geo{
         i(a.p,b); i(a.q,b); i(b.p,a); i(b.q,a);
         return l;
     }
-
     // O(log(n))
     bool inconvex(vpt& pol, pt p){
         if (pol.size() == 0) return false;
@@ -199,9 +197,9 @@ namespace geo{
         return qt != 0;
     }
     dd polarea(vpt &v){
-        ld ret = 0;
+        dd ret = 0;
         for (int i = 0; i < v.size(); i++)
-            ret += det(pt(0, 0), v[i], v[(i + 1) % v.size()])/2;
+            ret += det(pt(0, 0), v[i], v[(i + 1) % v.size()])/dd(2);
         return abs(ret);
     }
     bool interpol(vpt &v1, vpt &v2) { // se dois poligonos se intersectam - O(n*m)
@@ -217,7 +215,7 @@ namespace geo{
         dd ret = DINF;
         for (int i = 0; i < v1.size(); i++) for (int j = 0; j < v2.size(); j++)
             ret = min(ret, segdist(line(v1[i], v1[(i + 1) % v1.size()]),
-                        line(v2[j], v2[(j + 1) % v2.size()])));
+				line(v2[j], v2[(j + 1) % v2.size()])));
         return ret;
     }
 	// se vc quer que os pontos colineares aparecam nas arestas do poligono colocar o colinear=true
