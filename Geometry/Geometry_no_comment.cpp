@@ -229,7 +229,7 @@ namespace geo{
         for (int i = 0; i < v.size(); i++) { // lower
             while(l.size() > 1){
                 auto& p = l.end()[-2], &q = l.end()[-1];
-                if(ccw(p,q,v[i]) || (colinear && cross(p,q,v[i]) == 0)) break;
+                if(ccw(p,q,v[i]) || (colinear && eq(cross(p,q,v[i]),0))) break;
                 l.pop_back();
             }
             l.push_back(v[i]);
@@ -237,7 +237,7 @@ namespace geo{
         for (int i = v.size() - 1; i >= 0; i--) { // upper
             while(u.size() > 1){
                 auto& p = u.end()[-2], &q = u.end()[-1];
-                if(ccw(p,q,v[i]) || (colinear && cross(p,q,v[i]) == 0)) break;
+                if(ccw(p,q,v[i]) || (colinear && eq(cross(p,q,v[i]),0))) break;
                 u.pop_back();
             }
             u.push_back(v[i]);
