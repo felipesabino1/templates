@@ -15,7 +15,7 @@ struct frac{
     bool operator>(const frac& ot)const{return 1ll*num*ot.den > 1ll*ot.num*den;}
     bool operator<=(const frac &ot)const{return 1ll*num*ot.den <= 1ll*ot.num*den;}
     bool operator>=(const frac &ot)const{return 1ll*num*ot.den >= 1ll*ot.num*den;}
-    bool operator==(const frac& ot)const{return num == ot.num && den == ot.den;}
+    bool operator==(const frac& ot)const{return 1ll*num*ot.den == 1ll*ot.num*den;}
 
     frac operator-(){return frac(-num,den);}
     friend frac inv(frac f){return frac(f.den,f.num);}    
