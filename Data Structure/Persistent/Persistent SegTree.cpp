@@ -16,6 +16,7 @@ struct node{
 };
 struct upd{
 
+    upd(){}
     // aplica upd
     friend void apply(node &at,upd &x){
 
@@ -25,12 +26,14 @@ template <class node, class upd>
 struct perSeg{
     #define lef(x) seg[x].l
     #define rig(x) seg[x].r
-    perSeg(int nn = 0,vc<node> &v = {}) : n(nn),seg(1),rev(1,0){
-        if(!v.empty()) build(1,0,n-1,v);
+    perSeg(int nn = 0,vc<node> &v) : n(nn),seg(1),rev(1,0){
+        assert(nn == v.size());
+        build(0,0,n-1,v);
     }
     int n; vc<node> seg;
     vc<int> rev; // raiz da revisao
     node ret,aux;
+    int get_rev(){return int(rev.size())-1;}
     void build(int u,int tl,int tr,vc<node>& v){
         if(tl == tr) return void(seg[u] = v[tl]);
         int tmid = tl + tr; tmid >>= 1;
@@ -50,24 +53,20 @@ struct perSeg{
         return ret;
     }
     void update(int u,int nu,int tl,int tr,int id,upd &x){
-        if(tl == tr){
-            seg.push_back(seg[u]);
-            apply(seg.back(),x);
-            return;
-        }
+        if(tl == tr) return apply(seg[nu],x);
         int tmid = tl + tr; tmid >>= 1;
         lef(nu) = lef(u), rig(nu) = rig(u);
         if(id <= tmid){
-            lef(nu) = seg.size();
+            lef(nu) = seg.size(); seg.emplace_back(seg[lef(u)]);
             update(lef(u),lef(nu),tl,tmid,id,x);
         }else{
-            rig(nu) = seg.size();
+            rig(nu) = seg.size(); seg.emplace_back(seg[rig(u)]);
             update(rig(u),rig(nu),tmid+1,tr,id,x);
         }
-        merge(seg[lef(u)],seg[rig(u)],seg[u]);
+        merge(seg[lef(nu)],seg[rig(nu)],seg[nu]);
     }
     void update(int id,upd x,int r){
-        rev.push_back(seg.size()); seg.emplace_back();
+        rev.push_back(seg.size()); seg.emplace_back(seg[rev[r]]);
         update(rev[r],rev.back(),0,n-1,id,x);
     }
     #undef lef
