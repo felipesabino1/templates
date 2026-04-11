@@ -8,7 +8,7 @@ struct SparseTable{
     int n; vvc<TT> tab;
     const TT off = ;
 
-    SparseTable(vc<TT>& vec) : n(vec.size()), tab(31-__builtin_clz(vec.size()),vc<TT>(vec.size())){
+    SparseTable(vc<TT>& vec) : n(vec.size()), tab(32-__builtin_clz(vec.size()),vc<TT>(vec.size())){
         for(int i=0; i<n; i++) tab[0][i] = vec[i];
         for(int j=1; j<tab.size(); j++) for(int i=0; i+(1<<j)-1<n; i++) 
             tab[j][i] = f(tab[j-1][i],tab[j-1][i+(1<<(j-1))]);
