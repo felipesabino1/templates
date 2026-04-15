@@ -26,7 +26,7 @@ template <class node, class upd>
 struct perSeg{
     #define lef(x) seg[x].l
     #define rig(x) seg[x].r
-    perSeg(int nn = 0,vc<node> &v) : n(nn),seg(1),rev(1,0){
+    perSeg(int nn = 0,vc<node> &v = {}) : n(nn),seg(1),rev(1,0){
         assert(nn == v.size());
         build(0,0,n-1,v);
     }
