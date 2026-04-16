@@ -19,7 +19,7 @@ struct HLD{
         }
         if (ant*f == -1) dfs(hd[u]=u,-1,timer=0);
     }
-    HLD(int nn,vc<node> &v,int r=0) : n(nn),timer(0),tam(nn),tin(nn),hd(nn),p(nn),euler(nn),vec(v){
+    HLD(int nn,vc<node> &v,int r=0) : n(nn),timer(0),tam(nn),tin(nn),hd(nn),p(nn),euler(nn),vec(v),seg(nn),iseg(nn){
         dfs(r);
         seg.init(n,euler); 
         // se for comutativo nao precisa
