@@ -28,8 +28,14 @@ struct sono{
 };
 template<class node,class sono>
 struct Seg{
+    #define lef(x) ((x)<<1)
+    #define rig(x) (lef(x)|1)
     Seg(int nn = 0, vc<node> &v = {}) : n(nn), seg(n<<2), lazy(n<<2){
-        if(!v.empty()) build(1,n-1,0,v);
+        if(!v.empty()) build(1,0,n-1,v);
+    }
+    void init(vc<node> &v){
+        assert(v.size() == n);
+        build(1,0,n-1,v);
     }
     int n; vc<node> seg; vc<sono> lazy;
     node ret,aux;
@@ -67,4 +73,6 @@ struct Seg{
         merge(seg[lef(u)], seg[rig(u)], seg[u]);
     }
     void update(int l, int r, sono x){update(1,0,n-1,l,r,x);} // [l,r]
+    #undef lef
+    #undef rig
 };
