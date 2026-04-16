@@ -19,13 +19,13 @@ struct upd{
 
     bool off = true; 
     // aplica upd e upd lazy
-    friend void apply(node &at,upd &x){
+    friend void apply(node &at,upd &atl,upd &x){
         if(at.off) // init
         // updt seg
         at.off = false;
-        if(x.off) // init
+        if(atl.off) // init
         // updt lazy
-        x.off = false;
+        atl.off = false;
     }
 };
 template <class node, class upd>
@@ -38,7 +38,7 @@ struct Seg{
     void push(int u,int tl,int tr){
         if(tl == tr || lazy[u].off) return;
         int tmid = tl + tr; tmid >>= 1;
-        apply(seg[lef(u)],lazy[u]),apply(seg[rig(u)],lazy[u]);
+        apply(seg[lef(u)],lazy[lef(u)],lazy[u]),apply(seg[rig(u)],lazy[rig(u)],lazy[u]);
         lazy[u].off = true;
     }
     int add(){
@@ -60,7 +60,7 @@ struct Seg{
     }
     void update(int u, int tl, int tr, int l, int r, upd& x){
         if(l > r) return;
-        if(l == tl && tr == r) return apply(u,x);
+        if(l == tl && tr == r) return apply(seg[u],lazy[u],x);
         if(!lef(u)) lef(u) = add(), rig(u) = add();
         push(u,tl,tr); int tmid = tl + tr; tmid >>= 1;
         update(lef(u),tl,tmid,l,min(r,tmid),x),update(rig(u),tmid+1,tr,max(l,tmid+1),r,x);
