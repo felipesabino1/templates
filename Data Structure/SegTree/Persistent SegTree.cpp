@@ -27,7 +27,10 @@ struct perSeg{
     #define lef(x) seg[x].l
     #define rig(x) seg[x].r
     perSeg(int nn = 0,vc<node> &v = {}) : n(nn),seg(1),rev(1,0){
-        assert(nn == v.size());
+        if(!v.empty()) build(0,0,n-1,v);
+    }
+    void init(vc<node> &v){
+        assert(v.size() == n);
         build(0,0,n-1,v);
     }
     int n; vc<node> seg;
