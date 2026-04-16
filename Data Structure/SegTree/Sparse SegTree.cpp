@@ -19,13 +19,13 @@ struct upd{
 
     bool off = true; 
     // aplica upd e upd lazy
-    friend void apply(node &at,upd &atl,upd &x){
+    friend void apply(node &at,upd &lazy,upd &x){
         if(at.off) // init
         // updt seg
         at.off = false;
-        if(atl.off) // init
+        if(lazy.off) // init
         // updt lazy
-        atl.off = false;
+        lazy.off = false;
     }
 };
 template <class node, class upd>
