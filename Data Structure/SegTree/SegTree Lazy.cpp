@@ -1,8 +1,6 @@
 // Indexado de 0
 // Query com op associativa e update em range
-// Init: 4*N
-// Query: 4*log(N)
-// Update: 4*log(N)
+// Init(4*N), Query(4*log(N)), Update(4*log(N))
 // Definir tudo que ta fora de Seg
 struct node{
 
@@ -17,13 +15,13 @@ struct node{
 };
 struct upd{
 
-    bool off = false;
+    bool off = true;
     // aplica upd e upd lazy
-    friend void apply(node &at, upd &x){
-        // upd seg
-        if(x.off) // limpa o que tem
-        // upd lazy
-        x.off = false;
+    friend void apply(node &at, upd &atl, upd &x){
+        // upd node
+        if(atl.off) // limpa o que tem
+        // upd update
+        atl.off = false;
     }
 };
 template<class node,class upd>
@@ -40,19 +38,15 @@ struct Seg{
     int n; vc<node> seg; vc<upd> lazy;
     node ret,aux;
     void build(int u,int tl,int tr,vc<node> &v){
-        if(tl == tr){
-            seg[u] = v[tl],lazy[u].off = true;
-            return;
-        }
+        if(tl == tr) return void(seg[u] = v[tl]);
         int tmid = tl + tr; tmid >>= 1;
         build(lef(u),tl,tmid,v), build(rig(u),tmid+1,tr,v);
         merge(seg[lef(u)], seg[rig(u)], seg[u]);
-        lazy[u].off = true;
     }
     void push(int u,int tl,int tr){
         if(tl == tr || lazy[u].off) return;
         int tmid = tl + tr; tmid >>= 1;
-        apply(seg[lef(u)],lazy[u]),apply(seg[rig(u)],lazy[u]);
+        apply(seg[lef(u)],lazy[lef(u)],lazy[u]),apply(seg[rig(u)],lazy[rig(u)],lazy[u]);
         lazy[u].off = true;
     }
     void query(int u,int tl,int tr,int l, int r){
@@ -67,7 +61,7 @@ struct Seg{
     }
     void update(int u, int tl, int tr, int l, int r, upd& x){
         if(l > r) return;
-        if(tl == l && tr == r) return apply(u,x);
+        if(tl == l && tr == r) return apply(seg[u],lazy[u],x);
         push(u, tl, tr); int tmid = tl + tr; tmid >>= 1;
         update(lef(u), tl, tmid, l, min(tmid,r), x), update(rig(u), tmid+1, tr, max(tmid+1,l), r, x);
         merge(seg[lef(u)], seg[rig(u)], seg[u]);
