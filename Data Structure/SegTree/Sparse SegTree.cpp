@@ -15,11 +15,11 @@ struct node{
         at.off = false;
     }
 };
-struct sono{
+struct upd{
 
     bool off = true; 
     // aplica upd e upd lazy
-    friend void apply(node &at,sono &x){
+    friend void apply(node &at,upd &x){
         if(at.off) // init
         // updt seg
         at.off = false;
@@ -28,12 +28,12 @@ struct sono{
         x.off = false;
     }
 };
-template <class node, class sono>
+template <class node, class upd>
 struct Seg{
     #define lef(x) seg[x].l
     #define rig(x) seg[x].r
     Seg(int nn = 0) : n(nn),seg(1),lazy(1){}
-    int n; vc<node> seg;  vc<sono> lazy;
+    int n; vc<node> seg;  vc<upd> lazy;
     node ret,aux,offn;
     void push(int u,int tl,int tr){
         if(tl == tr || lazy[u].off) return;
@@ -58,7 +58,7 @@ struct Seg{
         if(ret.off) // off val
         return ret;
     }
-    void update(int u, int tl, int tr, int l, int r, sono& x){
+    void update(int u, int tl, int tr, int l, int r, upd& x){
         if(l > r) return;
         if(l == tl && tr == r) return apply(u,x);
         if(!lef(u)) lef(u) = add(), rig(u) = add();
@@ -66,7 +66,7 @@ struct Seg{
         update(lef(u),tl,tmid,l,min(r,tmid),x),update(rig(u),tmid+1,tr,max(l,tmid+1),r,x);
         merge(seg[lef(u)],seg[rig(u)],seg[u]);
     }
-    void update(int l, int r, sono x){update(0,0,n-1,l,r,x);} // [l,r]
+    void update(int l, int r, upd x){update(0,0,n-1,l,r,x);} // [l,r]
     #undef lef
     #undef rig
 };
