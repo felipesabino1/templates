@@ -17,11 +17,11 @@ struct upd{
 
     bool off = true;
     // aplica upd e upd lazy
-    friend void apply(node &at, upd &atl, upd &x){
+    friend void apply(node &at, upd &lazy, upd &x){
         // upd node
-        if(atl.off) // limpa o que tem
-        // upd update
-        atl.off = false;
+        if(lazy.off) // limpa o que tem
+        // upd lazy
+        lazy.off = false;
     }
 };
 template<class node,class upd>
