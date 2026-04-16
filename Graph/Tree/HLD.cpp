@@ -3,12 +3,12 @@
 // Init(8*N), Query(4*log^2(N)), Update(4*log^2(N))
 // Se op eh simetrico da pra apagar iseg e substituir todos os (iseg.query(inv(l),inv(r)) -> seg.query(dir(r),dir(l)))
 // struct Seg{...}
-template <class node, class sono>
+template <class node, class upd>
 struct HLD{
     int n,timer;
     vector<int> tam,tin,hd,p;
     vector<node> euler; vector<node> &vec; 
-    Seg<node,sono> seg,iseg;
+    Seg<node,upd> seg,iseg;
     void dfs(int u,int ant=-1, int f=1){
         tam[u] = 1, euler[tin[u] = timer++] = vec[u];
         p[u] = (ant == -1 ? u : ant), hd[u] = (ant == -1 ? u : hd[u]);
