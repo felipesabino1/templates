@@ -17,6 +17,7 @@ struct node{
 };
 struct upd{
 
+    upd(){}
     // aplicar um update em node
     friend void apply(node &at, upd& x){
         
