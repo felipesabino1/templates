@@ -16,6 +16,7 @@ struct node{
 struct upd{
 
     bool off = true;
+    upd(){}
     // aplica upd e upd lazy
     friend void apply(node &at, upd &lazy, upd &x){
         // upd node
@@ -28,7 +29,7 @@ template<class node,class upd>
 struct Seg{
     #define lef(x) ((x)<<1)
     #define rig(x) (lef(x)|1)
-    Seg(int nn = 0, vc<node> &v = {}) : n(nn), seg(n<<2), lazy(n<<2){
+    Seg(int nn = 0, vc<node> &v = {}) : n(nn), seg(n<<2), lazy(n<<2){    
         if(!v.empty()) build(1,0,n-1,v);
     }
     void init(vc<node> &v){
