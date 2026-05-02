@@ -3,7 +3,7 @@
 // Definir o merge dos grupos
 // O(N * log(N) * T) com T a complexidade do merge
 struct gp{
-    void inite(int x){
+    void init(int x){
                 
     }
     void clear(){
