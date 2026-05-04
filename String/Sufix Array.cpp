@@ -13,6 +13,7 @@ vc<int> SA(string s){
         for(int i = 1; i < N; i++) cnt[i] += cnt[i-1];
         for(int i = n-1; i+1; i--) sa[--cnt[c[nsa[i]]]] = nsa[i];
 
+        nc[sa[0]] = 0;
         for(int i = 1; i < n; i++) nc[sa[i]] = nc[sa[i-1]] + (c[sa[i]] !=
             c[sa[i-1]] || c[(sa[i]+k)%n] != c[(sa[i-1]+k)%n]);
         swap(c,nc);
