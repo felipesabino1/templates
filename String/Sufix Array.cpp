@@ -7,14 +7,14 @@ vc<int> SA(string s){
     int N = max(n,260);
     vc<int> sa(n),nsa(n),c(n),nc(n),cnt(N);
     for(int i=0; i<n; i++) sa[i] = i, c[i] = s[i];
-    for(int k = 0; k < n; k ? k *= 2 : k++) { 
+    for(int k = 0; k < n; k ? k <<= 1 : k++) { 
         fill(cnt.begin(),cnt.end(),0);
         for(int i = 0; i < n; i++) nsa[i] = (sa[i]-k+n)%n, cnt[c[i]]++;
         for(int i = 1; i < N; i++) cnt[i] += cnt[i-1];
         for(int i = n-1; i+1; i--) sa[--cnt[c[nsa[i]]]] = nsa[i];
 
-        for(int i = 1, r = 0; i < n; i++) nc[sa[i]] = r += c[sa[i]] !=
-            c[sa[i-1]] or c[(sa[i]+k)%n] != c[(sa[i-1]+k)%n];
+        for(int i = 1, r = 0; i < n; i++) nc[sa[i]] = c[sa[i]] !=
+            c[sa[i-1]] || c[(sa[i]+k)%n] != c[(sa[i-1]+k)%n];
         swap(c,nc);
         if (c[sa[n-1]] == n-1) break;
     }
