@@ -200,7 +200,7 @@ namespace geo{
         dd ret = 0;
         for (int i = 0; i < v.size(); i++)
             ret += det(pt(0, 0), v[i], v[(i + 1) % v.size()])/dd(2);
-        return abs(ret);
+        return std::abs(ret);
     }
     bool interpol(vpt &v1, vpt &v2) { // se dois poligonos se intersectam - O(n*m)
         int n = v1.size(), m = v2.size();
