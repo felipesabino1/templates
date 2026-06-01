@@ -4,6 +4,7 @@
 // Update: 4*log(N)
 // Q*log(N) de memoria
 // Definir tudo que ta fora de Seg, cuidado quando o retorno da query estiver off
+// Nao precisa atualizar as ranges no merge, eu faco isso quando crio o node
 struct node{
     
     bool off = true; 
@@ -13,7 +14,6 @@ struct node{
         if(y.off) return void(at = x);
         // o at eh o merge do x(esq) e y(dir)
 
-        at.tl = x.tl, at.tr = y.tr;
         at.off = false;
     }
 };
@@ -53,9 +53,10 @@ struct Seg{
     void query(int u,int tl,int tr,int l, int r){
         if(l > r) return;
         if(l == tl && tr == r) return merge(aux = ret,seg[u],ret);
-        push(u,tl,tr); int tmid = tl + tr; tmid >>= 1;
+        int tmid = tl + tr; tmid >>= 1;
         if(!lef(u)) lef(u) = add(), lef(u).tl = tl, lef(u).tr = tmid;
         if(!rig(u)) rig(u) = add(), rig(u).tl = tmid+1, rig(u).tr = tr;
+        push(u,tl,tr); 
         query(lef(u),tl,tmid,l,min(r,tmid)),query(rig(u),tmid+1,tr,max(l,tmid+1),r);
     }
     node query(int l, int r){
@@ -65,9 +66,10 @@ struct Seg{
     void update(int u, int tl, int tr, int l, int r, upd& x){
         if(l > r) return;
         if(l == tl && tr == r) return apply(seg[u],lazy[u],x);
-        push(u,tl,tr); int tmid = tl + tr; tmid >>= 1;
+        int tmid = tl + tr; tmid >>= 1;
         if(!lef(u)) lef(u) = add(), lef(u).tl = tl, lef(u).tr = tmid;
         if(!rig(u)) rig(u) = add(), rig(u).tl = tmid+1, rig(u).tr = tr;
+        push(u,tl,tr);
         update(lef(u),tl,tmid,l,min(r,tmid),x),update(rig(u),tmid+1,tr,max(l,tmid+1),r,x);
         merge(seg[lef(u)],seg[rig(u)],seg[u]);
     }
