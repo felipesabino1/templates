@@ -12,7 +12,8 @@ struct node{
         if(x.off) return void(at = y); // as vezes mudar o que o fazer com o off
         if(y.off) return void(at = x);
         // o at eh o merge do x(esq) e y(dir)
-    
+
+        at.tl = x.tl, at.tr = y.tr;
         at.off = false;
     }
 };
