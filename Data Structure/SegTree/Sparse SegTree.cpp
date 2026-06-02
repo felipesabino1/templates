@@ -8,15 +8,18 @@
 template<class T>
 struct node{
 
-    bool off = true;
     int l = 0,r = 0; T tl,tr; // ponteiros, range do node
+    bool off = true;// padding eh paia as vezes
     node(){}
     friend void merge(node<T> &x,node<T> &y,node<T> &at){
-        if(x.off) return void(at = y); // as vezes mudar o que o fazer com o off
-        if(y.off) return void(at = x);
+        if(x.off && y.off) return void(at.off = true);
         // o at eh o merge do x(esq) e y(dir)
-
-        at.off = false;
+        if(!x.off){
+            
+        }
+        if(!y.off){
+            
+        }
     }
 };
 template<class T>
@@ -42,7 +45,7 @@ struct Seg{
         seg[0].tl = 0, seg[0].tr = n-1;
     }
     T n; vc<node> seg;  vc<upd> lazy;
-    node ret,aux,offn;
+    node ret,aux;
     void push(int u,T tl,T tr){
         if(tl == tr || lazy[u].off) return;
         T tmid = tl + tr; tmid >>= 1;
