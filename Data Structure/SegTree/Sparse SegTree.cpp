@@ -12,7 +12,6 @@ struct node{
     bool off = true;// padding eh paia as vezes
     node(){}
     friend void merge(node<T> &x,node<T> &y,node<T> &at){
-        if(x.off && y.off) return void(at.off = true);
         // o at eh o merge do x(esq) e y(dir)
         if(!x.off){
             
