@@ -6,8 +6,8 @@
 template <class node, class upd>
 struct HLD{
     int n,timer;
-    vector<int> tam,tin,hd,p;
-    vector<node> euler; vector<node> &vec; 
+    vc<int> tam,tin,hd,p; vvc<int> &g;
+    vc<node> euler; vc<node> &vec; 
     Seg<node,upd> seg,iseg;
     void dfs(int u,int ant=-1, int f=1){
         tam[u] = 1, euler[tin[u] = timer++] = vec[u];
@@ -19,7 +19,7 @@ struct HLD{
         }
         if (ant*f == -1) dfs(hd[u]=u,-1,timer=0);
     }
-    HLD(int nn,vc<node> &v,int r=0) : n(nn),timer(0),tam(nn),tin(nn),hd(nn),p(nn),euler(nn),vec(v),seg(nn),iseg(nn){
+    HLD(int nn,vc<node> &v,vvc<int> &gg,int r=0) : n(nn),timer(0),tam(nn),tin(nn),hd(nn),p(nn),g(gg),euler(nn),vec(v),seg(nn),iseg(nn){
         dfs(r);
         seg.init(n,euler); 
         // se for comutativo nao precisa
