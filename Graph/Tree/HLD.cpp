@@ -45,7 +45,7 @@ struct HLD{
         return ru;
     }
     // update no path u->v
-    void update_path(int u,int v, sono x){
+    void update_path(int u,int v, upd x){
         for(; !lca(hd[u],v); u=p[hd[u]])
             seg.update(dir(hd[u]),dir(u),x),iseg.update(inv(u),inv(hd[u]),x);
         for(; !lca(hd[v],v); v=p[hd[v]])
@@ -59,5 +59,5 @@ struct HLD{
     #undef dir
     #undef inv
     node query_tree(int u){return seg.query(tin[u],tin[u]+tam[u]-1);}
-    void update_tree(int u, sono x){seg.update(tin[u],tin[u]+tam[u]-1,x);}
+    void update_tree(int u, upd x){seg.update(tin[u],tin[u]+tam[u]-1,x);}
 };
