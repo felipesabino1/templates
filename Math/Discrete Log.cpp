@@ -1,4 +1,6 @@
-// a^x === b (mod m)
+// Calcula a^x == b (mod m)
+// a^{sqrt(m)*p - q} == b (mod m) -> a^{sqrt(m)*p} == b*a^q (mod m), com 0 <= p,q <= sqrt(m)
+// O(sqrt(m))
 ll lgd(ll a, ll b, ll m){
     a %= m; b %= m;
     if(a == 0 && b != 0) return -1;
