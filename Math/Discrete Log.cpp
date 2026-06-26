@@ -1,7 +1,7 @@
 // Calcula a^x == b (mod m)
-// a^{sqrt(m)*p - q} == b (mod m) -> a^{sqrt(m)*p} == b*a^q (mod m), com 0 <= p,q <= sqrt(m)
 // O(sqrt(m))
 ll lgd(ll a, ll b, ll m){
+    // a^{sqrt(m)*p - q} == b (mod m) -> a^{sqrt(m)*p} == b*a^q (mod m), com 0 <= p,q <= sqrt(m)
     a %= m; b %= m;
     if(a == 0 && b != 0) return -1;
     ll k = 1, add = 0, g;
@@ -24,7 +24,7 @@ ll lgd(ll a, ll b, ll m){
     }
     // os caras que sao k*a^(p*n)
     sort(big.begin(),big.end(),[&](pair<ll,ll> x, pair<ll,ll> y){
-        return x.first < y.first;
+        return x.first == y.first ? x.second < y.second : x.first < y.first;
     });
     big.erase(unique(big.begin(),big.end()),big.end());
 
@@ -36,7 +36,7 @@ ll lgd(ll a, ll b, ll m){
     }
     // os caras que sao b*a^q
     sort(small.begin(),small.end(), [&] (pair<ll,ll> x, pair<ll,ll> y){
-        return x.first < y.first;
+        return x.first == y.first ? x.second < y.second : x.first < y.first;
     });
     small.erase(unique(small.begin(),small.end()),small.end());
 
@@ -45,7 +45,7 @@ ll lgd(ll a, ll b, ll m){
     for(int i=0, j=0; i<big.size() && j < small.size();){
         if(big[i].first == small[j].first) {
             if(ans == -1) ans=big[i].second*n-small[j].second+add;
-            else ans=big[i].second*n-small[j].second+add;  
+            else ans=min(ans,big[i].second*n-small[j].second+add);  
             i++,j++;
         }else if(big[i].first < small[j].first) i++;
         else j++;
