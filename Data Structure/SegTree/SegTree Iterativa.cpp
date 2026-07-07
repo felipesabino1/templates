@@ -25,6 +25,8 @@ struct upd{
 };
 template<class node,class upd>
 struct Seg{
+    #define lef(x) ((x)<<1)
+    #define rig(x) (lef(x)|1)
     Seg(int nn = 0, vc<node> &v = {}) : n(nn), seg(nn<<1){
         if(!v.empty()) build(v);
     }
@@ -48,4 +50,6 @@ struct Seg{
         apply(seg[id],x); 
         for(id>>=1; id; id>>=1) merge(seg[lef(id)],seg[rig(id)],seg[id]);
     }
+    #undef lef
+    #undef rig
 };
