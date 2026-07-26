@@ -33,16 +33,20 @@ struct Seg{
         if(!v.empty()) build(1,0,n-1,v);
     }
     void init(vc<node> &v){
-        assert(v.size() == n);
+        n = v.size();
         build(1,0,n-1,v);
     }
     int n; vc<node> seg; vc<upd> lazy;
     node ret,aux;
     void build(int u,int tl,int tr,vc<node> &v){
-        if(tl == tr) return void(seg[u] = v[tl]);
+        if(tl == tr){
+            lazy[u].off = true, seg[u] = v[tl];
+            return;
+        }
         int tmid = tl + tr; tmid >>= 1;
         build(lef(u),tl,tmid,v), build(rig(u),tmid+1,tr,v);
         merge(seg[lef(u)], seg[rig(u)], seg[u]);
+        lazy[u].off = true;
     }
     void push(int u,int tl,int tr){
         if(tl == tr || lazy[u].off) return;
