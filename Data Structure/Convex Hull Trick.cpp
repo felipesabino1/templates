@@ -1,5 +1,5 @@
-// Convex Hull Trick Dinamico
-// O(log2(n)) por insercao e query
+// - Convex Hull Trick Dinamico
+// - O(log2(n)) por insercao e query
 struct Line{
     // coef angular, linear, criterio de comparacao
     mutable ll k,m,p;
@@ -51,12 +51,10 @@ struct CHT : multiset<Line,less<>>{
 };
 
 
-// Convex Hull Trick Estatico
-//
-// adds tem que serem feitos em ordem de slope
+// - Convex Hull Trick Estatico
+// - adds tem que serem feitos em ordem de slope
 // queries tem que ser feitas em ordem de x
-//
-// add O(1) amortizado, get O(1) amortizado
+// - add O(1) amortizado, get O(1) amortizado
 struct CHT{
 	int it;
 	vector<pair<ll,ll>> cht;
