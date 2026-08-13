@@ -63,7 +63,7 @@ struct CHT{
     // se vc quer minimizar bota min, senao bota max
     ll bst(ll v1, ll v2){return min(v1,v2);}
     // pra double usar div(a,b) = a/b
-    int div(ll a, ll b){return a/b-((a^b) < 0 && a%b);}
+    ll div(ll a, ll b){return a/b-((a^b) < 0 && a%b);}
 	bool useless(){
         int tam = cht.size();
         auto a = cht[tam-3], b = cht[tam-2], c = cht[tam-1];
