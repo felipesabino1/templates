@@ -1,4 +1,3 @@
-// Dado uma string S computa o suffix automaton de S
 // Suffix automaton eh um automato que so aceita sufixos de S
 // Cada path do automato corresponde a uma substring de S
 // Cada no representa um subset de sufixos contiguos (um eh sufixo do outro)
@@ -35,13 +34,12 @@ struct SAM{
         trie.emplace_back(); trie[cur].len = trie[lst].len+1;
         int p = lst,q;
         for(; p != -1 && !trie[p](c); p = trie[p].p) trie[p][c] = cur;
-        if(p == -1 || (trie[q = trie[p][c]].len) == trie[p].len+1) trie[cur].p = (p == -1 ? 0 : q);
+        if(p == -1 || trie[q = trie[p][c]].len == trie[p].len+1) trie[cur].p = (p == -1 ? 0 : q);
         else{
             int clone = trie.size(); cnt.push_back(0);
             trie.emplace_back(); trie[clone] = trie[q]; 
             trie[clone].len = trie[p].len+1; trie[q].p = trie[cur].p = clone;
             for(; p != -1 && trie[p][c] == q; p = trie[p].p) trie[p][c] = clone;
-            
         }
         lst = cur;
     }
