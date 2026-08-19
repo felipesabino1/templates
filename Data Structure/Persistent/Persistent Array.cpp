@@ -1,5 +1,6 @@
 // Indexado de 0
 // Array persistente
+// Update eh settar o valor na posicao
 // Query e update: log(N)
 // N * log(N) de memoria (cada update adiciona log(N))
 struct info{
