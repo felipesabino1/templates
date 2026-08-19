@@ -6,8 +6,7 @@ struct RectangleUnion{
     struct Seg{
         Seg(vc<T>& vecc) : vec(vecc){}
         void init(int nn){
-            n = nn;
-            seg.resize(n<<2), lazy.resize(n<<2);
+            n = nn; seg.resize(n<<2), lazy.resize(n<<2);
             build(1,1,n);
         }
         struct node{
@@ -20,8 +19,7 @@ struct RectangleUnion{
         };
 
         int n;
-        vc<node> seg; vc<sono> lazy;
-        vc<T>& vec;
+        vc<node> seg; vc<sono> lazy; vc<T>& vec;
         node ret,aux;
         void merge(node& x, node& y, node& at){
             if(x.val == -1) return void(at = y);
