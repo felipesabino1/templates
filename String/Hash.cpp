@@ -3,7 +3,7 @@
 // Quando for escolher os primos, escolhe um do tamanho do alfabeto mais ou menos
 // O(n)
 const int qt_hash = 2;
-const array<uint64_t,2> p = {33,73}, mod = {1e9+7,1e9+9};
+const array<uint64_t,2> p = {33,73}, mod = {int(1e9+7),int(1e9+9)};
 struct Hash {
     vc<array<uint64_t,2>> h,ppow;
 
