@@ -3,29 +3,26 @@
 // Quando for escolher os primos, escolhe um do tamanho do alfabeto mais ou menos
 // O(n)
 const int qt_hash = 2;
-const vc<uint64_t> p = {33,73}, mod = {1e9+7,1e9+9};
+const array<uint64_t,2> p = {33,73}, mod = {1e9+7,1e9+9};
 struct Hash {
-    vvc<uint64_t> h,ppow;
+    vc<array<uint64_t,2>> h,ppow;
 
-    Hash(string & s) {
-        init(s);
-    }
+    Hash(string & s) {init(s);}
     Hash(){}
  
     void init(string &s){
-        ppow.resize(qt_hash), h.resize(qt_hash);
-        for(int t=0; t<qt_hash; t++) h[t].resize(s.size() + 2), ppow[t].resize(s.size()+2);
-        for(int t=0; t<qt_hash; t++) h[t][0] = 5389ULL, ppow[t][0] = 1;
-        for(int t=0; t<qt_hash; t++) for(int i=1; i<s.size()+2; i++) ppow[t][i] = ppow[t][i-1] * p[t] % mod[t];
-        for(int t=0; t<qt_hash; t++) for(int i=0; i<s.size(); i++) h[t][i+1] = (h[t][i] * p[t] + s[i]) % mod[t];
+        h.resize(s.size() + 2), ppow.resize(s.size()+2);
+        for(int t=0; t<qt_hash; t++) h[0][t] = 5389ULL, ppow[0][t] = 1;
+        for(int i=1; i<s.size()+2; i++) for(int t=0; t<qt_hash; t++) ppow[i][t] = ppow[i-1][t] * p[t] % mod[t];
+        for(int i=0; i<s.size(); i++) for(int t=0; t<qt_hash; t++) h[i+1][t] = (h[i][t] * p[t] + s[i]) % mod[t];
     }
  
     // vou incluir o range [i,j], indexado de 0
     // se quiser que seja mais rapido retorna um pair
-    vc<uint64_t> get_hash(int i,int j){
-        vc<uint64_t> r(qt_hash);
+    array<uint64_t,2> get_hash(int i,int j){
+        array<uint64_t,2> r;
         for(int t=0; t<qt_hash; t++)
-            r[t] = (h[t][j+1] - (h[t][i] * ppow[t][j-i+1]) % mod[t] + mod[t]) % mod[t];
+            r[t] = (h[j+1][t] - (h[i][t] * ppow[j-i+1][t]) % mod[t] + mod[t]) % mod[t];
         return r;
     }
 };
