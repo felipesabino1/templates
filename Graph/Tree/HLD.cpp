@@ -52,7 +52,7 @@ struct HLD{
             seg.update(dir(hd[v]),dir(v),x),iseg.update(inv(v),inv(hd[v]),x);
 
         if(lca(u,v))
-            seg.update(dir(u),dir(v),x),seg.update(inv(v),inv(u),x);
+            seg.update(dir(u),dir(v),x),iseg.update(inv(v),inv(u),x);
         else
             seg.update(dir(v),dir(u),x),iseg.update(inv(u),inv(v),x);
     }
