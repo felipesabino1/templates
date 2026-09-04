@@ -1,6 +1,6 @@
 // Indexado de 0
 // Query com op associativa e update em ponto
-// Init(N*O(merge)), Query(2*log(N)*O(merge)), Update(log(N)*O(merge))
+// Init(N*(1 + O(merge))), Query(2*log(N)*O(merge)), Update(log(N)*O(merge))
 struct node{
     
     bool off = false;
