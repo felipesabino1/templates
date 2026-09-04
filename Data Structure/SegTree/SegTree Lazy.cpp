@@ -1,13 +1,12 @@
 // Indexado de 0
 // Query com op associativa e update em range
 // Init(4*N*O(merge)), Query(4*log(N)*O(merge)), Update(4*log(N)*O(merge))
+// Inicializar o node com valor identidade
 struct node{
 
-    bool off = false;
     node(){}
+    void off(){} // transformar esse node na identidade
     friend void merge(node &x,node &y,node &at){
-        if(x.off) return void(at = y);
-        if(y.off) return void(at = x);
         // o at eh o merge do x(esq) e y(dir)
 
     }
@@ -19,7 +18,7 @@ struct upd{
     // aplica upd e upd lazy
     friend void apply(node &at, upd &lazy, upd &x){
         // upd node
-        if(lazy.off) // limpa o que tem
+        if(lazy.off) // clear lazy
         // upd lazy
         lazy.off = false;
     }
@@ -60,7 +59,7 @@ struct Seg{
         query(lef(u),tl,tmid,l,min(tmid,r)), query(rig(u),tmid+1,tr,max(tmid+1,l),r);   
     }
     node query(int l, int r){
-        ret.off = true; query(1,0,n-1,l,r);
+        ret.off(); query(1,0,n-1,l,r);
         return ret;
     }
     void update(int u, int tl, int tr, int l, int r, upd& x){
