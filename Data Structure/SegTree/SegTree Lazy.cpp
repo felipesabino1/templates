@@ -1,7 +1,6 @@
 // Indexado de 0
 // Query com op associativa e update em range
-// Init(4*N), Query(4*log(N)), Update(4*log(N))
-// Definir tudo que ta fora de Seg
+// Init(4*N*O(merge)), Query(4*log(N)*O(merge)), Update(4*log(N)*O(merge))
 struct node{
 
     bool off = false;
@@ -29,15 +28,15 @@ template<class node,class upd>
 struct Seg{
     #define lef(x) ((x)<<1)
     #define rig(x) (lef(x)|1)
-    Seg(int nn = 0, vc<node> &v = {}) : n(nn), seg(n<<2), lazy(n<<2){    
+    int n; vc<node> seg; vc<upd> lazy;
+    node ret,aux;
+    Seg(int nn = 0, vc<node> v = {}) : n(nn), seg(n<<2), lazy(n<<2){    
         if(!v.empty()) build(1,0,n-1,v);
     }
     void init(vc<node> &v){
         n = v.size();
         build(1,0,n-1,v);
     }
-    int n; vc<node> seg; vc<upd> lazy;
-    node ret,aux;
     void build(int u,int tl,int tr,vc<node> &v){
         if(tl == tr){
             lazy[u].off = true, seg[u] = v[tl];
