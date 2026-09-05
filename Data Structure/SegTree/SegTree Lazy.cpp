@@ -59,6 +59,7 @@ struct Seg{
         query(lef(u),tl,tmid,l,min(tmid,r)), query(rig(u),tmid+1,tr,max(tmid+1,l),r);   
     }
     node query(int l, int r){
+        assert(0 <= l && l <= r && r < n);
         ret.off(); query(1,0,n-1,l,r);
         return ret;
     }
@@ -69,7 +70,7 @@ struct Seg{
         update(lef(u), tl, tmid, l, min(tmid,r), x), update(rig(u), tmid+1, tr, max(tmid+1,l), r, x);
         merge(seg[lef(u)], seg[rig(u)], seg[u]);
     }
-    void update(int l, int r, upd x){update(1,0,n-1,l,r,x);} // [l,r]
+    void update(int l, int r, upd x){assert(0 <= l && l <= r && r < n); update(1,0,n-1,l,r,x);} // [l,r]
     #undef lef
     #undef rig
 };
