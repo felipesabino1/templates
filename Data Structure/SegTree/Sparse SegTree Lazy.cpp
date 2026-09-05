@@ -33,7 +33,10 @@ struct Seg{
     T n; vc<node> seg; vc<upd> lazy; vc<array<int,2>> prox;
     node ret,aux;
     Seg(T nn = 1,int q = 0) : n(nn){ // passar qtd de Queries em q
-        if(q > 0) seg.reserve(2*q*(msb(n)+1));
+        if(q > 0){
+            int tam = 2*q*(msb(n)+1);
+            seg.reserve(tam),lazy.reserve(tam),prox.reserve(tam);
+        }
         add(); 
     }
     int add(){
