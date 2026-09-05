@@ -24,41 +24,37 @@ struct upd{
         // upd lazy
         lazy.off = false;
     }
-};
-template <class node, class upd, class T>
+};template <class node, class upd, class T>
 struct Seg{
     #define lef(x) prox[x][0]
     #define rig(x) prox[x][1]
-    #define msb(x) ((x) == 0 ? -1 : __builtin_clzll(1ll) - __builtin_clzll(x))
+    #define check(x) x = x == -1 ? add() : x    
     T n; vc<node> seg; vc<upd> lazy; vc<array<int,2>> prox;
     node ret,aux;
     Seg(T nn = 1,int q = 0) : n(nn){ // passar qtd de Queries em q
         if(q > 0){
-            int tam = 2*q*(msb(n)+1);
+            int tam = 2*q*(64-__builtin_clzll(n));
             seg.reserve(tam),lazy.reserve(tam),prox.reserve(tam);
         }
         add(); 
     }
     int add(){
         int x = seg.size();
-        seg.emplace_back(),lazy.emplace_back(),prox.emplace_back();
+        seg.emplace_back(),lazy.emplace_back(),prox.push_back({-1,-1});
         return x;
-    }
-    void add(int u){
-        if(lef(u)) return;
-        lef(u) = add(), rig(u) = add();
     }
     void push(int u,T tl,T tr){
         if(tl == tr || lazy[u].off) return;
+        check(lef(u)), check(rig(u));
         apply(seg[lef(u)],lazy[lef(u)],lazy[u]),apply(seg[rig(u)],lazy[rig(u)],lazy[u]);
         lazy[u].off = true;
     }
     void query(int u,T tl,T tr,T l, T r){
         if(l > r) return;
         if(l == tl && tr == r) return merge(aux = ret,seg[u],ret);
-        T tmid = tl+tr; tmid >>= 1;
-        add(u); push(u,tl,tr);
-        query(lef(u),tl,tmid,l,min(r,tmid)),query(rig(u),tmid+1,tr,max(l,tmid+1),r);
+        T tmid = tl+tr; tmid >>= 1; push(u,tl,tr);
+        check(lef(u)), check(rig(u));
+        query(lef(u),tl,tmid,l,min(r,tmid)), query(rig(u),tmid+1,tr,max(l,tmid+1),r);
     }
     node query(T l, T r){
         assert(0 <= l && l <= r && r < n);
@@ -68,13 +64,13 @@ struct Seg{
     void update(int u,T tl,T tr,T l, T r, upd& x){
         if(l > r) return;
         if(l == tl && tr == r) return apply(seg[u],lazy[u],x);
-        T tmid = tl+tr; tmid >>= 1;
-        add(u); push(u,tl,tr);
-        update(lef(u),tl,tmid,l,min(r,tmid),x),update(rig(u),tmid+1,tr,max(l,tmid+1),r,x);
+        T tmid = tl+tr; tmid >>= 1; push(u,tl,tr);
+        check(lef(u)), check(rig(u));
+        update(lef(u),tl,tmid,l,min(r,tmid),x), update(rig(u),tmid+1,tr,max(l,tmid+1),r,x);
         merge(seg[lef(u)],seg[rig(u)],seg[u]);
     }
     void update(T l, T r, upd x){assert(0 <= l && l <= r && r < n); update(0,0,n-1,l,r,x);} // [l,r]
     #undef lef
     #undef rig
-    #undef msb
+    #undef check
 };
