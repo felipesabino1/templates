@@ -37,7 +37,7 @@ struct Seg{
     }
     int add(){
         int x = seg.size();
-        seg.emplace_back(),prox.emplace_back(-1,-1);
+        seg.emplace_back(),prox.push_back({-1,-1});
         return x;
     }
     int query(int u,T tl,T tr,T l, T r){
