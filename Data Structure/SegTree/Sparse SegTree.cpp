@@ -25,12 +25,12 @@ template <class node, class upd, class T>
 struct Seg{
     #define lef(x) prox[x][0]
     #define rig(x) prox[x][1]
-    #define msb(x) ((x) == 0 ? -1 : __builtin_clzll(1ll) - __builtin_clzll(x))
+    #define check(x) x = x == -1 ? add() : x;
     T n; vc<node> seg; vc<array<int,2>> prox;
     node ret,aux;
     Seg(T nn = 1,int q = 0) : n(nn){ // passar qtd de Queries em q
         if(q > 0){
-            int tam = 2*q*(msb(n)+1);
+            int tam = 2*q*(64 - __builtin_clzll(n));
             seg.reserve(tam),prox.reserve(tam);
         }
         add(); 
@@ -42,7 +42,7 @@ struct Seg{
     }
     int query(int u,T tl,T tr,T l, T r){
         if(l > r) return -1;
-        u = (u == -1 ? add() : u);
+        check(u);
         if(l == tl && tr == r){
             merge(aux = ret, seg[u], ret);
             return u;
@@ -58,7 +58,7 @@ struct Seg{
         return ret;
     }
     int update(int u,T tl,T tr,T id, upd& x){
-        u = (u == -1 ? add() : u);
+        check(u);
         if(tl == tr){
             apply(seg[u],x);
             return u;
@@ -72,5 +72,5 @@ struct Seg{
     void update(T id, upd x){assert(0 <= id && id < n); update(0,0,n-1,id,x);} // [l,r]
     #undef lef
     #undef rig
-    #undef msb
+    #undef check
 };
