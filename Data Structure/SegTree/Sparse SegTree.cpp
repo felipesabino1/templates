@@ -30,7 +30,7 @@ struct Seg{
     node ret,aux;
     Seg(T nn = 1,int q = 0) : n(nn){ // passar qtd de Queries em q
         if(q > 0){
-            int tam = 2*q*(64 - __builtin_clzll(n));
+            int tam = 2*q*(64-__builtin_clzll(n));
             seg.reserve(tam),prox.reserve(tam);
         }
         add(); 
