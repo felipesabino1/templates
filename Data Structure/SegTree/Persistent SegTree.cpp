@@ -25,10 +25,10 @@ struct perSeg{
     #define lef(x) prox[x][0]
     #define rig(x) prox[x][1]
     #define check(x) x = x == -1 ? add() : x
-    T n; vc<node> seg; vc<array<int,2>> prox; vc<int> rev; // raiz da revisao    
+    int n; vc<node> seg; vc<array<int,2>> prox; vc<int> rev; // raiz da revisao    
     node ret,aux;
-    perSeg(int nn = 0,vc<node> v = {}) : n(nn),seg(1),rev(1,0){
-        if(!v.empty()) build(0,0,n-1,v);
+    perSeg(int nn = 0,vc<node> v = {}) : n(nn),rev(1,0){
+        add(); if(!v.empty()) build(0,0,n-1,v);
     }
     void init(vc<node> &v){
         assert(v.size() == n);
@@ -62,13 +62,13 @@ struct perSeg{
         if(tl == tr) return apply(seg[nu],x);
         int tmid = tl + tr; tmid >>= 1;
         lef(nu) = lef(u), rig(nu) = rig(u);
-        if(id <= tmid) check(lef(nu)), update(lef(u),lef(nu),tl,tmid,id,x);
-        else check(rig(nu)), update(rig(u),rig(nu),tmid+1,tr,id,x);
+        if(id <= tmid) lef(nu) = add(), seg.back() = seg[lef(u)], update(lef(u),lef(nu),tl,tmid,id,x);
+        else rig(nu) = add(), seg.back() = seg[rig(u)], update(rig(u),rig(nu),tmid+1,tr,id,x);
         merge(seg[lef(nu)],seg[rig(nu)],seg[nu]);
     }
     void update(int id,upd x,int r){
         assert(0 <= id && id < n);
-        rev.push_back(seg.size()), seg.emplace_back(seg[rev[r]]);
+        rev.push_back(seg.size()), add(), seg.back() = seg[rev[r]];
         update(rev[r],rev.back(),0,n-1,id,x);
     }
     #undef lef
