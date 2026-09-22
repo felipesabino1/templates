@@ -44,6 +44,11 @@ struct perSeg{
         seg.emplace_back(),prox.push_back({-1,-1});
         return x;
     }
+    int clone(int u){
+        int x = add();
+        seg[x] = seg[u],prox[x] = prox[u];
+        return x;
+    }
     int get_rev(){return int(rev.size())-1;}
     void build(int u,int tl,int tr,vc<node>& v){
         if(tl == tr) return void(seg[u] = v[tl]);
@@ -66,15 +71,14 @@ struct perSeg{
     void update(int u,int nu,int tl,int tr,int id,upd &x){
         if(tl == tr) return apply(seg[nu],x);
         int tmid = tl + tr; tmid >>= 1;
-        lef(nu) = lef(u), rig(nu) = rig(u);
-        if(id <= tmid) lef(nu) = add(), seg.back() = seg[lef(u)], update(lef(u),lef(nu),tl,tmid,id,x);
-        else rig(nu) = add(), seg.back() = seg[rig(u)], update(rig(u),rig(nu),tmid+1,tr,id,x);
+        if(id <= tmid) lef(nu) = clone(lef(u)), update(lef(u),lef(nu),tl,tmid,id,x);
+        else rig(nu) = clone(rig(u)), update(rig(u),rig(nu),tmid+1,tr,id,x);
         merge(seg[lef(nu)],seg[rig(nu)],seg[nu]);
     }
     void update(int id,upd x,int r){
         assert(0 <= id && id < n);
-        rev.push_back(seg.size()), add(), seg.back() = seg[rev[r]];
-        update(rev[r],rev.back(),0,n-1,id,x);
+        rev.push_back(seg.size());
+        update(rev[r],clone(rev[r]),0,n-1,id,x);
     }
     #undef lef
     #undef rig
