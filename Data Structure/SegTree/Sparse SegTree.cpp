@@ -4,6 +4,14 @@
 // Cada update/query adiciona log(N) de memoria
 // Inicializar o node com valor identidade
 // Se precisar usar a range, eh melhor passar no apply ao inves de colocar no node
+struct upd{
+
+    upd(){}
+    // aplica upd e upd lazy
+    friend void apply(node &at,upd &x){
+        // upd node
+    }
+};
 struct node{
 
     node(){}
@@ -11,14 +19,6 @@ struct node{
     friend void merge(node &x,node &y,node &at){
         // o at eh o merge do x(esq) e y(dir)
         
-    }
-};
-struct upd{
-
-    upd(){}
-    // aplica upd e upd lazy
-    friend void apply(node &at,upd &x){
-        // upd node
     }
 };
 template <class node, class upd, class T>
