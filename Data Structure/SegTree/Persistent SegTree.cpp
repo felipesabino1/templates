@@ -3,6 +3,14 @@
 // Query(4*log(N)*O(merge)), Update(4*log(N)*O(merge))
 // Cada update adiciona log(N) de memoria
 // Inicializar o node com valor identidade
+struct upd{
+
+    upd(){}
+    // aplica upd
+    friend void apply(node &at,upd &x){
+        // upd node
+    }
+};
 struct node{
     
     node(){}
@@ -10,14 +18,6 @@ struct node{
     friend void merge(node &x,node &y,node &at){
         // o at eh o merge do x(esq) e y(dir)
         
-    }
-};
-struct upd{
-
-    upd(){}
-    // aplica upd
-    friend void apply(node &at,upd &x){
-        // upd node
     }
 };
 template <class node, class upd>
