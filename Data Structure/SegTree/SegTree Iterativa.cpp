@@ -5,10 +5,6 @@
 struct upd{
 
     upd(){}
-    // aplicar um update em node
-    friend void apply(node &at, upd& x){
-        
-    }
 };
 struct node{
     
@@ -16,6 +12,10 @@ struct node{
     friend void merge(node &x, node &y, node &at){
         // o at eh o merge do x(esq) e y(dir)
 
+    }
+    // aplicar um update em node
+    friend void apply(node &at, upd& x){
+        
     }
 };
 template<class node,class upd>
