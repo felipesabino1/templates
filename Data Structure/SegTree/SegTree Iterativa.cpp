@@ -2,20 +2,20 @@
 // Query com op associativa e update em ponto
 // Init(N*(1 + O(merge))), Query(2*log(N)*O(merge)), Update(log(N)*O(merge))
 // Inicializar o node com valor identidade
-struct node{
-    
-    node(){}
-    friend void merge(node &x, node &y, node &at){
-        // o at eh o merge do x(esq) e y(dir)
-
-    }
-};
 struct upd{
 
     upd(){}
     // aplicar um update em node
     friend void apply(node &at, upd& x){
         
+    }
+};
+struct node{
+    
+    node(){}
+    friend void merge(node &x, node &y, node &at){
+        // o at eh o merge do x(esq) e y(dir)
+
     }
 };
 template<class node,class upd>
