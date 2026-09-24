@@ -6,10 +6,6 @@
 struct upd{
 
     upd(){}
-    // aplica upd
-    friend void apply(node &at,upd &x){
-        // upd node
-    }
 };
 struct node{
     
@@ -18,6 +14,10 @@ struct node{
     friend void merge(node &x,node &y,node &at){
         // o at eh o merge do x(esq) e y(dir)
         
+    }
+    // aplica upd
+    friend void apply(node &at,upd &x){
+        // upd node
     }
 };
 template <class node, class upd>
