@@ -30,13 +30,8 @@ struct perSeg{
     #define inter(a,b) (a <= r && b >= l)
     int n; vc<node> seg; vc<array<int,2>> prox; vc<int> rev; // raiz da revisao    
     node ret,aux;
-    perSeg(int nn = 0,vc<node> v = {},int q = 0) : n(nn),rev(1,0){
-        // seg.reserve(n<<2);
-        if(n > 0 || q > 0){
-            int tam = n<<2;
-            tam += 2*q*(32-__builtin_clz(n));
-            seg.reserve(tam),prox.reserve(tam);
-        }
+    perSeg(int nn = 0,vc<node> v = {},int TAM = 0) : n(nn),rev(1,0){
+        if(TAM) seg.reserve(TAM), prox.reserve(TAM);
         add(); if(!v.empty()) build(0,0,n-1,v);
     }
     void init(vc<node> &v){
@@ -62,7 +57,7 @@ struct perSeg{
         merge(seg[lef(u)],seg[rig(u)],seg[u]);
     }
     void push(int u,int nu,int tl,int tr){
-        if(tl == tr || seg[u].lazy.is_off()) return;
+        if(tl == tr || seg[nu].lazy.is_off()) return;
         lef(nu) = clone(lef(u)), rig(nu) = clone(rig(u));
         apply(seg[lef(nu)],seg[nu].lazy), apply(seg[rig(nu)],seg[nu].lazy);
         seg[nu].lazy.off();
@@ -70,8 +65,8 @@ struct perSeg{
     void query(int u,int nu,int tl,int tr,int l,int r){
         if(l <= tl && tr <= r) return merge(aux = ret,seg[nu],ret);
         push(u,nu,tl,tr); int tmid = tl + tr; tmid >>= 1;
-        if(inter(tl,tmid)) query(lef(u),lef(nu),tl,tmid,l,r);
-        if(inter(tmid+1,tr)) query(rig(u),rig(nu),tmid+1,tr,l,r);
+        if(inter(tl,tmid)) lef(nu) = lef(u) == lef(nu) ? clone(lef(u)) : lef(nu), query(lef(u),lef(nu),tl,tmid,l,r);
+        if(inter(tmid+1,tr)) rig(nu) = rig(u) == rig(nu) ? clone(rig(u)) : rig(nu), query(rig(u),rig(nu),tmid+1,tr,l,r);
     }
     node query(int l,int r,int R){
         assert(0 <= l && l <= r && r < n);
@@ -84,8 +79,8 @@ struct perSeg{
     void update(int u,int nu,int tl,int tr,int l,int r,upd &x){
         if(l <= tl && tr <= r) return apply(seg[nu],x);
         push(u,nu,tl,tr); int tmid = tl + tr; tmid >>= 1;
-        if(inter(tl,tmid)) lef(nu) = (lef(u) == lef(nu) ? clone(lef(u)) : lef(nu)), update(lef(u),lef(nu),tl,tmid,l,r,x);
-        if(inter(tmid+1,tr)) rig(nu) = (rig(u) == rig(nu) ? clone(rig(u)) : rig(nu)), update(rig(u),rig(nu),tmid+1,tr,l,r,x);
+        if(inter(tl,tmid)) lef(nu) = lef(u) == lef(nu) ? clone(lef(u)) : lef(nu), update(lef(u),lef(nu),tl,tmid,l,r,x);
+        if(inter(tmid+1,tr)) rig(nu) = rig(u) == rig(nu) ? clone(rig(u)) : rig(nu), update(rig(u),rig(nu),tmid+1,tr,l,r,x);
         merge(seg[lef(nu)],seg[rig(nu)],seg[nu]);
     }
     void update(int l,int r,upd x,int R){
