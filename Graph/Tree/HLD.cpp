@@ -48,7 +48,7 @@ struct HLD{
     void update_path(int u,int v, upd x){
         for(; !lca(hd[u],v); u=p[hd[u]])
             seg.update(dir(hd[u]),dir(u),x),iseg.update(inv(u),inv(hd[u]),x);
-        for(; !lca(hd[v],v); v=p[hd[v]])
+        for(; !lca(hd[v],u); v=p[hd[v]])
             seg.update(dir(hd[v]),dir(v),x),iseg.update(inv(v),inv(hd[v]),x);
 
         if(lca(u,v))
