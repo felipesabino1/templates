@@ -31,6 +31,7 @@ struct CHT : multiset<Line,less<>>{
             x->p= bst(x->m,y->m) == x->m ? inf : -inf;
         else
             x->p=div(y->m-x->m,x->k-y->k);
+		#warning se quiser manter retas com mesmo ponto otimo, troca pra x->p > y->p
         return x->p >= y->p;
     }
     void add(ll k, ll m){
@@ -67,6 +68,7 @@ struct CHT{
 	bool useless(){
         int tam = cht.size();
         auto a = cht[tam-3], b = cht[tam-2], c = cht[tam-1];
+		#warning se quiser manter retas com mesmo ponto otimo, troca pra div(...) > div(...)
         return div(b.second-a.second,a.first-b.first) >= div(c.second-b.second,b.first-c.first);
     }
     // add a*x+b
