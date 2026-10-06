@@ -30,7 +30,7 @@ struct SegBeats{
     #define rig(x) (lef(x)|1)
     int n; vc<node> seg;
     node ret,aux;
-    Seg(int nn = 0, vc<node> v = {}) : n(nn), seg(n<<2){    
+    SegBeats(int nn = 0, vc<node> v = {}) : n(nn), seg(n<<2){    
         if(!v.empty()) build(1,0,n-1,v);
     }
     void init(vc<node> &v){
