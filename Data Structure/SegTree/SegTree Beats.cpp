@@ -13,6 +13,8 @@ struct node{
     friend void merge(node &x,node &y,node &at){ // o at eh o merge do x(esq) e y(dir)
     }
     friend void apply(node& at,upd& lazy,upd& x){ // upd node, clear lazy, upd lazy
+        if(lazy.off) // limpa a lazy
+        lazy.off = false;
     }
     friend bool useless(node& at,upd& x){ // verifica se fazer update aqui faz diferenca
         // exemplo de aplicar minimo na regiao: return at.mx1 <= x.val
