@@ -2,25 +2,20 @@
 // Query com operacao associativa e update em range
 // Query(4*log(N)*O(merge)), Update(4*log(N)*O(merge))
 // Cada update/query adiciona log(N) de memoria
-// Inicializar o node com valor identidade e upd com valo off
+// Inicializar o node com valor identidade
 // Se precisar usar a range, eh melhor passar no apply ao inves de colocar no node
 struct upd{
-
+    bool off = true;
     upd(){}
-    void off(){} // transforma na identidade
-    bool is_off(){} // esse cara eh identidade?
 };
 struct node{
-
-    upd lazy;
     node(){}
     void off(){} // transformar na identidade
-    friend void merge(node &x,node &y,node &at){
-        // o at eh o merge do x(esq) e y(dir)
-        
+    friend void merge(node &x,node &y,node &at){ // o at eh o merge do x(esq) e y(dir)
     }
-    friend void apply(node& at, upd& x){ // aplica upd e upd lazu
-        // upd node, clear lazy, upd lazy
+    friend void apply(node& at,upd& lazy,upd& x){ // upd node,clear lazy,upd lazy
+        if(lazy.off) // limpa a lazy
+        lazy.off = false;
     }
 };
 template <class node, class upd, class T>
@@ -28,22 +23,23 @@ struct Seg{
     #define lef(x) prox[x][0]
     #define rig(x) prox[x][1]
     #define check(x) x = x == -1 ? add() : x    
-    T n; vc<node> seg; vc<array<int,2>> prox;
+    T n; vc<node> seg; vc<upd> lazy; vc<array<int,2>> prox;
     node ret,aux;
     Seg(T nn = 1,int tam = 0) : n(nn){
-        if(tam) seg.reserve(tam), prox.reserve(tam);
+        if(tam) seg.reserve(tam),lazy.reserve(tam),prox.reserve(tam);
         add(); 
     }
     int add(){
         int x = seg.size();
-        seg.emplace_back(),prox.push_back({-1,-1});
+        seg.emplace_back(),lazy.emplace_back(),prox.push_back({-1,-1});
         return x;
     }
     void push(int u,T tl,T tr){
-        if(tl == tr || seg[u].lazy.is_off()) return;
+        if(tl == tr || lazy[u].off) return;
         check(lef(u)), check(rig(u));
-        apply(seg[lef(u)],seg[u].lazy),apply(seg[rig(u)],seg[u].lazy);
-        seg[u].lazy.off();
+        int tmid = tl + tr; tmid >>= 1;
+        apply(seg[lef(u)],lazy[lef(u)],lazy[u],tmid-tl+1),apply(seg[rig(u)],lazy[rig(u)],lazy[u],tr-tmid);
+        lazy[u].off = true;
     }
     void query(int u,T tl,T tr,T l, T r){
         if(l > r) return;
@@ -59,7 +55,7 @@ struct Seg{
     }
     void update(int u,T tl,T tr,T l, T r, upd& x){
         if(l > r) return;
-        if(l == tl && tr == r) return apply(seg[u],x);
+        if(l == tl && tr == r) return apply(seg[u],lazy[u],x,tr-tl+1);
         T tmid = tl+tr; tmid >>= 1; push(u,tl,tr);
         check(lef(u)), check(rig(u));
         update(lef(u),tl,tmid,l,min(r,tmid),x), update(rig(u),tmid+1,tr,max(l,tmid+1),r,x);
