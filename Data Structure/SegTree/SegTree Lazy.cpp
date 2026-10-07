@@ -3,31 +3,26 @@
 // Init(4*N*O(merge)), Query(4*log(N)*O(merge)), Update(4*log(N)*O(merge))
 // Inicializar o node e upd com valor off
 struct upd{
-    
+    bool off = true;
     upd(){}
-    void off(){} // transforma na identidade
-    bool is_off(){} // esse cara eh identidade?
 };
 struct node{
-
-    upd lazy;
     node(){}
     void off(){} // transformar na identidade
-    friend void merge(node &x,node &y,node &at){
-        // o at eh o merge do x(esq) e y(dir)
-
+    friend void merge(node &x,node &y,node &at){ // o at eh o merge do x(esq) e y(dir)
     }
-    friend void apply(node& at, upd& x){ // aplica upd e upd lazy
-        // upd node, clear lazy, upd lazy
+    friend void apply(node& at,upd& lazy,upd& x){ // upd node,clear lazy,upd lazy
+        if(lazy.off) // limpa a lazy
+        lazy.off = false;
     }
 };
 template<class node,class upd>
 struct Seg{
     #define lef(x) ((x)<<1)
     #define rig(x) (lef(x)|1)
-    int n; vc<node> seg;
+    int n; vc<node> seg; vc<upd> lazy;
     node ret,aux;
-    Seg(int nn = 0, vc<node> v = {}) : n(nn), seg(n<<2){    
+    Seg(int nn = 0, vc<node> v = {}) : n(nn), seg(n<<2), lazy(n<<2){    
         if(!v.empty()) build(1,0,n-1,v);
     }
     void init(vc<node> &v){
@@ -36,18 +31,18 @@ struct Seg{
     }
     void build(int u,int tl,int tr,vc<node> &v){
         if(tl == tr){
-            seg[u] = v[tl], seg[u].lazy.off();
+            seg[u] = v[tl], lazy[u].off = true;
             return;
         }
         int tmid = tl + tr; tmid >>= 1;
         build(lef(u),tl,tmid,v), build(rig(u),tmid+1,tr,v);
         merge(seg[lef(u)], seg[rig(u)], seg[u]);
-        seg[u].lazy.off();
+        lazy[u].off = true;
     }
     void push(int u,int tl,int tr){
-        if(tl == tr || seg[u].lazy.is_off()) return;
-        apply(seg[lef(u)],seg[u].lazy),apply(seg[rig(u)],seg[u].lazy);
-        seg[u].lazy.off();
+        if(tl == tr || lazy[u].off) return;
+        apply(seg[lef(u)],lazy[lef(u)],lazy[u]),apply(seg[rig(u)],lazy[rig(u)],lazy[u]);
+        lazy[u].off = true;
     }
     void query(int u,int tl,int tr,int l, int r){
         if(l > r) return;
@@ -62,7 +57,7 @@ struct Seg{
     }
     void update(int u, int tl, int tr, int l, int r, upd& x){
         if(l > r) return;
-        if(tl == l && tr == r) return apply(seg[u],x);
+        if(tl == l && tr == r) return apply(seg[u],lazy[u],x);
         push(u, tl, tr); int tmid = tl + tr; tmid >>= 1;
         update(lef(u), tl, tmid, l, min(tmid,r), x), update(rig(u), tmid+1, tr, max(tmid+1,l), r, x);
         merge(seg[lef(u)], seg[rig(u)], seg[u]);
