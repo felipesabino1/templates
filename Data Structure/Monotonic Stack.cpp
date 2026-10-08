@@ -2,7 +2,7 @@ template<class T>
 struct MonStack{
     vector<pair<T,T>> s1,s2; // valor, operacao no prefixo/sufixo inteiro
     // s2.back(),...,s2[0] | s1[0],...,s1.back()
-    const T off = -inf; // elemento neutro
+    const T off = 0; // elemento neutro
     T op(T a, T b){
         return __gcd(a,b);
     }   
