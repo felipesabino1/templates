@@ -26,7 +26,7 @@ struct Seg{
     T n; vc<node> seg; vc<upd> lazy; vc<array<int,2>> prox;
     node ret,aux;
     Seg(T nn = 1,int TAM = 0) : n(nn){
-        seg.reserve(tam),lazy.reserve(tam),prox.reserve(tam);
+        seg.reserve(TAM),lazy.reserve(TAM),prox.reserve(TAM);
         add(); 
     }
     int add(){
