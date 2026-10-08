@@ -25,8 +25,8 @@ struct Seg{
     #define check(x) x = x == -1 ? add() : x    
     T n; vc<node> seg; vc<upd> lazy; vc<array<int,2>> prox;
     node ret,aux;
-    Seg(T nn = 1,int tam = 0) : n(nn){
-        if(tam) seg.reserve(tam),lazy.reserve(tam),prox.reserve(tam);
+    Seg(T nn = 1,int TAM = 0) : n(nn){
+        seg.reserve(tam),lazy.reserve(tam),prox.reserve(tam);
         add(); 
     }
     int add(){
