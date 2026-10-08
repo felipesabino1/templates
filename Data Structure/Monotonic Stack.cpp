@@ -1,13 +1,13 @@
-template<class TT>
+template<class T>
 struct MonStack{
-    vector<pair<TT,TT>> s1,s2; // valor, operacao no prefixo/sufixo inteiro
+    vector<pair<T,T>> s1,s2; // valor, operacao no prefixo/sufixo inteiro
     // s2.back(),...,s2[0] | s1[0],...,s1.back()
-    const TT off = 0; // elemento neutro
-    TT op(TT a, TT b){
+    const T off = -inf; // elemento neutro
+    T op(T a, T b){
         return __gcd(a,b);
     }   
-    void push(TT x){
-        TT y = (s1.empty() ? x : op(x,s1.back().second));
+    void push(T x){
+        T y = (s1.empty() ? x : op(x,s1.back().second));
         s1.push_back({x,y});
     }
     void pop(){
@@ -21,7 +21,7 @@ struct MonStack{
         }
         if(!s2.empty()) s2.pop_back();        
     }
-    TT query(){
+    T query(){
         if(s1.empty() && s2.empty()) return off;
         else if(s1.empty()) return s2.back().second;
         else if(s2.empty()) return s1.back().second;
