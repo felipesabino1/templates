@@ -26,7 +26,7 @@ struct perSeg{
     int n; vc<node> seg; vc<upd> lazy; vc<array<int,2>> prox; vc<int> rev; // raiz da revisao    
     node ret,aux;
     perSeg(int nn = 0,vc<node> v = {},int TAM = 0) : n(nn),rev(1,0){
-        if(TAM) seg.reserve(TAM), lazy.reserve(TAM), prox.reserve(TAM);
+        seg.reserve(TAM), lazy.reserve(TAM), prox.reserve(TAM);
         add(); if(!v.empty()) build(0,0,n-1,v);
     }
     void init(vc<node> &v){
