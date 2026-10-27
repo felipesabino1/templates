@@ -8,12 +8,10 @@ ll lgd(ll a, ll b, ll m){
     while((g = __gcd(a,m)) > 1LL){
         if(b%g) return -1;
         if(b == k) return add;
-        b /= g; m /= g;
-        add++;
+        b /= g; m /= g, add++;
         k = k * (a/g) % m;
     }
-    ll n = sqrt(m)+1;
-    ll fat=1;
+    ll n = sqrt(m)+1, fat = 1;
     for(int i=0; i<n; i++) fat = fat * a % m;
     
     vector<pair<ll,ll>> big;
