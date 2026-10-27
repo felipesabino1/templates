@@ -3,6 +3,7 @@
 // Query(4*log(N)*O(merge)), Update(4*log(N)*O(merge))
 // Cada update adiciona log(N) de memoria
 // Inicializar o node com valor identidade
+// Tenta sempre inicializar a arvore com o tamanho esperado dela
 struct upd{
 
     upd(){}
