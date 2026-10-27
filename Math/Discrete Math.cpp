@@ -1,6 +1,5 @@
 namespace MD{
     const ll off = -1; // valor que indica que deu erro em conta
-
     // Euclides estendido: acha x,y tal que ax + by = gcd(a,b)
     // Assume que a,b >= 0, pra converter dps eh facil
     // O(log(min(a,b)))
@@ -18,8 +17,7 @@ namespace MD{
         crt(vector<ll>& A, vector<ll>& M){
             if(A.size() != M.size()) a = -1, m = 0;
             else{
-                crt c;
-                for(int i=0; i<A.size(); i++) c = c * crt(A[i],M[i]);
+                crt c; for(int i=0; i<A.size(); i++) c = c * crt(A[i],M[i]);
                 a = c.a, m = c.m;
             }            
         }
@@ -36,7 +34,7 @@ namespace MD{
     // calcula o inverso de a modulo m
     ll inv(ll a, ll m){
         assert(m > 0);
-        a %= m; if(a < 0) a += m;
+        a %= m; a += (a < 0 ? m : 0);
         auto [g,x,y] = ext_gcd(a,m);
         if(g != 1) return off;
         return x%m + (x < 0 ? m : 0);
@@ -44,13 +42,13 @@ namespace MD{
     // resolve equacoes do tipo a*x = b (mod m)
     ll solveLinear(ll a, ll b, ll m){
         assert(m > 0);
-        a %= m; if(a < 0) a += m;
-        b %= m; if(b < 0) b += m;
+        a %= m; a += (a < 0 ? m : 0);
+        b %= m; b += (b < 0 ? m : 0);
         ll g = __gcd(a,m);
         if(b%g) return off;
         a /= g, b /= g, m /= g;
         auto [gg,x,y] = ext_gcd(a,m);
-        x %=m; if(x < 0) x += m;
+        x %=m; x += (x < 0 ? m : 0);
         return b*x%m;
     }
 }
