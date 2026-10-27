@@ -2,9 +2,9 @@
 // Realiza a Centroid Decomposition da arvore
 // O(N * log(N))
 struct Centroid{
-    vector<vector<int>> & graph; // referencia da arvore original
-    int r; // raiz do centroid
-    vc<int> tam,p; vc<bool> vis; // tam de subarvore, pais do centroide
+    vvc<int> & graph;
+    int r; // raiz
+    vc<int> tam,p; vc<bool> vis;
     // vc<ll> cnt;
     // ll qt = 0;
 
@@ -14,9 +14,7 @@ struct Centroid{
 
     // constroi o centroid decomposition
     int build(int u){
-        set_tam(u,u);
-        u = get(u);
-        vis[u]=1;
+        set_tam(u,u), vis[u = get(u)] = 1;
 
         // se tiver que fazer algum calculo durante o centroid decomposition
         // calc(u);
